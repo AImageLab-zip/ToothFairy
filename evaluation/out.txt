@@ -1,0 +1,2020 @@
+Sending build context to Docker daemon  59.35MB
+Step 1/12 : FROM python:3.10-slim
+ ---> 1ad6437166cf
+Step 2/12 : RUN groupadd -r user && useradd -m --no-log-init -r -g user user
+ ---> Using cache
+ ---> be49078b9912
+Step 3/12 : RUN mkdir -p /opt/app /input /output     && chown user:user /opt/app /input /output
+ ---> Using cache
+ ---> 65162b4d8463
+Step 4/12 : USER user
+ ---> Using cache
+ ---> 5160a5c56a8d
+Step 5/12 : WORKDIR /opt/app
+ ---> Using cache
+ ---> 1a480833a60a
+Step 6/12 : ENV PATH="/home/user/.local/bin:${PATH}"
+ ---> Using cache
+ ---> a0d0be68b66d
+Step 7/12 : RUN python -m pip install --user -U pip && python -m pip install --user pip-tools
+ ---> Using cache
+ ---> 1c4e45dd6cbf
+Step 8/12 : COPY --chown=user:user requirements.txt /opt/app/
+ ---> Using cache
+ ---> 95dc0505fd4c
+Step 9/12 : RUN python -m piptools sync requirements.txt
+ ---> Using cache
+ ---> efe7d68f42d1
+Step 10/12 : COPY --chown=user:user ground-truth /opt/app/ground-truth
+ ---> Using cache
+ ---> ba058c4b9989
+Step 11/12 : COPY --chown=user:user evaluation.py /opt/app/
+ ---> Using cache
+ ---> 7ef8faa69820
+Step 12/12 : ENTRYPOINT [ "python", "-m", "evaluation" ]
+ ---> Using cache
+ ---> a76a0f386679
+Successfully built a76a0f386679
+Successfully tagged toothfairy_evaluation:latest
+toothfairy_evaluation-output-4f3baa54bf48b93dc9171a4746bff9fb
+total 0
+drwxr-xr-x 1 1000 1000 46 Mar 21 16:05 .
+drwxr-xr-x 1 1000 1000 12 Mar 21 16:05 ..
+drwxr-xr-x 1 1000 1000 80 Mar 21 16:06 inferior-alveolar-canal
+-rwxr-xr-x   1 root root   1234376 Mar 27  2022 /bin/bash
+-rwxr-xr-x   1 root root     43936 Sep 24  2020 /bin/cat
+-rwxr-xr-x   1 root root     72672 Sep 24  2020 /bin/chgrp
+-rwxr-xr-x   1 root root     64448 Sep 24  2020 /bin/chmod
+-rwxr-xr-x   1 root root     72672 Sep 24  2020 /bin/chown
+-rwxr-xr-x   1 root root    151168 Sep 24  2020 /bin/cp
+-rwxr-xr-x   1 root root    125560 Dec 10  2020 /bin/dash
+-rwxr-xr-x   1 root root    113664 Sep 24  2020 /bin/date
+-rwxr-xr-x   1 root root     80968 Sep 24  2020 /bin/dd
+-rwxr-xr-x   1 root root     93936 Sep 24  2020 /bin/df
+-rwxr-xr-x   1 root root    147176 Sep 24  2020 /bin/dir
+-rwxr-xr-x   1 root root     84440 Jan 20  2022 /bin/dmesg
+lrwxrwxrwx   1 root root         8 Nov  7  2019 /bin/dnsdomainname -> hostname
+lrwxrwxrwx   1 root root         8 Nov  7  2019 /bin/domainname -> hostname
+-rwxr-xr-x   1 root root     39712 Sep 24  2020 /bin/echo
+-rwxr-xr-x   1 root root        28 Nov  9  2020 /bin/egrep
+-rwxr-xr-x   1 root root     39680 Sep 24  2020 /bin/false
+-rwxr-xr-x   1 root root        28 Nov  9  2020 /bin/fgrep
+-rwxr-xr-x   1 root root     69032 Jan 20  2022 /bin/findmnt
+-rwxr-xr-x   1 root root    203072 Nov  9  2020 /bin/grep
+-rwxr-xr-x   2 root root      2346 Apr 10  2022 /bin/gunzip
+-rwxr-xr-x   1 root root      6447 Apr 10  2022 /bin/gzexe
+-rwxr-xr-x   1 root root     98048 Apr 10  2022 /bin/gzip
+-rwxr-xr-x   1 root root     22600 Nov  7  2019 /bin/hostname
+-rwxr-xr-x   1 root root     72840 Sep 24  2020 /bin/ln
+-rwxr-xr-x   1 root root     56952 Feb  7  2020 /bin/login
+-rwxr-xr-x   1 root root    147176 Sep 24  2020 /bin/ls
+-rwxr-xr-x   1 root root    149736 Jan 20  2022 /bin/lsblk
+-rwxr-xr-x   1 root root     85184 Sep 24  2020 /bin/mkdir
+-rwxr-xr-x   1 root root     76896 Sep 24  2020 /bin/mknod
+-rwxr-xr-x   1 root root     48064 Sep 24  2020 /bin/mktemp
+-rwxr-xr-x   1 root root     59632 Jan 20  2022 /bin/more
+-rwsr-xr-x   1 root root     55528 Jan 20  2022 /bin/mount
+-rwxr-xr-x   1 root root     18664 Jan 20  2022 /bin/mountpoint
+-rwxr-xr-x   1 root root    147080 Sep 24  2020 /bin/mv
+lrwxrwxrwx   1 root root         8 Nov  7  2019 /bin/nisdomainname -> hostname
+lrwxrwxrwx   1 root root        14 Dec 16  2021 /bin/pidof -> /sbin/killall5
+-rwxr-xr-x   1 root root     43872 Sep 24  2020 /bin/pwd
+lrwxrwxrwx   1 root root         4 Mar 27  2022 /bin/rbash -> bash
+-rwxr-xr-x   1 root root     52032 Sep 24  2020 /bin/readlink
+-rwxr-xr-x   1 root root     72704 Sep 24  2020 /bin/rm
+-rwxr-xr-x   1 root root     52032 Sep 24  2020 /bin/rmdir
+-rwxr-xr-x   1 root root     27472 Sep 27  2020 /bin/run-parts
+-rwxr-xr-x   1 root root    122224 Dec 22  2018 /bin/sed
+lrwxrwxrwx   1 root root         4 Feb 27 00:00 /bin/sh -> dash
+-rwxr-xr-x   1 root root     43808 Sep 24  2020 /bin/sleep
+-rwxr-xr-x   1 root root     84928 Sep 24  2020 /bin/stty
+-rwsr-xr-x   1 root root     71912 Jan 20  2022 /bin/su
+-rwxr-xr-x   1 root root     39744 Sep 24  2020 /bin/sync
+-rwxr-xr-x   1 root root    531928 Feb 17  2021 /bin/tar
+-rwxr-xr-x   1 root root     14456 Sep 27  2020 /bin/tempfile
+-rwxr-xr-x   1 root root    101408 Sep 24  2020 /bin/touch
+-rwxr-xr-x   1 root root     39680 Sep 24  2020 /bin/true
+-rwsr-xr-x   1 root root     35040 Jan 20  2022 /bin/umount
+-rwxr-xr-x   1 root root     39744 Sep 24  2020 /bin/uname
+-rwxr-xr-x   2 root root      2346 Apr 10  2022 /bin/uncompress
+-rwxr-xr-x   1 root root    147176 Sep 24  2020 /bin/vdir
+-rwxr-xr-x   1 root root     63744 Jan 20  2022 /bin/wdctl
+lrwxrwxrwx   1 root root         8 Nov  7  2019 /bin/ypdomainname -> hostname
+-rwxr-xr-x   1 root root      1984 Apr 10  2022 /bin/zcat
+-rwxr-xr-x   1 root root      1678 Apr 10  2022 /bin/zcmp
+-rwxr-xr-x   1 root root      5898 Apr 10  2022 /bin/zdiff
+-rwxr-xr-x   1 root root        29 Apr 10  2022 /bin/zegrep
+-rwxr-xr-x   1 root root        29 Apr 10  2022 /bin/zfgrep
+-rwxr-xr-x   1 root root      2081 Apr 10  2022 /bin/zforce
+-rwxr-xr-x   1 root root      8049 Apr 10  2022 /bin/zgrep
+-rwxr-xr-x   1 root root      2206 Apr 10  2022 /bin/zless
+-rwxr-xr-x   1 root root      1842 Apr 10  2022 /bin/zmore
+-rwxr-xr-x   1 root root      4577 Apr 10  2022 /bin/znew
+lrwxrwxrwx   1 root root        11 Mar 21 16:19 /dev/core -> /proc/kcore
+lrwxrwxrwx   1 root root        13 Mar 21 16:19 /dev/fd -> /proc/self/fd
+crw-rw-rw-   1 root root      1, 7 Mar 21 16:19 /dev/full
+crw-rw-rw-   1 user root      1, 3 Mar 21 16:19 /dev/null
+lrwxrwxrwx   1 root root         8 Mar 21 16:19 /dev/ptmx -> pts/ptmx
+crw-rw-rw-   1 root root      1, 8 Mar 21 16:19 /dev/random
+lrwxrwxrwx   1 root root        15 Mar 21 16:19 /dev/stderr -> /proc/self/fd/2
+lrwxrwxrwx   1 root root        15 Mar 21 16:19 /dev/stdin -> /proc/self/fd/0
+lrwxrwxrwx   1 root root        15 Mar 21 16:19 /dev/stdout -> /proc/self/fd/1
+crw-rw-rw-   1 root root      5, 0 Mar 21 16:19 /dev/tty
+crw-rw-rw-   1 root root      1, 9 Mar 21 16:19 /dev/urandom
+crw-rw-rw-   1 root root      1, 5 Mar 21 16:19 /dev/zero
+-rw-r--r--   1 root root      2981 Feb 27 00:00 /etc/adduser.conf
+-rw-r--r--   1 root root      1994 Mar 27  2022 /etc/bash.bashrc
+-rw-r--r--   1 root root       367 Sep 22 20:06 /etc/bindresvport.blacklist
+-rw-r--r--   1 root root      5662 Mar  1 14:09 /etc/ca-certificates.conf
+-rw-r--r--   1 root root      2969 Jun 10  2021 /etc/debconf.conf
+-rw-r--r--   1 root root         5 Dec  9 19:15 /etc/debian_version
+-rw-r--r--   1 root root       604 Jun 26  2016 /etc/deluser.conf
+-rw-r--r--   1 root root       685 Jun  7  2021 /etc/e2scrub.conf
+-rw-r--r--   1 root root         0 Feb 27 00:00 /etc/environment
+-rw-r--r--   1 root root      1816 Dec 27  2019 /etc/ethertypes
+-rw-r--r--   1 root root        37 Feb 27 00:00 /etc/fstab
+-rw-r--r--   1 root root      2584 Feb  1  2020 /etc/gai.conf
+-rw-r--r--   1 root root       458 Mar 15 12:53 /etc/group
+-rw-r--r--   1 root root       446 Feb 27 00:00 /etc/group-
+-rw-r-----   1 root shadow     383 Mar 15 12:53 /etc/gshadow
+-rw-r-----   1 root shadow     374 Feb 27 00:00 /etc/gshadow-
+-rw-r--r--   1 root root         9 Aug  7  2006 /etc/host.conf
+-rw-r--r--   1 root root        13 Mar 21 16:19 /etc/hostname
+-rw-r--r--   1 root root       150 Mar 21 16:19 /etc/hosts
+-rw-r--r--   1 root root      1748 Dec  8  2020 /etc/inputrc
+-rw-r--r--   1 root root        27 Dec  9 19:15 /etc/issue
+-rw-r--r--   1 root root        20 Dec  9 19:15 /etc/issue.net
+-rw-r--r--   1 root root      7203 Mar 14 02:43 /etc/ld.so.cache
+-rw-r--r--   1 root root        34 Sep 22 20:06 /etc/ld.so.conf
+-rw-r--r--   1 root root       191 Jan  6  2021 /etc/libaudit.conf
+lrwxrwxrwx   1 root root        27 Feb 27 00:00 /etc/localtime -> /usr/share/zoneinfo/Etc/UTC
+-rw-r--r--   1 root root     10477 Feb  7  2020 /etc/login.defs
+-rw-r--r--   1 root root       812 Jun  7  2021 /etc/mke2fs.conf
+-rw-r--r--   1 root root       286 Dec  9 19:15 /etc/motd
+lrwxrwxrwx   1 root root        12 Mar 21 16:19 /etc/mtab -> /proc/mounts
+-rw-r--r--   1 root root       767 Aug  1  2022 /etc/netconfig
+-rw-r--r--   1 root root        60 Mar  1 14:09 /etc/networks
+-rw-r--r--   1 root root       494 Sep 22 20:06 /etc/nsswitch.conf
+lrwxrwxrwx   1 root root        21 Dec  9 19:15 /etc/os-release -> ../usr/lib/os-release
+-rw-r--r--   1 root root       552 Jan 30  2021 /etc/pam.conf
+-rw-r--r--   1 root root       957 Mar 15 12:53 /etc/passwd
+-rw-r--r--   1 root root       922 Feb 27 00:00 /etc/passwd-
+-rw-r--r--   1 root root       769 Apr 10  2021 /etc/profile
+-rw-r--r--   1 root root      2932 Apr  1  2013 /etc/protocols
+-rw-r--r--   1 root root       256 Mar 21 16:19 /etc/resolv.conf
+lrwxrwxrwx   1 root root        13 Feb 17  2021 /etc/rmt -> /usr/sbin/rmt
+-rw-r--r--   1 root root       887 Apr  1  2013 /etc/rpc
+-rw-r--r--   1 root root     12813 Mar 27  2021 /etc/services
+-rw-r-----   1 root shadow     520 Mar 15 12:53 /etc/shadow
+-rw-r-----   1 root shadow     501 Feb 27 00:00 /etc/shadow-
+-rw-r--r--   1 root root        73 Feb 27 00:00 /etc/shells
+-rw-r--r--   1 root root         0 Feb 27 00:00 /etc/subgid
+-rw-r--r--   1 root root         0 Feb 27 00:00 /etc/subuid
+-rw-r--r--   1 root root         8 Feb 27 00:00 /etc/timezone
+-rw-r--r--   1 root root       642 Dec 24  2020 /etc/xattr.conf
+-rw-r--r--   1 1000   1000     343 Mar 21 16:04 /input/predictions.json
+lrwxrwxrwx   1 root root        32 Oct 14 19:35 /lib64/ld-linux-x86-64.so.2 -> /lib/x86_64-linux-gnu/ld-2.31.so
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/bootconfig
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/buddyinfo
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/cgroups
+-r--r--r--   1 root root       200 Mar 21 16:19 /proc/cmdline
+-r--r--r--   1 root root     62696 Mar 21 16:19 /proc/config.gz
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/consoles
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/cpuinfo
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/crypto
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/devices
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/diskstats
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/dma
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/execdomains
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/fb
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/filesystems
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/interrupts
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/iomem
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/ioports
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/kallsyms
+crw-rw-rw-   1 user root      1, 3 Mar 21 16:19 /proc/kcore
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/key-users
+crw-rw-rw-   1 user root      1, 3 Mar 21 16:19 /proc/keys
+-r--------   1 root root         0 Mar 21 16:19 /proc/kmsg
+-r--------   1 root root         0 Mar 21 16:19 /proc/kpagecgroup
+-r--------   1 root root         0 Mar 21 16:19 /proc/kpagecount
+-r--------   1 root root         0 Mar 21 16:19 /proc/kpageflags
+crw-rw-rw-   1 user root      1, 3 Mar 21 16:19 /proc/latency_stats
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/loadavg
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/locks
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/meminfo
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/misc
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/modules
+lrwxrwxrwx   1 root root        11 Mar 21 16:19 /proc/mounts -> self/mounts
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/mtd
+-rw-r--r--   1 root root         0 Mar 21 16:19 /proc/mtrr
+lrwxrwxrwx   1 root root         8 Mar 21 16:19 /proc/net -> self/net
+-r--------   1 root root         0 Mar 21 16:19 /proc/pagetypeinfo
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/partitions
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/schedstat
+lrwxrwxrwx   1 root root         0 Mar 21 16:19 /proc/self -> 24
+-r--------   1 root root         0 Mar 21 16:19 /proc/slabinfo
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/softirqs
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/stat
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/swaps
+--w-------   1 root root         0 Mar 21 16:19 /proc/sysrq-trigger
+lrwxrwxrwx   1 root root         0 Mar 21 16:19 /proc/thread-self -> 24/task/24
+crw-rw-rw-   1 user root      1, 3 Mar 21 16:19 /proc/timer_list
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/uptime
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/version
+-r--------   1 root root         0 Mar 21 16:19 /proc/vmallocinfo
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/vmstat
+-r--r--r--   1 root root         0 Mar 21 16:19 /proc/zoneinfo
+-rw-rw-r--   1 root utmp         0 Feb 27 00:00 /run/utmp
+-rwxr-xr-x   1 root root     64936 Jan 20  2022 /sbin/agetty
+-rwxr-xr-x   1 root root     34984 Jun  7  2021 /sbin/badblocks
+-rwxr-xr-x   1 root root     35048 Jan 20  2022 /sbin/blkdiscard
+-rwxr-xr-x   1 root root    121096 Jan 20  2022 /sbin/blkid
+-rwxr-xr-x   1 root root     76008 Jan 20  2022 /sbin/blkzone
+-rwxr-xr-x   1 root root     67816 Jan 20  2022 /sbin/blockdev
+-rwxr-xr-x   1 root root     47336 Jan 20  2022 /sbin/chcpu
+-rwxr-xr-x   1 root root     39144 Jan 20  2022 /sbin/ctrlaltdel
+-rwxr-xr-x   1 root root    239264 Jun  7  2021 /sbin/debugfs
+-rwxr-xr-x   1 root root     30960 Jun  7  2021 /sbin/dumpe2fs
+-rwxr-xr-x   1 root root    347808 Jun  7  2021 /sbin/e2fsck
+-rwxr-xr-x   1 root root     39152 Jun  7  2021 /sbin/e2image
+lrwxrwxrwx   1 root root         7 Jun  7  2021 /sbin/e2label -> tune2fs
+lrwxrwxrwx   1 root root         8 Jun  7  2021 /sbin/e2mmpstatus -> dumpe2fs
+-rwxr-xr-x   1 root root      7296 Jun  7  2021 /sbin/e2scrub
+-rwxr-xr-x   1 root root      5395 Jun  7  2021 /sbin/e2scrub_all
+-rwxr-xr-x   1 root root     22760 Jun  7  2021 /sbin/e2undo
+-rwxr-xr-x   1 root root     14568 Jan 20  2022 /sbin/findfs
+-rwxr-xr-x   1 root root     55576 Jan 20  2022 /sbin/fsck
+-rwxr-xr-x   1 root root     43272 Jan 20  2022 /sbin/fsck.cramfs
+lrwxrwxrwx   1 root root         6 Jun  7  2021 /sbin/fsck.ext2 -> e2fsck
+lrwxrwxrwx   1 root root         6 Jun  7  2021 /sbin/fsck.ext3 -> e2fsck
+lrwxrwxrwx   1 root root         6 Jun  7  2021 /sbin/fsck.ext4 -> e2fsck
+-rwxr-xr-x   1 root root    125184 Jan 20  2022 /sbin/fsck.minix
+-rwxr-xr-x   1 root root     14568 Jan 20  2022 /sbin/fsfreeze
+-rwxr-xr-x   1 root root     14496 Dec 16  2021 /sbin/fstab-decode
+-rwxr-xr-x   1 root root     71912 Jan 20  2022 /sbin/fstrim
+lrwxrwxrwx   1 root root         6 Jan 20  2022 /sbin/getty -> agetty
+-rwxr-xr-x   1 root root    104808 Jan 20  2022 /sbin/hwclock
+-rwxr-xr-x   1 root root      2659 Sep 27  2020 /sbin/installkernel
+-rwxr-xr-x   1 root root     30952 Jan 20  2022 /sbin/isosize
+-rwxr-xr-x   1 root root     26856 Dec 16  2021 /sbin/killall5
+-rwxr-xr-x   1 root root    995112 Oct 14 19:35 /sbin/ldconfig
+-rwxr-xr-x   1 root root     14336 Jun  7  2021 /sbin/logsave
+-rwxr-xr-x   1 root root    112984 Jan 20  2022 /sbin/losetup
+-rwxr-xr-x   1 root root    141792 Jun  7  2021 /sbin/mke2fs
+-rwxr-xr-x   1 root root     14568 Jan 20  2022 /sbin/mkfs
+-rwxr-xr-x   1 root root     35048 Jan 20  2022 /sbin/mkfs.bfs
+-rwxr-xr-x   1 root root     43176 Jan 20  2022 /sbin/mkfs.cramfs
+lrwxrwxrwx   1 root root         6 Jun  7  2021 /sbin/mkfs.ext2 -> mke2fs
+lrwxrwxrwx   1 root root         6 Jun  7  2021 /sbin/mkfs.ext3 -> mke2fs
+lrwxrwxrwx   1 root root         6 Jun  7  2021 /sbin/mkfs.ext4 -> mke2fs
+-rwxr-xr-x   1 root root    112880 Jan 20  2022 /sbin/mkfs.minix
+-rwxr-xr-x   1 root root     22544 Aug 26  2021 /sbin/mkhomedir_helper
+-rwxr-xr-x   1 root root    108784 Jan 20  2022 /sbin/mkswap
+-rwxr-xr-x   1 root root     14568 Jan 20  2022 /sbin/pivot_root
+-rwxr-xr-x   1 root root     14568 Jan 20  2022 /sbin/raw
+-rwxr-xr-x   1 root root     63720 Jun  7  2021 /sbin/resize2fs
+-rwxr-xr-x   1 root root     71912 Jan 20  2022 /sbin/runuser
+-rwxr-xr-x   1 root root       885 Feb  7  2020 /sbin/shadowconfig
+-rwxr-xr-x   1 root root     44232 Sep  1  2022 /sbin/start-stop-daemon
+-rwxr-xr-x   1 root root     47336 Jan 20  2022 /sbin/sulogin
+-rwxr-xr-x   1 root root     18664 Jan 20  2022 /sbin/swaplabel
+-rwxr-xr-x   1 root root     22752 Jan 20  2022 /sbin/swapoff
+-rwxr-xr-x   1 root root     51432 Jan 20  2022 /sbin/swapon
+-rwxr-xr-x   1 root root     14568 Jan 20  2022 /sbin/switch_root
+-rwxr-xr-x   1 root root    113056 Jun  7  2021 /sbin/tune2fs
+-rwxr-sr-x   1 root shadow   38912 Aug 26  2021 /sbin/unix_chkpwd
+-rwxr-xr-x   1 root root     38912 Aug 26  2021 /sbin/unix_update
+-rwxr-xr-x   1 root root     47336 Jan 20  2022 /sbin/wipefs
+-rwxr-xr-x   1 root root    117088 Jan 20  2022 /sbin/zramctl
+lrwxrwxrwx   1 root root         9 Feb 27 00:00 /var/lock -> /run/lock
+lrwxrwxrwx   1 root root         4 Feb 27 00:00 /var/run -> /run
+
+/dev/mqueue:
+total 0
+drwxrwxrwt 2 root root  40 Mar 21 16:19 .
+drwxr-xr-x 5 root root 340 Mar 21 16:19 ..
+
+/dev/pts:
+total 0
+drwxr-xr-x 2 root root    0 Mar 21 16:19 .
+drwxr-xr-x 5 root root  340 Mar 21 16:19 ..
+crw-rw-rw- 1 root root 5, 2 Mar 21 16:19 ptmx
+
+/dev/shm:
+total 0
+drwxrwxrwt 2 root root  40 Mar 21 16:19 .
+drwxr-xr-x 5 root root 340 Mar 21 16:19 ..
+
+/etc/alternatives:
+total 40
+drwxr-xr-x 1 root root   0 Mar 14 02:43 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 100 Sep  1  2022 README
+lrwxrwxrwx 1 root root  13 Feb 27 00:00 awk -> /usr/bin/mawk
+lrwxrwxrwx 1 root root  29 Feb 27 00:00 awk.1.gz -> /usr/share/man/man1/mawk.1.gz
+lrwxrwxrwx 1 root root  38 Feb 27 00:00 builtins.7.gz -> /usr/share/man/man7/bash-builtins.7.gz
+lrwxrwxrwx 1 root root  13 Feb 27 00:00 nawk -> /usr/bin/mawk
+lrwxrwxrwx 1 root root  29 Feb 27 00:00 nawk.1.gz -> /usr/share/man/man1/mawk.1.gz
+lrwxrwxrwx 1 root root   9 Feb 27 00:00 pager -> /bin/more
+lrwxrwxrwx 1 root root  29 Feb 27 00:00 pager.1.gz -> /usr/share/man/man1/more.1.gz
+lrwxrwxrwx 1 root root  17 Feb 27 00:00 rmt -> /usr/sbin/rmt-tar
+lrwxrwxrwx 1 root root  32 Feb 27 00:00 rmt.8.gz -> /usr/share/man/man8/rmt-tar.8.gz
+
+/etc/apt:
+total 4
+drwxr-xr-x 1 root root 146 Feb 27 00:00 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+drwxr-xr-x 1 root root 194 Feb 27 00:00 apt.conf.d
+drwxr-xr-x 1 root root   0 Jun 10  2021 auth.conf.d
+drwxr-xr-x 1 root root   0 Jun 10  2021 preferences.d
+-rw-r--r-- 1 root root 430 Feb 27 00:00 sources.list
+drwxr-xr-x 1 root root   0 Jun 10  2021 sources.list.d
+drwxr-xr-x 1 root root 684 Feb 27 00:00 trusted.gpg.d
+
+/etc/ca-certificates:
+total 0
+drwxr-xr-x 1 root root 16 Mar  1 14:09 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+drwxr-xr-x 1 root root  0 Jan 19  2021 update.d
+
+/etc/cron.d:
+total 4
+drwxr-xr-x 1 root root  22 Feb 27 00:00 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 201 Jun  7  2021 e2scrub_all
+
+/etc/cron.daily:
+total 8
+drwxr-xr-x 1 root root   28 Feb 27 00:00 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rwxr-xr-x 1 root root 1478 Jun 10  2021 apt-compat
+-rwxr-xr-x 1 root root 1298 Sep  1  2022 dpkg
+
+/etc/default:
+total 12
+drwxr-xr-x 1 root root   34 Feb 27 00:00 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root   81 Jan 20  2022 hwclock
+-rw-r--r-- 1 root root 1756 Oct 14 19:35 nss
+-rw-r--r-- 1 root root 1118 Feb  7  2020 useradd
+
+/etc/dpkg:
+total 4
+drwxr-xr-x 1 root root  20 Mar 14 02:43 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 446 Jan 30  2021 dpkg.cfg
+drwxr-xr-x 1 root root   0 Mar 14 02:43 dpkg.cfg.d
+drwxr-xr-x 1 root root  26 Feb 27 00:00 origins
+
+/etc/gss:
+total 0
+drwxr-xr-x 1 root root 12 Nov 17 19:41 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+drwxr-xr-x 1 root root  0 Nov 17 19:41 mech.d
+
+/etc/init.d:
+total 4
+drwxr-xr-x 1 root root    0 Mar 14 02:43 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rwxr-xr-x 1 root root 1748 Jan 20  2022 hwclock.sh
+
+/etc/kernel:
+total 0
+drwxr-xr-x 1 root root 20 Jun 10  2021 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+drwxr-xr-x 1 root root 32 Feb 27 00:00 postinst.d
+
+/etc/ld.so.conf.d:
+total 8
+drwxr-xr-x 1 root root  60 Feb 27 00:00 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root  44 Sep 22 20:06 libc.conf
+-rw-r--r-- 1 root root 100 Oct 14 19:35 x86_64-linux-gnu.conf
+
+/etc/logrotate.d:
+total 12
+drwxr-xr-x 1 root root  38 Feb 27 00:00 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 120 Aug 21  2022 alternatives
+-rw-r--r-- 1 root root 173 Jun 10  2021 apt
+-rw-r--r-- 1 root root 112 Aug 21  2022 dpkg
+
+/etc/opt:
+total 0
+drwxr-xr-x 1 root root  0 Feb 27 00:00 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/pam.d:
+total 68
+drwxr-xr-x 1 root root  290 Feb 27 00:00 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root  384 Feb  7  2020 chfn
+-rw-r--r-- 1 root root   92 Feb  7  2020 chpasswd
+-rw-r--r-- 1 root root  581 Feb  7  2020 chsh
+-rw-r--r-- 1 root root 1208 Feb 27 00:00 common-account
+-rw-r--r-- 1 root root 1214 Feb 27 00:00 common-auth
+-rw-r--r-- 1 root root 1620 Feb 27 00:00 common-password
+-rw-r--r-- 1 root root 1113 Feb 27 00:00 common-session
+-rw-r--r-- 1 root root 1154 Feb 27 00:00 common-session-noninteractive
+-rw-r--r-- 1 root root 4126 Feb  7  2020 login
+-rw-r--r-- 1 root root   92 Feb  7  2020 newusers
+-rw-r--r-- 1 root root  520 Jan 30  2021 other
+-rw-r--r-- 1 root root   92 Feb  7  2020 passwd
+-rw-r--r-- 1 root root  143 Jan 20  2022 runuser
+-rw-r--r-- 1 root root  138 Jan 20  2022 runuser-l
+-rw-r--r-- 1 root root 2259 Jan 20  2022 su
+-rw-r--r-- 1 root root  137 Jan 20  2022 su-l
+
+/etc/profile.d:
+total 0
+drwxr-xr-x 1 root root  0 Dec  9 19:15 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/rc0.d:
+total 4
+drwxr-xr-x 1 root root 26 Feb 27 00:00 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+lrwxrwxrwx 1 root root 20 Feb 27 00:00 K01hwclock.sh -> ../init.d/hwclock.sh
+
+/etc/rc1.d:
+total 0
+drwxr-xr-x 1 root root  0 Dec 14  2020 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/rc2.d:
+total 0
+drwxr-xr-x 1 root root  0 Dec 14  2020 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/rc3.d:
+total 0
+drwxr-xr-x 1 root root  0 Dec 14  2020 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/rc4.d:
+total 0
+drwxr-xr-x 1 root root  0 Dec 14  2020 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/rc5.d:
+total 0
+drwxr-xr-x 1 root root  0 Dec 14  2020 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+
+/etc/rc6.d:
+total 4
+drwxr-xr-x 1 root root 26 Feb 27 00:00 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+lrwxrwxrwx 1 root root 20 Feb 27 00:00 K01hwclock.sh -> ../init.d/hwclock.sh
+
+/etc/rcS.d:
+total 4
+drwxr-xr-x 1 root root  0 Mar 14 02:43 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+lrwxrwxrwx 1 root root 20 Feb 27 00:00 S01hwclock.sh -> ../init.d/hwclock.sh
+
+/etc/security:
+total 40
+drwxr-xr-x 1 root root  266 Feb 27 00:00 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 4564 Aug 26  2021 access.conf
+-rw-r--r-- 1 root root 2234 Aug 26  2021 faillock.conf
+-rw-r--r-- 1 root root 3635 Aug 26  2021 group.conf
+-rw-r--r-- 1 root root 2161 Aug 26  2021 limits.conf
+drwxr-xr-x 1 root root    0 Aug 26  2021 limits.d
+-rw-r--r-- 1 root root 1637 Aug 26  2021 namespace.conf
+drwxr-xr-x 1 root root    0 Aug 26  2021 namespace.d
+-rwxr-xr-x 1 root root 1016 Aug 26  2021 namespace.init
+-rw------- 1 root root    0 Feb 27 00:00 opasswd
+-rw-r--r-- 1 root root 2971 Aug 26  2021 pam_env.conf
+-rw-r--r-- 1 root root  419 Aug 26  2021 sepermit.conf
+-rw-r--r-- 1 root root 2179 Aug 26  2021 time.conf
+
+/etc/selinux:
+total 4
+drwxr-xr-x 1 root root   26 Feb 27 00:00 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 2041 Jul 15  2020 semanage.conf
+
+/etc/skel:
+total 12
+drwxr-xr-x 1 root root   54 Feb 27 00:00 .
+drwxr-xr-x 1 root root   56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root  220 Mar 27  2022 .bash_logout
+-rw-r--r-- 1 root root 3526 Mar 27  2022 .bashrc
+-rw-r--r-- 1 root root  807 Mar 27  2022 .profile
+
+/etc/ssl:
+total 12
+drwxr-xr-x 1 root root    46 Mar  1 14:09 .
+drwxr-xr-x 1 root root    56 Mar 21 16:19 ..
+drwxr-xr-x 1 root root 10664 Mar  1 14:09 certs
+-rw-r--r-- 1 root root 11118 Feb  5 21:23 openssl.cnf
+drwx------ 1 root root     0 Feb  5 21:23 private
+
+/etc/systemd:
+total 0
+drwxr-xr-x 1 root root  8 Dec 14  2020 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+drwxr-xr-x 1 root root 78 Feb 27 00:00 system
+drwxr-xr-x 1 root root  0 Mar 14 02:43 user
+
+/etc/terminfo:
+total 4
+drwxr-xr-x 1 root root  12 Feb 27 00:00 .
+drwxr-xr-x 1 root root  56 Mar 21 16:19 ..
+-rw-r--r-- 1 root root 212 Jan  1  2021 README
+
+/etc/update-motd.d:
+total 4
+drwxr-xr-x 1 root root 16 Feb 27 00:00 .
+drwxr-xr-x 1 root root 56 Mar 21 16:19 ..
+-rwxr-xr-x 1 root root 23 Apr  4  2017 10-uname
+
+/home/user:
+total 12
+drwxr-xr-x 1 user user   24 Mar 15 12:58 .
+drwxr-xr-x 1 root root    8 Mar 15 12:53 ..
+-rw-r--r-- 1 user user  220 Mar 27  2022 .bash_logout
+-rw-r--r-- 1 user user 3526 Mar 27  2022 .bashrc
+drwxr-xr-x 1 user user    6 Mar 15 12:58 .cache
+drwxr-xr-x 1 user user   12 Mar 15 12:58 .local
+-rw-r--r-- 1 user user  807 Mar 27  2022 .profile
+
+/input/random-job-id:
+total 0
+drwxr-xr-x 1 1000 1000 12 Mar 21 16:05 .
+drwxr-xr-x 1 1000 1000 58 Mar 21 16:06 ..
+drwxr-xr-x 1 1000 1000 46 Mar 21 16:05 output
+
+/lib/init:
+total 12
+drwxr-xr-x 1 root root   40 Feb 27 00:00 .
+drwxr-xr-x 1 root root   32 Mar 14 02:43 ..
+-rwxr-xr-x 1 root root 5779 Dec 16  2021 init-d-script
+-rw-r--r-- 1 root root 1212 Dec 16  2021 vars.sh
+
+/lib/lsb:
+total 12
+drwxr-xr-x 1 root root    60 Feb 27 00:00 .
+drwxr-xr-x 1 root root    32 Mar 14 02:43 ..
+-rw-r--r-- 1 root root 11526 Jul 16  2019 init-functions
+drwxr-xr-x 1 root root    20 Feb 27 00:00 init-functions.d
+
+/lib/systemd:
+total 0
+drwxr-xr-x 1 root root  12 Jun 10  2021 .
+drwxr-xr-x 1 root root  32 Mar 14 02:43 ..
+drwxr-xr-x 1 root root 398 Feb 27 00:00 system
+
+/lib/terminfo:
+total 0
+drwxr-xr-x 1 root root  28 Jan  1  2021 .
+drwxr-xr-x 1 root root  32 Mar 14 02:43 ..
+drwxr-xr-x 1 root root  32 Feb 27 00:00 E
+drwxr-xr-x 1 root root   8 Feb 27 00:00 a
+drwxr-xr-x 1 root root  50 Feb 27 00:00 c
+drwxr-xr-x 1 root root   8 Feb 27 00:00 d
+drwxr-xr-x 1 root root   8 Feb 27 00:00 h
+drwxr-xr-x 1 root root  10 Feb 27 00:00 l
+drwxr-xr-x 1 root root  90 Feb 27 00:00 m
+drwxr-xr-x 1 root root  12 Feb 27 00:00 p
+drwxr-xr-x 1 root root 106 Feb 27 00:00 r
+drwxr-xr-x 1 root root 180 Feb 27 00:00 s
+drwxr-xr-x 1 root root  34 Feb 27 00:00 t
+drwxr-xr-x 1 root root  38 Feb 27 00:00 v
+drwxr-xr-x 1 root root  26 Feb 27 00:00 w
+drwxr-xr-x 1 root root 184 Feb 27 00:00 x
+
+/lib/udev:
+total 0
+drwxr-xr-x 1 root root 14 Jun  7  2021 .
+drwxr-xr-x 1 root root 32 Mar 14 02:43 ..
+drwxr-xr-x 1 root root 32 Feb 27 00:00 rules.d
+
+/lib/x86_64-linux-gnu:
+total 8468
+drwxr-xr-x 1 root root     262 Mar 14 02:43 .
+drwxr-xr-x 1 root root      32 Mar 14 02:43 ..
+-rwxr-xr-x 1 root root  177928 Oct 14 19:35 ld-2.31.so
+lrwxrwxrwx 1 root root      10 Oct 14 19:35 ld-linux-x86-64.so.2 -> ld-2.31.so
+-rw-r--r-- 1 root root   14432 Oct 14 19:35 libBrokenLocale-2.31.so
+lrwxrwxrwx 1 root root      23 Oct 14 19:35 libBrokenLocale.so.1 -> libBrokenLocale-2.31.so
+-rw-r--r-- 1 root root   22784 Oct 14 19:35 libSegFault.so
+-rw-r--r-- 1 root root   19048 Oct 14 19:35 libanl-2.31.so
+lrwxrwxrwx 1 root root      14 Oct 14 19:35 libanl.so.1 -> libanl-2.31.so
+lrwxrwxrwx 1 root root      17 Jan  6  2021 libaudit.so.1 -> libaudit.so.1.0.0
+-rw-r--r-- 1 root root  128952 Jan  6  2021 libaudit.so.1.0.0
+lrwxrwxrwx 1 root root      15 Jul 20  2020 libbz2.so.1 -> libbz2.so.1.0.4
+lrwxrwxrwx 1 root root      15 Jul 20  2020 libbz2.so.1.0 -> libbz2.so.1.0.4
+-rw-r--r-- 1 root root   74688 Jul 20  2020 libbz2.so.1.0.4
+-rwxr-xr-x 1 root root 1905632 Oct 14 19:35 libc-2.31.so
+lrwxrwxrwx 1 root root      12 Oct 14 19:35 libc.so.6 -> libc-2.31.so
+lrwxrwxrwx 1 root root      18 Nov 20  2020 libcap-ng.so.0 -> libcap-ng.so.0.0.0
+-rw-r--r-- 1 root root   26984 Nov 20  2020 libcap-ng.so.0.0.0
+lrwxrwxrwx 1 root root      17 Jun  7  2021 libcom_err.so.2 -> libcom_err.so.2.1
+-rw-r--r-- 1 root root   18344 Jun  7  2021 libcom_err.so.2.1
+lrwxrwxrwx 1 root root      17 Apr 19  2021 libcrypt.so.1 -> libcrypt.so.1.1.0
+-rw-r--r-- 1 root root  202680 Apr 19  2021 libcrypt.so.1.1.0
+-rw-r--r-- 1 root root   18688 Oct 14 19:35 libdl-2.31.so
+lrwxrwxrwx 1 root root      13 Oct 14 19:35 libdl.so.2 -> libdl-2.31.so
+lrwxrwxrwx 1 root root      13 Jun  7  2021 libe2p.so.2 -> libe2p.so.2.3
+-rw-r--r-- 1 root root   44976 Jun  7  2021 libe2p.so.2.3
+lrwxrwxrwx 1 root root      18 Oct 28 15:29 libexpat.so.1 -> libexpat.so.1.6.12
+-rw-r--r-- 1 root root  186496 Oct 28 15:29 libexpat.so.1.6.12
+lrwxrwxrwx 1 root root      16 Jun  7  2021 libext2fs.so.2 -> libext2fs.so.2.4
+-rw-r--r-- 1 root root  438608 Jun  7  2021 libext2fs.so.2.4
+-rw-r--r-- 1 root root  100736 Jan 10  2021 libgcc_s.so.1
+lrwxrwxrwx 1 root root      22 Jul  1  2020 libgpg-error.so.0 -> libgpg-error.so.0.29.0
+-rw-r--r-- 1 root root  149576 Jul  1  2020 libgpg-error.so.0.29.0
+lrwxrwxrwx 1 root root      17 Dec  8  2020 libhistory.so.8 -> libhistory.so.8.1
+-rw-r--r-- 1 root root   51672 Dec  8  2020 libhistory.so.8.1
+lrwxrwxrwx 1 root root      18 Feb 10  2020 libkeyutils.so.1 -> libkeyutils.so.1.9
+-rw-r--r-- 1 root root   22448 Feb 10  2020 libkeyutils.so.1.9
+lrwxrwxrwx 1 root root      16 Apr 11  2022 liblzma.so.5 -> liblzma.so.5.2.5
+-rw-r--r-- 1 root root  158400 Apr 11  2022 liblzma.so.5.2.5
+-rw-r--r-- 1 root root 1321344 Oct 14 19:35 libm-2.31.so
+lrwxrwxrwx 1 root root      12 Oct 14 19:35 libm.so.6 -> libm-2.31.so
+-rw-r--r-- 1 root root   18752 Oct 14 19:35 libmemusage.so
+-rw-r--r-- 1 root root  174488 Oct 14 19:35 libmvec-2.31.so
+lrwxrwxrwx 1 root root      15 Oct 14 19:35 libmvec.so.1 -> libmvec-2.31.so
+lrwxrwxrwx 1 root root      18 Jan  1  2021 libncursesw.so.6 -> libncursesw.so.6.2
+-rw-r--r-- 1 root root  235440 Jan  1  2021 libncursesw.so.6.2
+-rw-r--r-- 1 root root   93096 Oct 14 19:35 libnsl-2.31.so
+lrwxrwxrwx 1 root root      14 Oct 14 19:35 libnsl.so.1 -> libnsl-2.31.so
+-rw-r--r-- 1 root root   43832 Oct 14 19:35 libnss_compat-2.31.so
+lrwxrwxrwx 1 root root      21 Oct 14 19:35 libnss_compat.so.2 -> libnss_compat-2.31.so
+-rw-r--r-- 1 root root   26952 Oct 14 19:35 libnss_dns-2.31.so
+lrwxrwxrwx 1 root root      18 Oct 14 19:35 libnss_dns.so.2 -> libnss_dns-2.31.so
+-rw-r--r-- 1 root root   51696 Oct 14 19:35 libnss_files-2.31.so
+lrwxrwxrwx 1 root root      20 Oct 14 19:35 libnss_files.so.2 -> libnss_files-2.31.so
+-rw-r--r-- 1 root root   27000 Oct 14 19:35 libnss_hesiod-2.31.so
+lrwxrwxrwx 1 root root      21 Oct 14 19:35 libnss_hesiod.so.2 -> libnss_hesiod-2.31.so
+lrwxrwxrwx 1 root root      16 Aug 26  2021 libpam.so.0 -> libpam.so.0.85.1
+-rw-r--r-- 1 root root   67584 Aug 26  2021 libpam.so.0.85.1
+lrwxrwxrwx 1 root root      21 Aug 26  2021 libpam_misc.so.0 -> libpam_misc.so.0.82.1
+-rw-r--r-- 1 root root   14280 Aug 26  2021 libpam_misc.so.0.82.1
+lrwxrwxrwx 1 root root      17 Aug 26  2021 libpamc.so.0 -> libpamc.so.0.82.1
+-rw-r--r-- 1 root root   18352 Aug 26  2021 libpamc.so.0.82.1
+-rw-r--r-- 1 root root   14464 Oct 14 19:35 libpcprofile.so
+lrwxrwxrwx 1 root root      17 Jun 18  2020 libpcre.so.3 -> libpcre.so.3.13.3
+-rw-r--r-- 1 root root  464848 Jun 18  2020 libpcre.so.3.13.3
+-rwxr-xr-x 1 root root  149520 Oct 14 19:35 libpthread-2.31.so
+lrwxrwxrwx 1 root root      18 Oct 14 19:35 libpthread.so.0 -> libpthread-2.31.so
+lrwxrwxrwx 1 root root      18 Dec  8  2020 libreadline.so.8 -> libreadline.so.8.1
+-rw-r--r-- 1 root root  346312 Dec  8  2020 libreadline.so.8.1
+-rw-r--r-- 1 root root   93000 Oct 14 19:35 libresolv-2.31.so
+lrwxrwxrwx 1 root root      17 Oct 14 19:35 libresolv.so.2 -> libresolv-2.31.so
+-rw-r--r-- 1 root root   35808 Oct 14 19:35 librt-2.31.so
+lrwxrwxrwx 1 root root      13 Oct 14 19:35 librt.so.1 -> librt-2.31.so
+-rw-r--r-- 1 root root  166120 Feb  9  2021 libselinux.so.1
+-rw-r--r-- 1 root root  722024 Jul 14  2020 libsepol.so.1
+lrwxrwxrwx 1 root root      12 Jun  7  2021 libss.so.2 -> libss.so.2.0
+-rw-r--r-- 1 root root   34736 Jun  7  2021 libss.so.2.0
+-rw-r--r-- 1 root root   35672 Oct 14 19:35 libthread_db-1.0.so
+lrwxrwxrwx 1 root root      19 Oct 14 19:35 libthread_db.so.1 -> libthread_db-1.0.so
+lrwxrwxrwx 1 root root      15 Jan  1  2021 libtinfo.so.6 -> libtinfo.so.6.2
+-rw-r--r-- 1 root root  187792 Jan  1  2021 libtinfo.so.6.2
+lrwxrwxrwx 1 root root      17 Aug  1  2022 libtirpc.so.3 -> libtirpc.so.3.0.0
+-rw-r--r-- 1 root root  190928 Aug  1  2022 libtirpc.so.3.0.0
+-rw-r--r-- 1 root root   14720 Oct 14 19:35 libutil-2.31.so
+lrwxrwxrwx 1 root root      15 Oct 14 19:35 libutil.so.1 -> libutil-2.31.so
+lrwxrwxrwx 1 root root      14 Aug 23  2022 libz.so.1 -> libz.so.1.2.11
+-rw-r--r-- 1 root root  113088 Aug 23  2022 libz.so.1.2.11
+drwxr-xr-x 1 root root    1176 Feb 27 00:00 security
+
+/opt/app:
+total 12
+drwxr-xr-x 1 user user   22 Mar 21 16:19 .
+drwxr-xr-x 1 root root    6 Mar 15 12:53 ..
+drwxr-xr-x 1 user user   52 Mar 21 16:19 __pycache__
+-rw-r--r-- 1 user user 5529 Mar 21 16:18 evaluation.py
+drwxr-xr-x 1 user user   80 Mar 20 11:25 ground-truth
+-rw-r--r-- 1 user user 1834 Mar 16 14:46 requirements.txt
+
+/proc/1:
+total 0
+dr-xr-xr-x   9 user user 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+-r--r--r--   1 user user 0 Mar 21 16:19 arch_status
+dr-xr-xr-x   2 user user 0 Mar 21 16:19 attr
+-rw-r--r--   1 user user 0 Mar 21 16:19 autogroup
+-r--------   1 user user 0 Mar 21 16:19 auxv
+-r--r--r--   1 user user 0 Mar 21 16:19 cgroup
+--w-------   1 user user 0 Mar 21 16:19 clear_refs
+-r--r--r--   1 user user 0 Mar 21 16:19 cmdline
+-rw-r--r--   1 user user 0 Mar 21 16:19 comm
+-rw-r--r--   1 user user 0 Mar 21 16:19 coredump_filter
+-r--r--r--   1 user user 0 Mar 21 16:19 cpu_resctrl_groups
+-r--r--r--   1 user user 0 Mar 21 16:19 cpuset
+lrwxrwxrwx   1 user user 0 Mar 21 16:19 cwd -> /opt/app
+-r--------   1 user user 0 Mar 21 16:19 environ
+lrwxrwxrwx   1 user user 0 Mar 21 16:19 exe -> /usr/local/bin/python3.10
+dr-x------   2 user user 3 Mar 21 16:19 fd
+dr-xr-xr-x   2 user user 0 Mar 21 16:19 fdinfo
+-rw-r--r--   1 user user 0 Mar 21 16:19 gid_map
+-r--------   1 user user 0 Mar 21 16:19 io
+-r--------   1 user user 0 Mar 21 16:19 ksm_merging_pages
+-r--------   1 user user 0 Mar 21 16:19 ksm_stat
+-r--r--r--   1 user user 0 Mar 21 16:19 latency
+-r--r--r--   1 user user 0 Mar 21 16:19 limits
+-rw-r--r--   1 user user 0 Mar 21 16:19 loginuid
+dr-x------   2 user user 0 Mar 21 16:19 map_files
+-r--r--r--   1 user user 0 Mar 21 16:19 maps
+-rw-------   1 user user 0 Mar 21 16:19 mem
+-r--r--r--   1 user user 0 Mar 21 16:19 mountinfo
+-r--r--r--   1 user user 0 Mar 21 16:19 mounts
+-r--------   1 user user 0 Mar 21 16:19 mountstats
+dr-xr-xr-x  55 user user 0 Mar 21 16:19 net
+dr-x--x--x   2 user user 0 Mar 21 16:19 ns
+-r--r--r--   1 user user 0 Mar 21 16:19 numa_maps
+-rw-r--r--   1 user user 0 Mar 21 16:19 oom_adj
+-r--r--r--   1 user user 0 Mar 21 16:19 oom_score
+-rw-r--r--   1 user user 0 Mar 21 16:19 oom_score_adj
+-r--------   1 user user 0 Mar 21 16:19 pagemap
+-r--------   1 user user 0 Mar 21 16:19 personality
+-rw-r--r--   1 user user 0 Mar 21 16:19 projid_map
+lrwxrwxrwx   1 user user 0 Mar 21 16:19 root -> /
+-rw-r--r--   1 user user 0 Mar 21 16:19 sched
+-r--r--r--   1 user user 0 Mar 21 16:19 schedstat
+-r--r--r--   1 user user 0 Mar 21 16:19 sessionid
+-rw-r--r--   1 user user 0 Mar 21 16:19 setgroups
+-r--r--r--   1 user user 0 Mar 21 16:19 smaps
+-r--r--r--   1 user user 0 Mar 21 16:19 smaps_rollup
+-r--------   1 user user 0 Mar 21 16:19 stack
+-r--r--r--   1 user user 0 Mar 21 16:19 stat
+-r--r--r--   1 user user 0 Mar 21 16:19 statm
+-r--r--r--   1 user user 0 Mar 21 16:19 status
+-r--------   1 user user 0 Mar 21 16:19 syscall
+dr-xr-xr-x  17 user user 0 Mar 21 16:19 task
+-rw-r--r--   1 user user 0 Mar 21 16:19 timens_offsets
+-r--r--r--   1 user user 0 Mar 21 16:19 timers
+-rw-rw-rw-   1 user user 0 Mar 21 16:19 timerslack_ns
+-rw-r--r--   1 user user 0 Mar 21 16:19 uid_map
+-r--r--r--   1 user user 0 Mar 21 16:19 wchan
+
+/proc/23:
+total 0
+dr-xr-xr-x   9 user user 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+-r--r--r--   1 user user 0 Mar 21 16:19 arch_status
+dr-xr-xr-x   2 user user 0 Mar 21 16:19 attr
+-rw-r--r--   1 user user 0 Mar 21 16:19 autogroup
+-r--------   1 user user 0 Mar 21 16:19 auxv
+-r--r--r--   1 user user 0 Mar 21 16:19 cgroup
+--w-------   1 user user 0 Mar 21 16:19 clear_refs
+-r--r--r--   1 user user 0 Mar 21 16:19 cmdline
+-rw-r--r--   1 user user 0 Mar 21 16:19 comm
+-rw-r--r--   1 user user 0 Mar 21 16:19 coredump_filter
+-r--r--r--   1 user user 0 Mar 21 16:19 cpu_resctrl_groups
+-r--r--r--   1 user user 0 Mar 21 16:19 cpuset
+lrwxrwxrwx   1 user user 0 Mar 21 16:19 cwd -> /opt/app
+-r--------   1 user user 0 Mar 21 16:19 environ
+lrwxrwxrwx   1 user user 0 Mar 21 16:19 exe -> /bin/dash
+dr-x------   2 user user 3 Mar 21 16:19 fd
+dr-xr-xr-x   2 user user 0 Mar 21 16:19 fdinfo
+-rw-r--r--   1 user user 0 Mar 21 16:19 gid_map
+-r--------   1 user user 0 Mar 21 16:19 io
+-r--------   1 user user 0 Mar 21 16:19 ksm_merging_pages
+-r--------   1 user user 0 Mar 21 16:19 ksm_stat
+-r--r--r--   1 user user 0 Mar 21 16:19 latency
+-r--r--r--   1 user user 0 Mar 21 16:19 limits
+-rw-r--r--   1 user user 0 Mar 21 16:19 loginuid
+dr-x------   2 user user 0 Mar 21 16:19 map_files
+-r--r--r--   1 user user 0 Mar 21 16:19 maps
+-rw-------   1 user user 0 Mar 21 16:19 mem
+-r--r--r--   1 user user 0 Mar 21 16:19 mountinfo
+-r--r--r--   1 user user 0 Mar 21 16:19 mounts
+-r--------   1 user user 0 Mar 21 16:19 mountstats
+dr-xr-xr-x  55 user user 0 Mar 21 16:19 net
+dr-x--x--x   2 user user 0 Mar 21 16:19 ns
+-r--r--r--   1 user user 0 Mar 21 16:19 numa_maps
+-rw-r--r--   1 user user 0 Mar 21 16:19 oom_adj
+-r--r--r--   1 user user 0 Mar 21 16:19 oom_score
+-rw-r--r--   1 user user 0 Mar 21 16:19 oom_score_adj
+-r--------   1 user user 0 Mar 21 16:19 pagemap
+-r--------   1 user user 0 Mar 21 16:19 personality
+-rw-r--r--   1 user user 0 Mar 21 16:19 projid_map
+lrwxrwxrwx   1 user user 0 Mar 21 16:19 root -> /
+-rw-r--r--   1 user user 0 Mar 21 16:19 sched
+-r--r--r--   1 user user 0 Mar 21 16:19 schedstat
+-r--r--r--   1 user user 0 Mar 21 16:19 sessionid
+-rw-r--r--   1 user user 0 Mar 21 16:19 setgroups
+-r--r--r--   1 user user 0 Mar 21 16:19 smaps
+-r--r--r--   1 user user 0 Mar 21 16:19 smaps_rollup
+-r--------   1 user user 0 Mar 21 16:19 stack
+-r--r--r--   1 user user 0 Mar 21 16:19 stat
+-r--r--r--   1 user user 0 Mar 21 16:19 statm
+-r--r--r--   1 user user 0 Mar 21 16:19 status
+-r--------   1 user user 0 Mar 21 16:19 syscall
+dr-xr-xr-x   3 user user 0 Mar 21 16:19 task
+-rw-r--r--   1 user user 0 Mar 21 16:19 timens_offsets
+-r--r--r--   1 user user 0 Mar 21 16:19 timers
+-rw-rw-rw-   1 user user 0 Mar 21 16:19 timerslack_ns
+-rw-r--r--   1 user user 0 Mar 21 16:19 uid_map
+-r--r--r--   1 user user 0 Mar 21 16:19 wchan
+
+/proc/acpi:
+total 0
+drwxrwxrwt   2 root root 40 Mar 21 16:19 .
+dr-xr-xr-x 351 root root  0 Mar 21 16:19 ..
+
+/proc/asound:
+total 0
+drwxrwxrwt   2 root root 40 Mar 21 16:19 .
+dr-xr-xr-x 351 root root  0 Mar 21 16:19 ..
+
+/proc/bus:
+total 0
+dr-xr-xr-x   4 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+dr-xr-xr-x   4 root root 0 Mar 21 16:19 input
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 pci
+
+/proc/driver:
+total 0
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+dr-xr-xr-x  11 root root 0 Mar 21 16:19 nvidia
+dr-xr-xr-x   5 root root 0 Mar 21 16:19 nvidia-caps
+dr-xr-xr-x   4 root root 0 Mar 21 16:19 nvidia-nvlink
+dr-xr-xr-x   4 root root 0 Mar 21 16:19 nvidia-nvswitch
+dr-xr-xr-x   4 root root 0 Mar 21 16:19 nvidia-uvm
+-r--r--r--   1 root root 0 Mar 21 16:19 nvram
+-r--r--r--   1 root root 0 Mar 21 16:19 rtc
+
+/proc/dynamic_debug:
+total 0
+dr-xr-xr-x   3 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+-rw-r--r--   1 root root 0 Mar 21 16:19 control
+
+/proc/fs:
+total 0
+dr-xr-xr-x   3 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+dr-xr-xr-x   2 root root 0 Mar 21 16:19 nfsd
+
+/proc/irq:
+total 0
+dr-xr-xr-x  89 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 0
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 1
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 10
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 11
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 12
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 120
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 121
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 122
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 123
+dr-xr-xr-x  11 root root 0 Mar 21 16:19 124
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 125
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 126
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 127
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 128
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 129
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 13
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 130
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 131
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 132
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 133
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 134
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 135
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 136
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 137
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 138
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 139
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 14
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 140
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 141
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 142
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 143
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 144
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 145
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 146
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 147
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 148
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 149
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 15
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 150
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 151
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 152
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 153
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 154
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 155
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 156
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 157
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 158
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 159
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 16
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 160
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 161
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 162
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 163
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 164
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 165
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 166
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 167
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 168
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 169
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 17
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 184
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 185
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 186
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 187
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 188
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 189
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 190
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 191
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 192
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 193
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 194
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 195
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 196
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 197
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 198
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 2
+dr-xr-xr-x  11 root root 0 Mar 21 16:19 27
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 3
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 4
+dr-xr-xr-x  11 root root 0 Mar 21 16:19 40
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 44
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 5
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 6
+dr-xr-xr-x   9 root root 0 Mar 21 16:19 7
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 8
+dr-xr-xr-x  10 root root 0 Mar 21 16:19 9
+-rw-r--r--   1 root root 0 Mar 21 16:19 default_smp_affinity
+
+/proc/pressure:
+total 0
+dr-xr-xr-x   6 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+-rw-rw-rw-   1 root root 0 Mar 21 16:19 cpu
+-rw-rw-rw-   1 root root 0 Mar 21 16:19 io
+-rw-rw-rw-   1 root root 0 Mar 21 16:19 irq
+-rw-rw-rw-   1 root root 0 Mar 21 16:19 memory
+
+/proc/scsi:
+total 0
+drwxrwxrwt   2 root root 40 Mar 21 16:19 .
+dr-xr-xr-x 351 root root  0 Mar 21 16:19 ..
+
+/proc/sys:
+total 0
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 abi
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 debug
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 dev
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 fs
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 kernel
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 net
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 user
+dr-xr-xr-x   1 root root 0 Mar 21 16:19 vm
+
+/proc/sysvipc:
+total 0
+dr-xr-xr-x   5 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+-r--r--r--   1 root root 0 Mar 21 16:19 msg
+-r--r--r--   1 root root 0 Mar 21 16:19 sem
+-r--r--r--   1 root root 0 Mar 21 16:19 shm
+
+/proc/tty:
+total 0
+dr-xr-xr-x   6 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 351 root root 0 Mar 21 16:19 ..
+dr-x------   4 root root 0 Mar 21 16:19 driver
+-r--r--r--   1 root root 0 Mar 21 16:19 drivers
+dr-xr-xr-x   2 root root 0 Mar 21 16:19 ldisc
+-r--r--r--   1 root root 0 Mar 21 16:19 ldiscs
+
+/run/lock:
+total 0
+drwxrwxrwt 1 root root  0 Feb 27 00:00 .
+drwxr-xr-x 1 root root 16 Feb 27 00:00 ..
+
+/sys/block:
+total 0
+drwxr-xr-x  2 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+lrwxrwxrwx  1 root root 0 Mar 21 16:19 dm-0 -> ../devices/virtual/block/dm-0
+lrwxrwxrwx  1 root root 0 Mar 21 16:19 nvme0n1 -> ../devices/pci0000:00/0000:00:0e.0/pci10000:e0/10000:e0:1c.4/10000:e1:00.0/nvme/nvme0/nvme0n1
+lrwxrwxrwx  1 root root 0 Mar 21 16:19 nvme1n1 -> ../devices/pci0000:00/0000:00:0e.0/pci10000:e0/10000:e0:1d.0/10000:e2:00.0/nvme/nvme1/nvme1n1
+lrwxrwxrwx  1 root root 0 Mar 21 16:19 zram0 -> ../devices/virtual/block/zram0
+
+/sys/bus:
+total 0
+drwxr-xr-x 47 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+drwxr-xr-x  4 root root 0 Mar 21 16:19 ac97
+drwxr-xr-x  4 root root 0 Mar 21 16:19 acpi
+drwxr-xr-x  4 root root 0 Mar 21 16:19 auxiliary
+drwxr-xr-x  4 root root 0 Mar 21 16:19 cec
+drwxr-xr-x  4 root root 0 Mar 21 16:19 clockevents
+drwxr-xr-x  4 root root 0 Mar 21 16:19 clocksource
+drwxr-xr-x  4 root root 0 Mar 21 16:19 container
+drwxr-xr-x  4 root root 0 Mar 21 16:19 cpu
+drwxr-xr-x  4 root root 0 Mar 21 16:19 dax
+drwxr-xr-x  4 root root 0 Mar 21 16:19 edac
+drwxr-xr-x  4 root root 0 Mar 21 16:19 event_source
+drwxr-xr-x  4 root root 0 Mar 21 16:19 gpio
+drwxr-xr-x  4 root root 0 Mar 21 16:19 hdaudio
+drwxr-xr-x  4 root root 0 Mar 21 16:19 hid
+drwxr-xr-x  4 root root 0 Mar 21 16:19 i2c
+drwxr-xr-x  4 root root 0 Mar 21 16:19 isa
+drwxr-xr-x  4 root root 0 Mar 21 16:19 machinecheck
+drwxr-xr-x  4 root root 0 Mar 21 16:19 mdio_bus
+drwxr-xr-x  4 root root 0 Mar 21 16:19 mei
+drwxr-xr-x  4 root root 0 Mar 21 16:19 memory
+drwxr-xr-x  4 root root 0 Mar 21 16:19 memory_tiering
+drwxr-xr-x  4 root root 0 Mar 21 16:19 mipi-dsi
+drwxr-xr-x  4 root root 0 Mar 21 16:19 nd
+drwxr-xr-x  4 root root 0 Mar 21 16:19 node
+drwxr-xr-x  4 root root 0 Mar 21 16:19 nvmem
+drwxr-xr-x  5 root root 0 Mar 21 16:19 pci
+drwxr-xr-x  4 root root 0 Mar 21 16:19 pci_express
+drwxr-xr-x  4 root root 0 Mar 21 16:19 platform
+drwxr-xr-x  4 root root 0 Mar 21 16:19 pnp
+drwxr-xr-x  4 root root 0 Mar 21 16:19 scsi
+drwxr-xr-x  4 root root 0 Mar 21 16:19 serial
+drwxr-xr-x  4 root root 0 Mar 21 16:19 serio
+drwxr-xr-x  4 root root 0 Mar 21 16:19 snd_seq
+drwxr-xr-x  4 root root 0 Mar 21 16:19 soundwire
+drwxr-xr-x  4 root root 0 Mar 21 16:19 spi
+drwxr-xr-x  4 root root 0 Mar 21 16:19 tee
+drwxr-xr-x  4 root root 0 Mar 21 16:19 thunderbolt
+drwxr-xr-x  4 root root 0 Mar 21 16:19 typec
+drwxr-xr-x  4 root root 0 Mar 21 16:19 usb
+drwxr-xr-x  4 root root 0 Mar 21 16:19 usb-serial
+drwxr-xr-x  4 root root 0 Mar 21 16:19 virtio
+drwxr-xr-x  4 root root 0 Mar 21 16:19 wmi
+drwxr-xr-x  4 root root 0 Mar 21 16:19 workqueue
+drwxr-xr-x  4 root root 0 Mar 21 16:19 xen
+drwxr-xr-x  4 root root 0 Mar 21 16:19 xen-backend
+
+/sys/class:
+total 0
+drwxr-xr-x 80 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+drwxr-xr-x  2 root root 0 Mar 21 16:19 accel
+drwxr-xr-x  2 root root 0 Mar 21 16:19 ata_device
+drwxr-xr-x  2 root root 0 Mar 21 16:19 ata_link
+drwxr-xr-x  2 root root 0 Mar 21 16:19 ata_port
+drwxr-xr-x  2 root root 0 Mar 21 16:19 backlight
+drwxr-xr-x  2 root root 0 Mar 21 16:19 bdi
+drwxr-xr-x  2 root root 0 Mar 21 16:19 block
+drwxr-xr-x  2 root root 0 Mar 21 16:19 bluetooth
+drwxr-xr-x  2 root root 0 Mar 21 16:19 bsg
+drwxr-xr-x  2 root root 0 Mar 21 16:19 cpuid
+drwxr-xr-x  2 root root 0 Mar 21 16:19 devcoredump
+drwxr-xr-x  2 root root 0 Mar 21 16:19 devfreq
+drwxr-xr-x  2 root root 0 Mar 21 16:19 devfreq-event
+drwxr-xr-x  2 root root 0 Mar 21 16:19 devlink
+drwxr-xr-x  2 root root 0 Mar 21 16:19 dma
+drwxr-xr-x  2 root root 0 Mar 21 16:19 dma_heap
+drwxr-xr-x  2 root root 0 Mar 21 16:19 dmi
+drwxr-xr-x  2 root root 0 Mar 21 16:19 drm
+drwxr-xr-x  2 root root 0 Mar 21 16:19 drm_dp_aux_dev
+drwxr-xr-x  2 root root 0 Mar 21 16:19 extcon
+drwxr-xr-x  2 root root 0 Mar 21 16:19 firmware
+drwxr-xr-x  2 root root 0 Mar 21 16:19 graphics
+drwxr-xr-x  2 root root 0 Mar 21 16:19 hidraw
+drwxr-xr-x  2 root root 0 Mar 21 16:19 hwmon
+drwxr-xr-x  2 root root 0 Mar 21 16:19 i2c-adapter
+drwxr-xr-x  2 root root 0 Mar 21 16:19 ieee80211
+drwxr-xr-x  2 root root 0 Mar 21 16:19 input
+drwxr-xr-x  2 root root 0 Mar 21 16:19 intel_pmt
+drwxr-xr-x  2 root root 0 Mar 21 16:19 intel_scu_ipc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 iommu
+drwxr-xr-x  2 root root 0 Mar 21 16:19 leds
+drwxr-xr-x  2 root root 0 Mar 21 16:19 lirc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 mdio_bus
+drwxr-xr-x  2 root root 0 Mar 21 16:19 mei
+drwxr-xr-x  2 root root 0 Mar 21 16:19 mem
+drwxr-xr-x  2 root root 0 Mar 21 16:19 misc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 msr
+drwxr-xr-x  2 root root 0 Mar 21 16:19 mtd
+drwxr-xr-x  2 root root 0 Mar 21 16:19 nd
+drwxr-xr-x  2 root root 0 Mar 21 16:19 net
+drwxr-xr-x  2 root root 0 Mar 21 16:19 nvme
+drwxr-xr-x  2 root root 0 Mar 21 16:19 nvme-generic
+drwxr-xr-x  2 root root 0 Mar 21 16:19 nvme-subsystem
+drwxr-xr-x  2 root root 0 Mar 21 16:19 pci_bus
+drwxr-xr-x  2 root root 0 Mar 21 16:19 phy
+drwxr-xr-x  2 root root 0 Mar 21 16:19 power_supply
+drwxr-xr-x  2 root root 0 Mar 21 16:19 powercap
+drwxr-xr-x  2 root root 0 Mar 21 16:19 pps
+drwxr-xr-x  2 root root 0 Mar 21 16:19 ptp
+drwxr-xr-x  2 root root 0 Mar 21 16:19 pwm
+drwxr-xr-x  2 root root 0 Mar 21 16:19 rc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 regulator
+drwxr-xr-x  2 root root 0 Mar 21 16:19 remoteproc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 retimer
+drwxr-xr-x  2 root root 0 Mar 21 16:19 rfkill
+drwxr-xr-x  2 root root 0 Mar 21 16:19 rtc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 scsi_device
+drwxr-xr-x  2 root root 0 Mar 21 16:19 scsi_disk
+drwxr-xr-x  2 root root 0 Mar 21 16:19 scsi_host
+drwxr-xr-x  2 root root 0 Mar 21 16:19 sound
+drwxr-xr-x  2 root root 0 Mar 21 16:19 spi_master
+drwxr-xr-x  2 root root 0 Mar 21 16:19 spi_slave
+drwxr-xr-x  2 root root 0 Mar 21 16:19 tee
+drwxr-xr-x  2 root root 0 Mar 21 16:19 thermal
+drwxr-xr-x  2 root root 0 Mar 21 16:19 tpm
+drwxr-xr-x  2 root root 0 Mar 21 16:19 tpmrm
+drwxr-xr-x  2 root root 0 Mar 21 16:19 tty
+drwxr-xr-x  2 root root 0 Mar 21 16:19 typec
+drwxr-xr-x  2 root root 0 Mar 21 16:19 typec_mux
+drwxr-xr-x  2 root root 0 Mar 21 16:19 usb_power_delivery
+drwxr-xr-x  2 root root 0 Mar 21 16:19 usb_role
+drwxr-xr-x  2 root root 0 Mar 21 16:19 vc
+drwxr-xr-x  2 root root 0 Mar 21 16:19 vtconsole
+drwxr-xr-x  2 root root 0 Mar 21 16:19 wakeup
+drwxr-xr-x  2 root root 0 Mar 21 16:19 watchdog
+drwxr-xr-x  2 root root 0 Mar 21 16:19 wmi_bus
+drwxr-xr-x  2 root root 0 Mar 21 16:19 wwan
+drwxr-xr-x  2 root root 0 Mar 21 16:19 zram-control
+
+/sys/dev:
+total 0
+drwxr-xr-x  4 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+drwxr-xr-x  2 root root 0 Mar 21 16:19 block
+drwxr-xr-x  2 root root 0 Mar 21 16:19 char
+
+/sys/devices:
+total 0
+drwxr-xr-x 30 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+drwxr-xr-x  9 root root 0 Mar 21 16:19 LNXSYSTM:00
+drwxr-xr-x  3 root root 0 Mar 21 16:19 breakpoint
+drwxr-xr-x  6 root root 0 Mar 21 16:19 cpu
+drwxr-xr-x  5 root root 0 Mar 21 16:19 cstate_core
+drwxr-xr-x  5 root root 0 Mar 21 16:19 cstate_pkg
+drwxr-xr-x  5 root root 0 Mar 21 16:19 i915
+drwxr-xr-x  3 root root 0 Mar 21 16:19 intel_bts
+drwxr-xr-x  5 root root 0 Mar 21 16:19 intel_pt
+drwxr-xr-x  3 root root 0 Mar 21 16:19 isa
+drwxr-xr-x  4 root root 0 Mar 21 16:19 kprobe
+drwxr-xr-x  5 root root 0 Mar 21 16:19 msr
+drwxr-xr-x 27 root root 0 Mar 21 16:19 pci0000:00
+drwxr-xr-x 32 root root 0 Mar 21 16:19 platform
+drwxr-xr-x 11 root root 0 Mar 21 16:19 pnp0
+drwxr-xr-x  5 root root 0 Mar 21 16:19 power
+drwxr-xr-x  3 root root 0 Mar 21 16:19 software
+drwxr-xr-x 10 root root 0 Mar 21 16:19 system
+drwxr-xr-x  3 root root 0 Mar 21 16:19 tracepoint
+drwxr-xr-x  4 root root 0 Mar 21 16:19 uncore_arb
+drwxr-xr-x  4 root root 0 Mar 21 16:19 uncore_cbox_0
+drwxr-xr-x  4 root root 0 Mar 21 16:19 uncore_cbox_1
+drwxr-xr-x  4 root root 0 Mar 21 16:19 uncore_cbox_2
+drwxr-xr-x  4 root root 0 Mar 21 16:19 uncore_cbox_3
+drwxr-xr-x  5 root root 0 Mar 21 16:19 uncore_clock
+drwxr-xr-x  5 root root 0 Mar 21 16:19 uncore_imc_free_running_0
+drwxr-xr-x  5 root root 0 Mar 21 16:19 uncore_imc_free_running_1
+drwxr-xr-x  4 root root 0 Mar 21 16:19 uprobe
+drwxr-xr-x 24 root root 0 Mar 21 16:19 virtual
+
+/sys/firmware:
+total 0
+drwxrwxrwt  2 root root 40 Mar 21 16:19 .
+dr-xr-xr-x 13 root root  0 Mar 21 16:19 ..
+
+/sys/fs:
+total 0
+drwxr-xr-x  8 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+dr-xr-xr-x  2 root root 0 Mar 21 16:19 bpf
+drwxr-xr-x  4 root root 0 Mar 21 16:19 btrfs
+drwxr-xr-x  2 root root 0 Mar 21 16:19 cgroup
+drwxr-xr-x  3 root root 0 Mar 21 16:19 fuse
+dr-xr-xr-x  2 root root 0 Mar 21 16:19 pstore
+dr-xr-xr-x  2 root root 0 Mar 21 16:19 resctrl
+
+/sys/hypervisor:
+total 0
+drwxr-xr-x  2 root root 0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root 0 Mar 21 16:19 ..
+
+/sys/kernel:
+total 0
+drwxr-xr-x  16 root root    0 Mar 21 16:19 .
+dr-xr-xr-x  13 root root    0 Mar 21 16:19 ..
+drwxr-xr-x   2 root root    0 Mar 21 16:19 boot_params
+drwxr-xr-x   2 root root    0 Mar 21 16:19 btf
+drwxr-xr-x   2 root root    0 Mar 21 16:19 cgroup
+dr-xr-xr-x   2 root root    0 Mar 21 16:19 config
+-r--r--r--   1 root root 4096 Mar 21 16:19 cpu_byteorder
+dr-xr-xr-x   2 root root    0 Mar 21 16:19 debug
+drwxr-xr-x   3 root root    0 Mar 21 16:19 dmabuf
+-r--r--r--   1 root root 4096 Mar 21 16:19 fscaps
+drwxr-xr-x  21 root root    0 Mar 21 16:19 iommu_groups
+drwxr-xr-x 104 root root    0 Mar 21 16:19 irq
+-r--r--r--   1 root root 4096 Mar 21 16:19 kexec_crash_loaded
+-rw-r--r--   1 root root 4096 Mar 21 16:19 kexec_crash_size
+-r--r--r--   1 root root 4096 Mar 21 16:19 kexec_loaded
+drwxr-xr-x  11 root root    0 Mar 21 16:19 mm
+-r--r--r--   1 root root  516 Mar 21 16:19 notes
+-r--r--r--   1 root root 4096 Mar 21 16:19 oops_count
+-rw-r--r--   1 root root 4096 Mar 21 16:19 profiling
+-rw-r--r--   1 root root 4096 Mar 21 16:19 rcu_expedited
+-rw-r--r--   1 root root 4096 Mar 21 16:19 rcu_normal
+drwxr-xr-x   2 root root    0 Mar 21 16:19 reboot
+dr-xr-xr-x   2 root root    0 Mar 21 16:19 security
+drwxr-xr-x 183 root root    0 Mar 21 16:19 slab
+drwxr-xr-x   3 root root    0 Mar 21 16:19 software_nodes
+dr-xr-xr-x   2 root root    0 Mar 21 16:19 tracing
+-r--r--r--   1 root root 4096 Mar 21 16:19 uevent_seqnum
+-r--r--r--   1 root root 4096 Mar 21 16:19 vmcoreinfo
+-r--r--r--   1 root root 4096 Mar 21 16:19 warn_count
+
+/sys/module:
+total 0
+drwxr-xr-x 290 root root    0 Mar 21 16:19 .
+dr-xr-xr-x  13 root root    0 Mar 21 16:19 ..
+drwxr-xr-x   3 root root    0 Mar 21 16:19 8250
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ac97_bus
+drwxr-xr-x   3 root root    0 Mar 21 16:19 acpi
+drwxr-xr-x   5 root root    0 Mar 21 16:19 acpi_pad
+drwxr-xr-x   6 root root    0 Mar 21 16:19 acpi_tad
+drwxr-xr-x   5 root root    0 Mar 21 16:19 acpi_thermal_rel
+drwxr-xr-x   3 root root    0 Mar 21 16:19 acpiphp
+drwxr-xr-x   5 root root    0 Mar 21 16:19 aesni_intel
+drwxr-xr-x   5 root root    0 Mar 21 16:19 af_alg
+drwxr-xr-x   3 root root    0 Mar 21 16:19 ahci
+drwxr-xr-x   5 root root    0 Mar 21 16:19 algif_aead
+drwxr-xr-x   5 root root    0 Mar 21 16:19 algif_hash
+drwxr-xr-x   5 root root    0 Mar 21 16:19 algif_skcipher
+drwxr-xr-x   3 root root    0 Mar 21 16:19 apparmor
+drwxr-xr-x   5 root root    0 Mar 21 16:19 asn1_encoder
+drwxr-xr-x   6 root root    0 Mar 21 16:19 asus_nb_wmi
+drwxr-xr-x   5 root root    0 Mar 21 16:19 asus_wireless
+drwxr-xr-x   7 root root    0 Mar 21 16:19 asus_wmi
+drwxr-xr-x   6 root root    0 Mar 21 16:19 atkbd
+drwxr-xr-x   3 root root    0 Mar 21 16:19 battery
+drwxr-xr-x   5 root root    0 Mar 21 16:19 blake2b_generic
+drwxr-xr-x   3 root root    0 Mar 21 16:19 blk_cgroup
+drwxr-xr-x   3 root root    0 Mar 21 16:19 blk_crypto
+drwxr-xr-x   3 root root    0 Mar 21 16:19 block
+drwxr-xr-x   6 root root    0 Mar 21 16:19 bluetooth
+drwxr-xr-x   6 root root    0 Mar 21 16:19 bnep
+drwxr-xr-x   5 root root    0 Mar 21 16:19 bpf_preload
+drwxr-xr-x   5 root root    0 Mar 21 16:19 br_netfilter
+drwxr-xr-x   5 root root    0 Mar 21 16:19 bridge
+drwxr-xr-x   5 root root    0 Mar 21 16:19 btbcm
+drwxr-xr-x   5 root root    0 Mar 21 16:19 btintel
+drwxr-xr-x   5 root root    0 Mar 21 16:19 btmtk
+drwxr-xr-x   5 root root    0 Mar 21 16:19 btrfs
+drwxr-xr-x   5 root root    0 Mar 21 16:19 btrtl
+drwxr-xr-x   7 root root    0 Mar 21 16:19 btusb
+drwxr-xr-x   3 root root    0 Mar 21 16:19 button
+drwxr-xr-x   5 root root    0 Mar 21 16:19 cbc
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ccm
+drwxr-xr-x   6 root root    0 Mar 21 16:19 cec
+drwxr-xr-x   6 root root    0 Mar 21 16:19 cfg80211
+drwxr-xr-x   3 root root    0 Mar 21 16:19 clocksource
+drwxr-xr-x   5 root root    0 Mar 21 16:19 cmac
+-r--r--r--   1 root root 4096 Mar 21 16:19 compression
+drwxr-xr-x   2 root root    0 Mar 21 16:19 configfs
+drwxr-xr-x   7 root root    0 Mar 21 16:19 coretemp
+drwxr-xr-x   3 root root    0 Mar 21 16:19 cpufreq
+drwxr-xr-x   3 root root    0 Mar 21 16:19 cpuidle
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crc16
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crc32_pclmul
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crc32c_generic
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crc32c_intel
+drwxr-xr-x   3 root root    0 Mar 21 16:19 crc64_rocksoft
+drwxr-xr-x   3 root root    0 Mar 21 16:19 crc_t10dif
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crct10dif_pclmul
+drwxr-xr-x   5 root root    0 Mar 21 16:19 cryptd
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crypto_simd
+drwxr-xr-x   5 root root    0 Mar 21 16:19 crypto_user
+drwxr-xr-x   3 root root    0 Mar 21 16:19 cryptomgr
+drwxr-xr-x   3 root root    0 Mar 21 16:19 damon_lru_sort
+drwxr-xr-x   3 root root    0 Mar 21 16:19 damon_reclaim
+drwxr-xr-x   5 root root    0 Mar 21 16:19 des_generic
+drwxr-xr-x   3 root root    0 Mar 21 16:19 device_hmem
+drwxr-xr-x   5 root root    0 Mar 21 16:19 dm_crypt
+drwxr-xr-x   6 root root    0 Mar 21 16:19 dm_mod
+drwxr-xr-x   3 root root    0 Mar 21 16:19 drm
+drwxr-xr-x   5 root root    0 Mar 21 16:19 drm_buddy
+drwxr-xr-x   6 root root    0 Mar 21 16:19 drm_display_helper
+drwxr-xr-x   3 root root    0 Mar 21 16:19 drm_kms_helper
+drwxr-xr-x   3 root root    0 Mar 21 16:19 dynamic_debug
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ecb
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ecdh_generic
+drwxr-xr-x   3 root root    0 Mar 21 16:19 edac_core
+drwxr-xr-x   3 root root    0 Mar 21 16:19 efi_pstore
+drwxr-xr-x   3 root root    0 Mar 21 16:19 ehci_hcd
+drwxr-xr-x   5 root root    0 Mar 21 16:19 encrypted_keys
+drwxr-xr-x   5 root root    0 Mar 21 16:19 fat
+drwxr-xr-x   3 root root    0 Mar 21 16:19 fb
+drwxr-xr-x   3 root root    0 Mar 21 16:19 firmware_class
+drwxr-xr-x   3 root root    0 Mar 21 16:19 fscrypto
+drwxr-xr-x   6 root root    0 Mar 21 16:19 fuse
+drwxr-xr-x   5 root root    0 Mar 21 16:19 gf128mul
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ghash_clmulni_intel
+drwxr-xr-x   3 root root    0 Mar 21 16:19 gpiolib_acpi
+drwxr-xr-x   3 root root    0 Mar 21 16:19 haltpoll
+drwxr-xr-x   3 root root    0 Mar 21 16:19 hid
+drwxr-xr-x   6 root root    0 Mar 21 16:19 hid_multitouch
+drwxr-xr-x   3 root root    0 Mar 21 16:19 i2c_algo_bit
+drwxr-xr-x   6 root root    0 Mar 21 16:19 i2c_hid
+drwxr-xr-x   6 root root    0 Mar 21 16:19 i2c_hid_acpi
+drwxr-xr-x   7 root root    0 Mar 21 16:19 i2c_i801
+drwxr-xr-x   6 root root    0 Mar 21 16:19 i2c_smbus
+drwxr-xr-x   7 root root    0 Mar 21 16:19 i8042
+drwxr-xr-x   7 root root    0 Mar 21 16:19 i915
+drwxr-xr-x   5 root root    0 Mar 21 16:19 iTCO_vendor_support
+drwxr-xr-x   6 root root    0 Mar 21 16:19 iTCO_wdt
+drwxr-xr-x   6 root root    0 Mar 21 16:19 idma64
+drwxr-xr-x   6 root root    0 Mar 21 16:19 igen6_edac
+drwxr-xr-x   6 root root    0 Mar 21 16:19 int3400_thermal
+drwxr-xr-x   6 root root    0 Mar 21 16:19 int3403_thermal
+drwxr-xr-x   5 root root    0 Mar 21 16:19 int340x_thermal_zone
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_cstate
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_gtt
+drwxr-xr-x   3 root root    0 Mar 21 16:19 intel_idle
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_lpss
+drwxr-xr-x   6 root root    0 Mar 21 16:19 intel_lpss_pci
+drwxr-xr-x   6 root root    0 Mar 21 16:19 intel_pmc_bxt
+drwxr-xr-x   3 root root    0 Mar 21 16:19 intel_pmc_core
+drwxr-xr-x   6 root root    0 Mar 21 16:19 intel_powerclamp
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_rapl_common
+drwxr-xr-x   6 root root    0 Mar 21 16:19 intel_rapl_msr
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_soc_dts_iosf
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_tcc_cooling
+drwxr-xr-x   5 root root    0 Mar 21 16:19 intel_uncore
+drwxr-xr-x   6 root root    0 Mar 21 16:19 intel_vsec
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ip_tables
+drwxr-xr-x   5 root root    0 Mar 21 16:19 iptable_filter
+drwxr-xr-x   5 root root    0 Mar 21 16:19 iptable_nat
+drwxr-xr-x   3 root root    0 Mar 21 16:19 ipv6
+drwxr-xr-x   5 root root    0 Mar 21 16:19 irqbypass
+drwxr-xr-x   6 root root    0 Mar 21 16:19 iwlmvm
+drwxr-xr-x   7 root root    0 Mar 21 16:19 iwlwifi
+drwxr-xr-x   5 root root    0 Mar 21 16:19 joydev
+drwxr-xr-x   3 root root    0 Mar 21 16:19 kernel
+drwxr-xr-x   3 root root    0 Mar 21 16:19 keyboard
+drwxr-xr-x   3 root root    0 Mar 21 16:19 kfence
+drwxr-xr-x   6 root root    0 Mar 21 16:19 kvm
+drwxr-xr-x   6 root root    0 Mar 21 16:19 kvm_intel
+drwxr-xr-x   5 root root    0 Mar 21 16:19 ledtrig_audio
+drwxr-xr-x   3 root root    0 Mar 21 16:19 libahci
+drwxr-xr-x   5 root root    0 Mar 21 16:19 libarc4
+drwxr-xr-x   3 root root    0 Mar 21 16:19 libata
+drwxr-xr-x   5 root root    0 Mar 21 16:19 libcrc32c
+drwxr-xr-x   5 root root    0 Mar 21 16:19 libdes
+drwxr-xr-x   6 root root    0 Mar 21 16:19 libphy
+drwxr-xr-x   5 root root    0 Mar 21 16:19 libps2
+drwxr-xr-x   5 root root    0 Mar 21 16:19 llc
+drwxr-xr-x   6 root root    0 Mar 21 16:19 loop
+drwxr-xr-x   5 root root    0 Mar 21 16:19 lzo_rle
+drwxr-xr-x   6 root root    0 Mar 21 16:19 mac80211
+drwxr-xr-x   5 root root    0 Mar 21 16:19 mac_hid
+drwxr-xr-x   5 root root    0 Mar 21 16:19 md4
+drwxr-xr-x   5 root root    0 Mar 21 16:19 mdio_devres
+drwxr-xr-x   5 root root    0 Mar 21 16:19 mei
+drwxr-xr-x   6 root root    0 Mar 21 16:19 mei_hdcp
+drwxr-xr-x   6 root root    0 Mar 21 16:19 mei_me
+drwxr-xr-x   6 root root    0 Mar 21 16:19 mei_pxp
+drwxr-xr-x   3 root root    0 Mar 21 16:19 memory_hotplug
+drwxr-xr-x   3 root root    0 Mar 21 16:19 module
+drwxr-xr-x   6 root root    0 Mar 21 16:19 mousedev
+drwxr-xr-x   3 root root    0 Mar 21 16:19 msr
+drwxr-xr-x   5 root root    0 Mar 21 16:19 mtd
+drwxr-xr-x   3 root root    0 Mar 21 16:19 netpoll
+drwxr-xr-x   6 root root    0 Mar 21 16:19 nf_conntrack
+drwxr-xr-x   5 root root    0 Mar 21 16:19 nf_conntrack_netlink
+drwxr-xr-x   5 root root    0 Mar 21 16:19 nf_defrag_ipv4
+drwxr-xr-x   5 root root    0 Mar 21 16:19 nf_defrag_ipv6
+drwxr-xr-x   5 root root    0 Mar 21 16:19 nf_nat
+drwxr-xr-x   5 root root    0 Mar 21 16:19 nfnetlink
+drwxr-xr-x   3 root root    0 Mar 21 16:19 nmi_backtrace
+drwxr-xr-x   6 root root    0 Mar 21 16:19 nvidia
+drwxr-xr-x   6 root root    0 Mar 21 16:19 nvidia_drm
+drwxr-xr-x   6 root root    0 Mar 21 16:19 nvidia_modeset
+drwxr-xr-x   6 root root    0 Mar 21 16:19 nvidia_uvm
+drwxr-xr-x   7 root root    0 Mar 21 16:19 nvme
+drwxr-xr-x   5 root root    0 Mar 21 16:19 nvme_common
+drwxr-xr-x   6 root root    0 Mar 21 16:19 nvme_core
+drwxr-xr-x   6 root root    0 Mar 21 16:19 overlay
+drwxr-xr-x   3 root root    0 Mar 21 16:19 page_alloc
+drwxr-xr-x   3 root root    0 Mar 21 16:19 page_reporting
+drwxr-xr-x   3 root root    0 Mar 21 16:19 pci_hotplug
+drwxr-xr-x   3 root root    0 Mar 21 16:19 pcie_aspm
+drwxr-xr-x   3 root root    0 Mar 21 16:19 pciehp
+drwxr-xr-x   6 root root    0 Mar 21 16:19 pcspkr
+drwxr-xr-x   5 root root    0 Mar 21 16:19 pkcs8_key_parser
+drwxr-xr-x   5 root root    0 Mar 21 16:19 platform_profile
+drwxr-xr-x   5 root root    0 Mar 21 16:19 pmt_class
+drwxr-xr-x   6 root root    0 Mar 21 16:19 pmt_telemetry
+drwxr-xr-x   3 root root    0 Mar 21 16:19 pnp
+drwxr-xr-x   5 root root    0 Mar 21 16:19 polyval_clmulni
+drwxr-xr-x   5 root root    0 Mar 21 16:19 polyval_generic
+drwxr-xr-x   3 root root    0 Mar 21 16:19 printk
+drwxr-xr-x   3 root root    0 Mar 21 16:19 processor
+drwxr-xr-x   5 root root    0 Mar 21 16:19 processor_thermal_device
+drwxr-xr-x   6 root root    0 Mar 21 16:19 processor_thermal_device_pci_legacy
+drwxr-xr-x   5 root root    0 Mar 21 16:19 processor_thermal_mbox
+drwxr-xr-x   5 root root    0 Mar 21 16:19 processor_thermal_rapl
+drwxr-xr-x   5 root root    0 Mar 21 16:19 processor_thermal_rfim
+drwxr-xr-x   3 root root    0 Mar 21 16:19 pstore
+drwxr-xr-x   6 root root    0 Mar 21 16:19 r8169
+drwxr-xr-x   5 root root    0 Mar 21 16:19 raid6_pq
+drwxr-xr-x   3 root root    0 Mar 21 16:19 random
+drwxr-xr-x   5 root root    0 Mar 21 16:19 rapl
+drwxr-xr-x   3 root root    0 Mar 21 16:19 rcupdate
+drwxr-xr-x   3 root root    0 Mar 21 16:19 rcutree
+drwxr-xr-x   6 root root    0 Mar 21 16:19 realtek
+drwxr-xr-x   6 root root    0 Mar 21 16:19 rfcomm
+drwxr-xr-x   6 root root    0 Mar 21 16:19 rfkill
+drwxr-xr-x   3 root root    0 Mar 21 16:19 rng_core
+drwxr-xr-x   5 root root    0 Mar 21 16:19 roles
+drwxr-xr-x   3 root root    0 Mar 21 16:19 rtc_cmos
+drwxr-xr-x   3 root root    0 Mar 21 16:19 scsi_mod
+drwxr-xr-x   3 root root    0 Mar 21 16:19 secretmem
+drwxr-xr-x   5 root root    0 Mar 21 16:19 serio
+drwxr-xr-x   6 root root    0 Mar 21 16:19 serio_raw
+drwxr-xr-x   5 root root    0 Mar 21 16:19 sha512_ssse3
+drwxr-xr-x   3 root root    0 Mar 21 16:19 shpchp
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_compress
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_hda_codec
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_hda_codec_generic
+drwxr-xr-x   7 root root    0 Mar 21 16:19 snd_hda_codec_hdmi
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_hda_codec_realtek
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_hda_core
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_hda_ext_core
+drwxr-xr-x   7 root root    0 Mar 21 16:19 snd_hda_intel
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_hrtimer
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_hwdep
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_intel_dspcfg
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_intel_sdw_acpi
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_pcm
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_pcm_dmaengine
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_seq
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_seq_device
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_seq_dummy
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_soc_acpi
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_soc_acpi_intel_match
+drwxr-xr-x   7 root root    0 Mar 21 16:19 snd_soc_core
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_soc_hdac_hda
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_sof
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_sof_intel_hda
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_sof_intel_hda_common
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_sof_pci
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_sof_pci_intel_tgl
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_sof_utils
+drwxr-xr-x   5 root root    0 Mar 21 16:19 snd_sof_xtensa_dsp
+drwxr-xr-x   6 root root    0 Mar 21 16:19 snd_timer
+drwxr-xr-x   6 root root    0 Mar 21 16:19 soundcore
+drwxr-xr-x   5 root root    0 Mar 21 16:19 soundwire_bus
+drwxr-xr-x   6 root root    0 Mar 21 16:19 soundwire_cadence
+drwxr-xr-x   5 root root    0 Mar 21 16:19 soundwire_generic_allocation
+drwxr-xr-x   7 root root    0 Mar 21 16:19 soundwire_intel
+drwxr-xr-x   5 root root    0 Mar 21 16:19 sparse_keymap
+drwxr-xr-x   5 root root    0 Mar 21 16:19 spi_intel
+drwxr-xr-x   6 root root    0 Mar 21 16:19 spi_intel_pci
+drwxr-xr-x   6 root root    0 Mar 21 16:19 spi_nor
+drwxr-xr-x   3 root root    0 Mar 21 16:19 spurious
+drwxr-xr-x   3 root root    0 Mar 21 16:19 srcutree
+drwxr-xr-x   5 root root    0 Mar 21 16:19 stp
+drwxr-xr-x   3 root root    0 Mar 21 16:19 suspend
+drwxr-xr-x   3 root root    0 Mar 21 16:19 sysrq
+drwxr-xr-x   3 root root    0 Mar 21 16:19 tcp_cubic
+drwxr-xr-x   5 root root    0 Mar 21 16:19 tee
+drwxr-xr-x   3 root root    0 Mar 21 16:19 thermal
+drwxr-xr-x   7 root root    0 Mar 21 16:19 thunderbolt
+drwxr-xr-x   3 root root    0 Mar 21 16:19 tpm
+drwxr-xr-x   2 root root    0 Mar 21 16:19 tpm_crb
+drwxr-xr-x   3 root root    0 Mar 21 16:19 tpm_tis
+drwxr-xr-x   2 root root    0 Mar 21 16:19 tpm_tis_core
+drwxr-xr-x   5 root root    0 Mar 21 16:19 trusted
+drwxr-xr-x   6 root root    0 Mar 21 16:19 ttm
+drwxr-xr-x   5 root root    0 Mar 21 16:19 typec
+drwxr-xr-x   5 root root    0 Mar 21 16:19 typec_ucsi
+drwxr-xr-x   6 root root    0 Mar 21 16:19 ucsi_acpi
+drwxr-xr-x   3 root root    0 Mar 21 16:19 udmabuf
+drwxr-xr-x   3 root root    0 Mar 21 16:19 uhci_hcd
+drwxr-xr-x   3 root root    0 Mar 21 16:19 usbcore
+drwxr-xr-x   5 root root    0 Mar 21 16:19 veth
+drwxr-xr-x   5 root root    0 Mar 21 16:19 vfat
+drwxr-xr-x   6 root root    0 Mar 21 16:19 video
+drwxr-xr-x   5 root root    0 Mar 21 16:19 vivaldi_fmap
+drwxr-xr-x   6 root root    0 Mar 21 16:19 vmd
+drwxr-xr-x   3 root root    0 Mar 21 16:19 vt
+drwxr-xr-x   3 root root    0 Mar 21 16:19 watchdog
+drwxr-xr-x   7 root root    0 Mar 21 16:19 wmi
+drwxr-xr-x   6 root root    0 Mar 21 16:19 wmi_bmof
+drwxr-xr-x   3 root root    0 Mar 21 16:19 workqueue
+drwxr-xr-x   6 root root    0 Mar 21 16:19 x86_pkg_temp_thermal
+drwxr-xr-x   5 root root    0 Mar 21 16:19 x_tables
+drwxr-xr-x   3 root root    0 Mar 21 16:19 xen
+drwxr-xr-x   3 root root    0 Mar 21 16:19 xhci_hcd
+drwxr-xr-x   6 root root    0 Mar 21 16:19 xhci_pci
+drwxr-xr-x   5 root root    0 Mar 21 16:19 xhci_pci_renesas
+drwxr-xr-x   5 root root    0 Mar 21 16:19 xor
+drwxr-xr-x   5 root root    0 Mar 21 16:19 xt_MASQUERADE
+drwxr-xr-x   5 root root    0 Mar 21 16:19 xt_addrtype
+drwxr-xr-x   5 root root    0 Mar 21 16:19 xt_conntrack
+drwxr-xr-x   2 root root    0 Mar 21 16:19 xz_dec
+drwxr-xr-x   5 root root    0 Mar 21 16:19 zram
+drwxr-xr-x   3 root root    0 Mar 21 16:19 zswap
+
+/sys/power:
+total 0
+drwxr-xr-x  3 root root    0 Mar 21 16:19 .
+dr-xr-xr-x 13 root root    0 Mar 21 16:19 ..
+-rw-r--r--  1 root root 4096 Mar 21 16:19 disk
+-rw-r--r--  1 root root 4096 Mar 21 16:19 image_size
+-rw-r--r--  1 root root 4096 Mar 21 16:19 mem_sleep
+-rw-r--r--  1 root root 4096 Mar 21 16:19 pm_async
+-rw-r--r--  1 root root 4096 Mar 21 16:19 pm_debug_messages
+-rw-r--r--  1 root root 4096 Mar 21 16:19 pm_freeze_timeout
+-rw-r--r--  1 root root 4096 Mar 21 16:19 pm_print_times
+-rw-r--r--  1 root root 4096 Mar 21 16:19 pm_test
+-rw-r--r--  1 root root 4096 Mar 21 16:19 pm_trace
+-r--r--r--  1 root root 4096 Mar 21 16:19 pm_trace_dev_match
+-r--r--r--  1 root root 4096 Mar 21 16:19 pm_wakeup_irq
+-rw-r--r--  1 root root 4096 Mar 21 16:19 reserved_size
+-rw-r--r--  1 root root 4096 Mar 21 16:19 resume
+-rw-r--r--  1 root root 4096 Mar 21 16:19 resume_offset
+-rw-r--r--  1 root root 4096 Mar 21 16:19 state
+drwxr-xr-x  2 root root    0 Mar 21 16:19 suspend_stats
+-rw-r--r--  1 root root 4096 Mar 21 16:19 sync_on_suspend
+-rw-r--r--  1 root root 4096 Mar 21 16:19 wakeup_count
+
+/usr/bin:
+total 18644
+drwxr-xr-x 1 root root         0 Mar 14 02:43 .
+drwxr-xr-x 1 root root        32 Feb 27 00:00 ..
+-rwxr-xr-x 1 root root     60224 Sep 24  2020 [
+-rwxr-xr-x 1 root root     26856 Jan 20  2022 addpart
+-rwxr-xr-x 1 root root     18664 Jun 10  2021 apt
+-rwxr-xr-x 1 root root     88376 Jun 10  2021 apt-cache
+-rwxr-xr-x 1 root root     26936 Jun 10  2021 apt-cdrom
+-rwxr-xr-x 1 root root     26856 Jun 10  2021 apt-config
+-rwxr-xr-x 1 root root     47416 Jun 10  2021 apt-get
+-rwxr-xr-x 1 root root     28191 Jun 10  2021 apt-key
+-rwxr-xr-x 1 root root     51512 Jun 10  2021 apt-mark
+-rwxr-xr-x 1 root root     39744 Sep 24  2020 arch
+lrwxrwxrwx 1 root root        21 Feb 27 00:00 awk -> /etc/alternatives/awk
+-rwxr-xr-x 1 root root     60352 Sep 24  2020 b2sum
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 base32
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 base64
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 basename
+-rwxr-xr-x 1 root root     56160 Sep 24  2020 basenc
+-rwxr-xr-x 1 root root      6759 Mar 27  2022 bashbug
+-rwxr-xr-x 1 root root      6277 Feb  5 21:23 c_rehash
+lrwxrwxrwx 1 root root         3 Jan  1  2021 captoinfo -> tic
+-rwxr-xr-x 1 root root      3304 Oct 14 19:35 catchsegv
+-rwxr-sr-x 1 root shadow   80256 Feb  7  2020 chage
+-rwxr-xr-x 1 root root     14496 Jun  7  2021 chattr
+-rwxr-xr-x 1 root root     72768 Sep 24  2020 chcon
+-rwsr-xr-x 1 root root     58416 Feb  7  2020 chfn
+-rwxr-xr-x 1 root root     51432 Jan 20  2022 choom
+-rwxr-xr-x 1 root root     35048 Jan 20  2022 chrt
+-rwsr-xr-x 1 root root     52880 Feb  7  2020 chsh
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 cksum
+-rwxr-xr-x 1 root root     14496 Jan  1  2021 clear
+-rwxr-xr-x 1 root root     14648 Mar 27  2022 clear_console
+-rwxr-xr-x 1 root root     47904 Jan  1  2021 cmp
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 comm
+-rwxr-xr-x 1 root root    121920 Sep 24  2020 csplit
+-rwxr-xr-x 1 root root     48032 Sep 24  2020 cut
+-rwxr-xr-x 1 root root     21394 Dec 14  2020 deb-systemd-helper
+-rwxr-xr-x 1 root root      4411 Dec 14  2020 deb-systemd-invoke
+-rwxr-xr-x 1 root root      2859 Jun 10  2021 debconf
+-rwxr-xr-x 1 root root     11541 Jun 10  2021 debconf-apt-progress
+-rwxr-xr-x 1 root root       608 Jun 10  2021 debconf-communicate
+-rwxr-xr-x 1 root root      1719 Jun 10  2021 debconf-copydb
+-rwxr-xr-x 1 root root       647 Jun 10  2021 debconf-escape
+-rwxr-xr-x 1 root root      2935 Jun 10  2021 debconf-set-selections
+-rwxr-xr-x 1 root root      1827 Jun 10  2021 debconf-show
+-rwxr-xr-x 1 root root     26856 Jan 20  2022 delpart
+-rwxr-xr-x 1 root root    208320 Jan  1  2021 diff
+-rwxr-xr-x 1 root root     64512 Jan  1  2021 diff3
+-rwxr-xr-x 1 root root     47944 Sep 24  2020 dircolors
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 dirname
+-rwxr-xr-x 1 root root    313888 Sep  1  2022 dpkg
+-rwxr-xr-x 1 root root    162184 Sep  1  2022 dpkg-deb
+-rwxr-xr-x 1 root root    154048 Sep  1  2022 dpkg-divert
+-rwxr-xr-x 1 root root     21163 Sep  1  2022 dpkg-maintscript-helper
+-rwxr-xr-x 1 root root    166328 Sep  1  2022 dpkg-query
+-rwxr-xr-x 1 root root      4150 Sep  1  2022 dpkg-realpath
+-rwxr-xr-x 1 root root    125272 Sep  1  2022 dpkg-split
+-rwxr-xr-x 1 root root     63608 Sep  1  2022 dpkg-statoverride
+-rwxr-xr-x 1 root root     80216 Sep  1  2022 dpkg-trigger
+-rwxr-xr-x 1 root root    175360 Sep 24  2020 du
+-rwxr-xr-x 1 root root     48480 Sep 24  2020 env
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 expand
+-rwxr-sr-x 1 root shadow   31160 Feb  7  2020 expiry
+-rwxr-xr-x 1 root root    117728 Sep 24  2020 expr
+-rwxr-xr-x 1 root root     81056 Sep 24  2020 factor
+-rwxr-xr-x 1 root root     22984 Feb  7  2020 faillog
+-rwxr-xr-x 1 root root     35048 Jan 20  2022 fallocate
+-rwxr-xr-x 1 root root     35096 Jan 20  2022 fincore
+-rwxr-xr-x 1 root root    311008 Jan  9  2021 find
+-rwxr-xr-x 1 root root     35128 Jan 20  2022 flock
+-rwxr-xr-x 1 root root     47936 Sep 24  2020 fmt
+-rwxr-xr-x 1 root root     43840 Sep 24  2020 fold
+-rwxr-xr-x 1 root root     35192 Oct 14 19:35 getconf
+-rwxr-xr-x 1 root root     32096 Oct 14 19:35 getent
+-rwxr-xr-x 1 root root     22760 Jan 20  2022 getopt
+-rwsr-xr-x 1 root root     88304 Feb  7  2020 gpasswd
+-rwxr-xr-x 1 root root    449400 Jul  1  2022 gpgv
+-rwxr-xr-x 1 root root     43840 Sep 24  2020 groups
+-rwxr-xr-x 1 root root     48000 Sep 24  2020 head
+-rwxr-xr-x 1 root root     39680 Sep 24  2020 hostid
+lrwxrwxrwx 1 root root         7 Jan 20  2022 i386 -> setarch
+-rwxr-xr-x 1 root root     60424 Oct 14 19:35 iconv
+-rwxr-xr-x 1 root root     48064 Sep 24  2020 id
+-rwxr-xr-x 1 root root     63720 Jan  1  2021 infocmp
+lrwxrwxrwx 1 root root         3 Jan  1  2021 infotocap -> tic
+-rwxr-xr-x 1 root root    159528 Sep 24  2020 install
+-rwxr-xr-x 1 root root     30952 Jan 20  2022 ionice
+-rwxr-xr-x 1 root root     31024 Jan 20  2022 ipcmk
+-rwxr-xr-x 1 root root     35048 Jan 20  2022 ipcrm
+-rwxr-xr-x 1 root root     71912 Jan 20  2022 ipcs
+-rwxr-xr-x 1 root root     14608 Sep 27  2020 ischroot
+-rwxr-xr-x 1 root root     56224 Sep 24  2020 join
+-rwxr-xr-x 1 root root     47336 Jan 20  2022 last
+lrwxrwxrwx 1 root root         4 Jan 20  2022 lastb -> last
+-rwxr-xr-x 1 root root     32256 Feb  7  2020 lastlog
+-rwxr-xr-x 1 root root      5401 Oct 14 19:35 ldd
+-rwxr-xr-x 1 root root     39680 Sep 24  2020 link
+lrwxrwxrwx 1 root root         7 Jan 20  2022 linux32 -> setarch
+lrwxrwxrwx 1 root root         7 Jan 20  2022 linux64 -> setarch
+-rwxr-xr-x 1 root root     55336 Oct 14 19:35 locale
+-rwxr-xr-x 1 root root    315136 Oct 14 19:35 localedef
+-rwxr-xr-x 1 root root     52040 Jan 20  2022 logger
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 logname
+-rwxr-xr-x 1 root root     14496 Jun  7  2021 lsattr
+-rwxr-xr-x 1 root root    100584 Jan 20  2022 lscpu
+-rwxr-xr-x 1 root root     96488 Jan 20  2022 lsipc
+-rwxr-xr-x 1 root root     39480 Jan 20  2022 lslocks
+-rwxr-xr-x 1 root root     67816 Jan 20  2022 lslogins
+-rwxr-xr-x 1 root root     67816 Jan 20  2022 lsmem
+-rwxr-xr-x 1 root root     51440 Jan 20  2022 lsns
+-rwxr-xr-x 1 root root    158296 Feb 16  2020 mawk
+-rwxr-xr-x 1 root root     35120 Jan 20  2022 mcookie
+-rwxr-xr-x 1 root root     48032 Sep 24  2020 md5sum
+lrwxrwxrwx 1 root root         6 Sep 24  2020 md5sum.textutils -> md5sum
+-rwxr-xr-x 1 root root     14568 Jan 20  2022 mesg
+-rwxr-xr-x 1 root root     68704 Sep 24  2020 mkfifo
+-rwxr-xr-x 1 root root     35048 Jan 20  2022 namei
+lrwxrwxrwx 1 root root        22 Feb 27 00:00 nawk -> /etc/alternatives/nawk
+-rwsr-xr-x 1 root root     44632 Feb  7  2020 newgrp
+-rwxr-xr-x 1 root root     43840 Sep 24  2020 nice
+-rwxr-xr-x 1 root root    113696 Sep 24  2020 nl
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 nohup
+-rwxr-xr-x 1 root root     43840 Sep 24  2020 nproc
+-rwxr-xr-x 1 root root     35280 Jan 20  2022 nsenter
+-rwxr-xr-x 1 root root     68576 Sep 24  2020 numfmt
+-rwxr-xr-x 1 root root     72640 Sep 24  2020 od
+-rwxr-xr-x 1 root root    736792 Feb  5 21:23 openssl
+lrwxrwxrwx 1 root root        23 Feb 27 00:00 pager -> /etc/alternatives/pager
+-rwxr-xr-x 1 root root    121072 Jan 20  2022 partx
+-rwsr-xr-x 1 root root     63960 Feb  7  2020 passwd
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 paste
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 pathchk
+-rwxr-xr-x 2 root root   3681152 Sep 24  2021 perl
+-rwxr-xr-x 2 root root   3681152 Sep 24  2021 perl5.32.1
+-rwxr-xr-x 1 root root     44000 Sep 24  2020 pinky
+-rwxr-xr-x 1 root root     23112 Oct 14 19:35 pldd
+-rwxr-xr-x 1 root root     76896 Sep 24  2020 pr
+-rwxr-xr-x 1 root root     39680 Sep 24  2020 printenv
+-rwxr-xr-x 1 root root     60256 Sep 24  2020 printf
+-rwxr-xr-x 1 root root     39672 Jan 20  2022 prlimit
+-rwxr-xr-x 1 root root    138336 Sep 24  2020 ptx
+-rwxr-xr-x 1 root root     56160 Sep 24  2020 realpath
+-rwxr-xr-x 1 root root     14560 Jan 20  2022 renice
+lrwxrwxrwx 1 root root         4 Jan  1  2021 reset -> tset
+-rwxr-xr-x 1 root root     63720 Jan 20  2022 resizepart
+-rwxr-xr-x 1 root root     14568 Jan 20  2022 rev
+-rwxr-xr-x 1 root root        30 Jan 29  2020 rgrep
+-rwxr-xr-x 1 root root     43936 Sep 24  2020 runcon
+-rwxr-xr-x 1 root root     10481 Sep 27  2020 savelog
+-rwxr-xr-x 1 root root     67816 Jan 20  2022 script
+-rwxr-xr-x 1 root root     55528 Jan 20  2022 scriptlive
+-rwxr-xr-x 1 root root     43240 Jan 20  2022 scriptreplay
+-rwxr-xr-x 1 root root     48032 Jan  1  2021 sdiff
+-rwxr-xr-x 1 root root     56192 Sep 24  2020 seq
+-rwxr-xr-x 1 root root     27136 Jan 20  2022 setarch
+-rwxr-xr-x 1 root root     51440 Jan 20  2022 setpriv
+-rwxr-xr-x 1 root root     14568 Jan 20  2022 setsid
+-rwxr-xr-x 1 root root     47336 Jan 20  2022 setterm
+lrwxrwxrwx 1 root root         6 Feb  7  2020 sg -> newgrp
+-rwxr-xr-x 1 root root     52128 Sep 24  2020 sha1sum
+-rwxr-xr-x 1 root root     64416 Sep 24  2020 sha224sum
+-rwxr-xr-x 1 root root     64416 Sep 24  2020 sha256sum
+-rwxr-xr-x 1 root root     68512 Sep 24  2020 sha384sum
+-rwxr-xr-x 1 root root     68512 Sep 24  2020 sha512sum
+-rwxr-xr-x 1 root root     64608 Sep 24  2020 shred
+-rwxr-xr-x 1 root root     60384 Sep 24  2020 shuf
+-rwxr-xr-x 1 root root    118408 Sep 24  2020 sort
+-rwxr-xr-x 1 root root     60896 Sep 24  2020 split
+-rwxr-xr-x 1 root root     85184 Sep 24  2020 stat
+-rwxr-xr-x 1 root root     52064 Sep 24  2020 stdbuf
+-rwxr-xr-x 1 root root     48008 Sep 24  2020 sum
+-rwxr-xr-x 1 root root     18584 Jan  1  2021 tabs
+-rwxr-xr-x 1 root root    109536 Sep 24  2020 tac
+-rwxr-xr-x 1 root root     76864 Sep 24  2020 tail
+-rwxr-xr-x 1 root root     35048 Jan 20  2022 taskset
+-rwxr-xr-x 1 root root     43904 Sep 24  2020 tee
+-rwxr-xr-x 1 root root     56128 Sep 24  2020 test
+-rwxr-xr-x 1 root root     92432 Jan  1  2021 tic
+-rwxr-xr-x 1 root root     44448 Sep 24  2020 timeout
+-rwxr-xr-x 1 root root     22680 Jan  1  2021 toe
+lrwxrwxrwx 1 root root        10 Feb 27 00:00 touch -> /bin/touch
+-rwxr-xr-x 1 root root     26808 Jan  1  2021 tput
+-rwxr-xr-x 1 root root     56160 Sep 24  2020 tr
+-rwxr-xr-x 1 root root     43840 Sep 24  2020 truncate
+-rwxr-xr-x 1 root root     30880 Jan  1  2021 tset
+-rwxr-xr-x 1 root root     56128 Sep 24  2020 tsort
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 tty
+-rwxr-xr-x 1 root root     15352 Oct 14 19:35 tzselect
+-rwxr-xr-x 1 root root     43872 Sep 24  2020 unexpand
+-rwxr-xr-x 1 root root     52128 Sep 24  2020 uniq
+-rwxr-xr-x 1 root root     39680 Sep 24  2020 unlink
+-rwxr-xr-x 1 root root     47576 Jan 20  2022 unshare
+-rwxr-xr-x 1 root root     59480 Sep  1  2022 update-alternatives
+-rwxr-xr-x 1 root root     39744 Sep 24  2020 users
+-rwxr-xr-x 1 root root     30952 Jan 20  2022 utmpdump
+-rwxr-sr-x 1 root tty      35048 Jan 20  2022 wall
+-rwxr-xr-x 1 root root     48072 Sep 24  2020 wc
+-rwxr-xr-x 1 root root     31400 Jan 20  2022 whereis
+-rwxr-xr-x 1 root root       946 Sep 27  2020 which
+-rwxr-xr-x 1 root root     60384 Sep 24  2020 who
+-rwxr-xr-x 1 root root     39712 Sep 24  2020 whoami
+lrwxrwxrwx 1 root root         7 Jan 20  2022 x86_64 -> setarch
+-rwxr-xr-x 1 root root     76152 Jan  9  2021 xargs
+-rwxr-xr-x 1 root root     39680 Sep 24  2020 yes
+-rwxr-xr-x 1 root root     22936 Oct 14 19:35 zdump
+
+/usr/games:
+total 0
+drwxr-xr-x 1 root root  0 Dec  9 19:15 .
+drwxr-xr-x 1 root root 32 Feb 27 00:00 ..
+
+/usr/include:
+total 0
+drwxr-xr-x 1 root root  0 Mar 14 02:43 .
+drwxr-xr-x 1 root root 32 Feb 27 00:00 ..
+
+/usr/lib:
+total 4
+drwxr-xr-x 1 root root  32 Mar 14 02:43 .
+drwxr-xr-x 1 root root  32 Feb 27 00:00 ..
+drwxr-xr-x 1 root root  98 Feb 27 00:00 apt
+drwxr-xr-x 1 root root  14 Jun 10  2021 dpkg
+drwxr-xr-x 1 root root  14 Oct 14 19:35 locale
+drwxr-xr-x 1 root root  16 Feb 17  2021 mime
+-rw-r--r-- 1 root root 267 Dec  9 19:15 os-release
+drwxr-xr-x 1 root root  54 Mar  1 14:09 ssl
+drwxr-xr-x 1 root root  22 Feb 27 00:00 tmpfiles.d
+drwxr-xr-x 1 root root  36 Feb 27 00:00 udev
+drwxr-xr-x 1 root root   0 Mar 14 02:43 x86_64-linux-gnu
+
+/usr/libexec:
+total 0
+drwxr-xr-x 1 root root 18 Sep 24  2020 .
+drwxr-xr-x 1 root root 32 Feb 27 00:00 ..
+drwxr-xr-x 1 root root 24 Feb 27 00:00 coreutils
+
+/usr/local:
+total 4
+drwxr-xr-x 1 root root 12 Feb 27 00:00 .
+drwxr-xr-x 1 root root 32 Feb 27 00:00 ..
+drwxr-xr-x 1 root root 38 Mar 14 02:44 bin
+drwxr-xr-x 1 root root  0 Feb 27 00:00 etc
+drwxr-xr-x 1 root root  0 Feb 27 00:00 games
+drwxr-xr-x 1 root root 20 Mar 14 02:43 include
+drwxr-xr-x 1 root root 20 Mar 14 02:43 lib
+lrwxrwxrwx 1 root root  9 Feb 27 00:00 man -> share/man
+drwxr-xr-x 1 root root  0 Feb 27 00:00 sbin
+drwxr-xr-x 1 root root  6 Mar 14 02:43 share
+drwxr-xr-x 1 root root  0 Feb 27 00:00 src
+
+/usr/sbin:
+total 2228
+drwxr-xr-x 1 root root      0 Mar 14 02:43 .
+drwxr-xr-x 1 root root     32 Feb 27 00:00 ..
+-rwxr-xr-x 1 root root    915 Sep 27  2020 add-shell
+lrwxrwxrwx 1 root root      7 Sep 15  2018 addgroup -> adduser
+-rwxr-xr-x 1 root root  34518 Sep 15  2018 adduser
+-rwxr-xr-x 1 root root  67632 Feb  7  2020 chgpasswd
+-rwxr-xr-x 1 root root  63720 Jan 20  2022 chmem
+-rwxr-xr-x 1 root root  59440 Feb  7  2020 chpasswd
+-rwxr-xr-x 1 root root  48064 Sep 24  2020 chroot
+lrwxrwxrwx 1 root root      4 Feb  7  2020 cpgr -> cppw
+-rwxr-xr-x 1 root root  61624 Feb  7  2020 cppw
+lrwxrwxrwx 1 root root      7 Sep 15  2018 delgroup -> deluser
+-rwxr-xr-x 1 root root  15782 Sep 15  2018 deluser
+-rwxr-xr-x 1 root root  15467 Sep  1  2022 dpkg-fsys-usrunmess
+-rwxr-xr-x 1 root root   3663 Jun 10  2021 dpkg-preconfigure
+-rwxr-xr-x 1 root root   4448 Jun 10  2021 dpkg-reconfigure
+-rwxr-xr-x 1 root root  14568 Jun  7  2021 e2freefrag
+-rwxr-xr-x 1 root root  26856 Jun  7  2021 e4crypt
+-rwxr-xr-x 1 root root  34968 Jun  7  2021 e4defrag
+-rwxr-xr-x 1 root root  14328 Aug 26  2021 faillock
+-rwxr-xr-x 1 root root  35048 Jan 20  2022 fdformat
+-rwxr-xr-x 1 root root  18608 Jun  7  2021 filefrag
+-rwxr-xr-x 1 root root  88848 Feb  7  2020 groupadd
+-rwxr-xr-x 1 root root  84560 Feb  7  2020 groupdel
+-rwxr-xr-x 1 root root  63576 Feb  7  2020 groupmems
+-rwxr-xr-x 1 root root  92880 Feb  7  2020 groupmod
+-rwxr-xr-x 1 root root  63512 Feb  7  2020 grpck
+-rwxr-xr-x 1 root root  59288 Feb  7  2020 grpconv
+-rwxr-xr-x 1 root root  59288 Feb  7  2020 grpunconv
+-rwxr-xr-x 1 root root  31400 Oct 14 19:35 iconvconfig
+-rwxr-xr-x 1 root root  16507 Dec 14  2020 invoke-rc.d
+-rwxr-xr-x 1 root root  35048 Jan 20  2022 ldattach
+-rwxr-xr-x 1 root root  14488 Jun  7  2021 mklost+found
+-rwxr-xr-x 1 root root  96912 Feb  7  2020 newusers
+-rwxr-xr-x 1 root root  14488 Feb  7  2020 nologin
+-rwxr-xr-x 1 root root  20686 Aug 26  2021 pam-auth-update
+-rwxr-xr-x 1 root root   2890 Jan 30  2021 pam_getenv
+-rwxr-xr-x 1 root root  14328 Aug 26  2021 pam_timestamp_check
+-rwxr-xr-x 1 root root    255 Feb 27 00:00 policy-rc.d
+-rwxr-xr-x 1 root root  59408 Feb  7  2020 pwck
+-rwxr-xr-x 1 root root  55184 Feb  7  2020 pwconv
+-rwxr-xr-x 1 root root  55192 Feb  7  2020 pwunconv
+-rwxr-xr-x 1 root root  22792 Jan 20  2022 readprofile
+-rwxr-xr-x 1 root root    963 Sep 27  2020 remove-shell
+lrwxrwxrwx 1 root root     21 Feb 27 00:00 rmt -> /etc/alternatives/rmt
+-rwxr-xr-x 1 root root  60376 Feb 17  2021 rmt-tar
+-rwxr-xr-x 1 root root  47336 Jan 20  2022 rtcwake
+-rwxr-xr-x 1 root root   9097 Dec 14  2020 service
+-rwxr-xr-x 1 root root    936 Feb 17  2021 tarcat
+-rwxr-xr-x 1 root root    106 Jun 10  2022 tzconfig
+-rwxr-xr-x 1 root root   5300 Jan 19  2021 update-ca-certificates
+-rwxr-xr-x 1 root root  35232 Jul 10  2021 update-passwd
+-rwxr-xr-x 1 root root  17324 Dec 14  2020 update-rc.d
+-rwxr-xr-x 1 root root 142872 Feb  7  2020 useradd
+-rwxr-xr-x 1 root root  96976 Feb  7  2020 userdel
+-rwxr-xr-x 1 root root 138584 Feb  7  2020 usermod
+lrwxrwxrwx 1 root root      4 Feb  7  2020 vigr -> vipw
+-rwxr-xr-x 1 root root  70040 Feb  7  2020 vipw
+-rwxr-xr-x 1 root root  55872 Oct 14 19:35 zic
+
+/usr/share:
+total 0
+drwxr-xr-x 1 root root   6 Mar 14 02:43 .
+drwxr-xr-x 1 root root  32 Feb 27 00:00 ..
+drwxr-xr-x 1 root root  24 Feb 27 00:00 adduser
+drwxr-xr-x 1 root root 198 Feb 27 00:00 base-files
+drwxr-xr-x 1 root root  50 Feb 27 00:00 base-passwd
+drwxr-xr-x 1 root root  22 Jun 10  2021 bash-completion
+drwxr-xr-x 1 root root   0 Mar 14 02:43 bug
+drwxr-xr-x 1 root root  14 Mar  1 14:09 ca-certificates
+drwxr-xr-x 1 root root 208 Feb 27 00:00 common-licenses
+drwxr-xr-x 1 root root 136 Feb 27 00:00 debconf
+drwxr-xr-x 1 root root  12 Feb 27 00:00 debianutils
+drwxr-xr-x 1 root root   0 Dec  9 19:15 dict
+drwxr-xr-x 1 root root   0 Mar 14 02:43 doc
+drwxr-xr-x 1 root root   0 Mar 14 02:43 doc-base
+drwxr-xr-x 1 root root   0 Mar 14 02:43 dpkg
+drwxr-xr-x 1 root root  12 Jan 10  2021 gcc
+drwxr-xr-x 1 root root  18 Jan 10  2021 gdb
+drwxr-xr-x 1 root root   0 Feb 27 00:00 info
+drwxr-xr-x 1 root root 798 Feb 27 00:00 keyrings
+drwxr-xr-x 1 root root  26 Feb 27 00:00 libc-bin
+drwxr-xr-x 1 root root  34 Feb 27 00:00 lintian
+drwxr-xr-x 1 root root   0 Feb 27 00:00 locale
+drwxr-xr-x 1 root root  40 Feb 27 00:00 man
+drwxr-xr-x 1 root root   0 Mar 14 02:43 menu
+drwxr-xr-x 1 root root   0 Dec  9 19:15 misc
+drwxr-xr-x 1 root root 412 Feb 27 00:00 pam
+drwxr-xr-x 1 root root  26 Feb 27 00:00 pam-configs
+drwxr-xr-x 1 root root   0 Mar 14 02:43 perl5
+drwxr-xr-x 1 root root  30 Feb 27 00:00 pixmaps
+drwxr-xr-x 1 root root  14 Sep  1  2022 polkit-1
+drwxr-xr-x 1 root root  14 Mar 14 02:39 readline
+drwxr-xr-x 1 root root  38 Feb 27 00:00 tabset
+drwxr-xr-x 1 root root   0 Jan  1  2021 terminfo
+drwxr-xr-x 1 root root 850 Feb 27 00:00 zoneinfo
+
+/usr/src:
+total 0
+drwxr-xr-x 1 root root  0 Mar 14 02:43 .
+drwxr-xr-x 1 root root 32 Feb 27 00:00 ..
+
+/var/backups:
+total 0
+drwxr-xr-x 1 root root  0 Dec  9 19:15 .
+drwxr-xr-x 1 root root 22 Feb 27 00:00 ..
+
+/var/cache:
+total 0
+drwxr-xr-x 1 root root 36 Feb 27 00:00 .
+drwxr-xr-x 1 root root 22 Feb 27 00:00 ..
+drwxr-xr-x 1 root root 16 Mar  1 14:09 apt
+drwxr-xr-x 1 root root 72 Mar 14 02:43 debconf
+drwx------ 1 root root 18 Mar 14 02:43 ldconfig
+
+/var/lib:
+total 0
+drwxr-xr-x 1 root root  14 Mar 14 02:43 .
+drwxr-xr-x 1 root root  22 Feb 27 00:00 ..
+drwxr-xr-x 1 root root  40 Mar 14 02:43 apt
+drwxr-xr-x 1 root root 104 Mar 14 02:43 dpkg
+drwxr-xr-x 1 root root   0 Dec  9 19:15 misc
+drwxr-xr-x 1 root root 104 Feb 27 00:00 pam
+drwxr-xr-x 1 root root   0 Mar 14 02:43 systemd
+
+/var/local:
+total 0
+drwxrwsr-x 1 root staff  0 Dec  9 19:15 .
+drwxr-xr-x 1 root root  22 Feb 27 00:00 ..
+
+/var/log:
+total 160
+drwxr-xr-x 1 root root     22 Mar 14 02:39 .
+drwxr-xr-x 1 root root     22 Feb 27 00:00 ..
+-rw-r--r-- 1 root root   3632 Mar 14 02:43 alternatives.log
+drwxr-xr-x 1 root root     60 Mar 14 02:43 apt
+-rw-rw---- 1 root utmp      0 Feb 27 00:00 btmp
+-rw-r--r-- 1 root root 119354 Mar 14 02:43 dpkg.log
+-rw-r--r-- 1 root root   3232 Feb 27 00:00 faillog
+-rw-rw-r-- 1 root utmp  29492 Feb 27 00:00 lastlog
+-rw-rw-r-- 1 root utmp      0 Feb 27 00:00 wtmp
+
+/var/mail:
+total 0
+drwxrwsr-x 1 root mail  0 Feb 27 00:00 .
+drwxr-xr-x 1 root root 22 Feb 27 00:00 ..
+
+/var/opt:
+total 0
+drwxr-xr-x 1 root root  0 Feb 27 00:00 .
+drwxr-xr-x 1 root root 22 Feb 27 00:00 ..
+
+/var/spool:
+total 4
+drwxr-xr-x 1 root root  8 Feb 27 00:00 .
+drwxr-xr-x 1 root root 22 Feb 27 00:00 ..
+lrwxrwxrwx 1 root root  7 Feb 27 00:00 mail -> ../mail
+
+/var/tmp:
+total 0
+drwxrwxrwt 1 root root  0 Dec  9 19:15 .
+drwxr-xr-x 1 root root 22 Feb 27 00:00 ..
+LOAD PREDICTIONS JSON
+[{'pk': 'random-job-id', 'inputs': [{'interface': {'slug': 'generic-medical-image'}, 'image': {'name': 'random-name.mha'}}], 'outputs': [{'interface': {'slug': 'generic-medical-image'}, 'image': {'pk': 'random-name.mha'}}]}]
+0
+0
+gt_path: /opt/app/ground-truth/c8b27e25-f837-4ccb-8cad-be7fc5ade3d9.tif
+pred_path: /input/random-job-id/output/inferior-alveolar-canal/c8b27e25-f837-4ccb-8cad-be7fc5ade3d9.tif
+{
+    "case": {
+        "DiceCoefficient": {
+            "0": 1.0
+        },
+        "HausdorffDistance95": {
+            "0": 0.0
+        },
+        "pred_fname": {
+            "0": "c8b27e25-f837-4ccb-8cad-be7fc5ade3d9.tif"
+        },
+        "gt_fname": {
+            "0": "c8b27e25-f837-4ccb-8cad-be7fc5ade3d9.tif"
+        }
+    },
+    "aggregates": {
+        "DiceCoefficient": {
+            "75pc": 1.0,
+            "50pc": 1.0,
+            "min": 1.0,
+            "max": 1.0,
+            "count": 1.0,
+            "std": NaN,
+            "25pc": 1.0,
+            "mean": 1.0
+        },
+        "HausdorffDistance95": {
+            "75pc": 0.0,
+            "50pc": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "count": 1.0,
+            "std": NaN,
+            "25pc": 0.0,
+            "mean": 0.0
+        },
+        "pred_fname": {
+            "freq": 1,
+            "count": 1
+        },
+        "gt_fname": {
+            "freq": 1,
+            "count": 1
+        }
+    }
+}
+toothfairy_evaluation-output-4f3baa54bf48b93dc9171a4746bff9fb
