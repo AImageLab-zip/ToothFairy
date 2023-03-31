@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://rumc-gcorg-p-public.s3.amazonaws.com/b/723/ToothFairy-Banner.x10.jpeg" style="margin: 0 auto;">
+<img src="https://rumc-gcorg-p-public.s3.amazonaws.com/b/723/toothfairy-banner_20Yo7Er.x10.jpeg" style="margin: 0 auto;">
 </p>
 
 # ToothFairy Challenge (MICCAI 2023)
