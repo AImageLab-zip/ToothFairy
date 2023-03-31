@@ -33,7 +33,7 @@ docker run --rm \
         -v toothfairy_algorithm-output-$VOLUME_SUFFIX:/output/ \
         python:3.10-slim ls -lah /output/images/inferior-alveolar-canal/
 
-cp -r /var/lib/docker/volumes/toothfairy_algorithm-output-$VOLUME_SUFFIX/ out_d
-chown llumetti:llumetti -R out_d
+cp -r /var/lib/docker/volumes/toothfairy_algorithm-output-$VOLUME_SUFFIX/ output
+chown llumetti:llumetti -R output
 
 docker volume rm toothfairy_algorithm-output-$VOLUME_SUFFIX

@@ -1,9 +1,7 @@
-*.mha
 *.tif
 *.tiff
 *.tar.gz
 *.gz
-*.json
 out_d
 test
 tests
