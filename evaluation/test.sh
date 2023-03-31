@@ -19,14 +19,12 @@ docker run --rm \
         --security-opt="no-new-privileges" \
         --shm-size="128m" \
         --pids-limit="256" \
-        -v $SCRIPTPATH/test/:/input/ \
+        -v $SCRIPTPATH/test:/input/ \
         -v toothfairy_evaluation-output-$VOLUME_SUFFIX:/output/ \
         toothfairy_evaluation
 
 docker run --rm \
         -v toothfairy_evaluation-output-$VOLUME_SUFFIX:/output/ \
         python:3.10-slim cat /output/metrics.json | python -m json.tool
-
-
 
 docker volume rm toothfairy_evaluation-output-$VOLUME_SUFFIX
