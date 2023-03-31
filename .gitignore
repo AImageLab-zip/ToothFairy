@@ -2,11 +2,6 @@
 *.tiff
 *.tar.gz
 *.gz
-out_d
-test
-tests
-ground-truth
-ground_truth
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
