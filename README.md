@@ -1,5 +1,5 @@
 <p align="center">
-<img src="https://rumc-gcorg-p-public.s3.amazonaws.com/b/723/toothfairy-banner_20Yo7Er.x10.jpeg" style="margin: 0 auto;">
+<img src="https://rumc-gcorg-p-public.s3.amazonaws.com/b/723/banner-toothfairy.x10.jpeg" style="margin: 0 auto;">
 </p>
 
 # ToothFairy Challenge (MICCAI 2023)
@@ -12,3 +12,4 @@ This repository contains the information and source code of [algorithm template]
 ### Challenge and Dataset
 For any information about the challenge, please visit the [Grand-Challenge website](https://toothfairy.grand-challenge.org/).
 For any information about the dataset, please visit the [ToothFairy page on Ditto](https://ditto.ing.unimore.it/toothfairy).
+
