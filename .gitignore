@@ -1,7 +1,9 @@
+*.mha
 *.tif
 *.tiff
 *.tar.gz
 *.gz
+*.pth
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
