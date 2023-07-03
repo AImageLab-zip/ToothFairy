@@ -10,6 +10,8 @@ from evalutils.validators import (
     UniqueImagesValidator,
 )
 
+import PosPadUNet3D
+
 
 def get_default_device():
     """ Set device """
@@ -38,23 +40,24 @@ class Toothfairy_algorithm(SegmentationAlgorithm):
                 )
             ),
         )
-
         self._output_path.mkdir(parents=True)
 
     @torch.no_grad()
     def predict(self, *, input_image: sitk.Image):
         input_array = sitk.GetArrayFromImage(input_image)
 
-        input_tensor = torch.from_numpy(input_array.astype(np.int32))
-        # print(f'input_tensor: {input_tensor.max()}, {input_tensor.min()}')
-        net = SimpleNet()
+        input_tensor = torch.from_numpy(input_array.astype(np.float32))
+        input_tensor = input_tensor[None, ...].to(get_default_device())
+
+        net = PosPadUNet3D.PosPadUNet3D(1, [10, 10, 10], 1)
         net = net.to(get_default_device())
+
+        input_tensor = PosPadUNet3D.preprocessing(input_tensor)
         output = net(input_tensor)
-        # print(f'output: {output.max()}, {output.min()}')
-        output = output.detach().cpu().numpy()
-        output = sitk.GetImageFromArray(output.astype(input_array.dtype))
-        output.SetOrigin(input_image.GetOrigin())
-        output.SetSpacing(input_image.GetSpacing())
+
+        output = output.detach().cpu().numpy().squeeze().astype(np.uint8)
+        output = np.where(output > 0.5, 1, 0)
+        output = sitk.GetImageFromArray(output)
 
         return output
 

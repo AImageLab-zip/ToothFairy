@@ -20,7 +20,8 @@ COPY --chown=user:user requirements.txt /opt/app/
 RUN python -m pip install --user -r requirements.txt
 
 
-
 COPY --chown=user:user process.py /opt/app/
+COPY --chown=user:user PosPadUNet3D.py /opt/app/
+COPY --chown=user:user checkpoints.pth /opt/app/
 
 ENTRYPOINT [ "python", "-m", "process" ]

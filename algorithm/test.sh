@@ -6,7 +6,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 VOLUME_SUFFIX=$(dd if=/dev/urandom bs=32 count=1 | md5sum | cut --delimiter=' ' --fields=1)
 # Maximum is currently 30g, configurable in your algorithm image settings on grand challenge
-MEM_LIMIT="4g"
+MEM_LIMIT="10g"
 
 docker volume create toothfairy_algorithm-output-$VOLUME_SUFFIX
 
@@ -21,9 +21,7 @@ docker run --rm \
         --pids-limit="256" \
         -v $SCRIPTPATH/test/:/input/ \
         -v toothfairy_algorithm-output-$VOLUME_SUFFIX:/output/ \
-        toothfairy_algorithm
-
-
+        toothfairy_algorithm 
 
 docker run --rm \
         -v toothfairy_algorithm-output-$VOLUME_SUFFIX:/output/ \
