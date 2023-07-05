@@ -11,6 +11,10 @@ MEM_LIMIT="10g"
 docker volume create toothfairy_algorithm-output-$VOLUME_SUFFIX
 
 # Do not change any of the parameters to docker run, these are fixed
+# You are free to add --gpus all if you would like to locally test
+# your algorithm with your GPU hardware. In the grand-challenge container
+# all the docker will have a single T4 with 16GB and they will be
+# run using such flag
 docker run --rm \
         --memory="${MEM_LIMIT}" \
         --memory-swap="${MEM_LIMIT}" \
