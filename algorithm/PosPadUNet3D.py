@@ -2,6 +2,7 @@ import torchio as tio
 import torch
 import torch.nn as nn
 
+
 def get_default_device():
     """ Set device """
     if torch.cuda.is_available():
