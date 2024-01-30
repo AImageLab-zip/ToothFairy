@@ -54,7 +54,6 @@ class Toothfairy_algorithm(SegmentationAlgorithm):
         output = (output > 0.5).int()
         output = output.detach().cpu().numpy().squeeze().astype(np.uint8)
         output = sitk.GetImageFromArray(output)
-        print(output)
 
         return output
 
