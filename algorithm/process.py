@@ -3,6 +3,9 @@ import SimpleITK as sitk
 import torch
 import torch.nn as nn
 import numpy as np
+import torchio as tio
+
+from torch.utils.data import DataLoader
 
 from evalutils import SegmentationAlgorithm
 from evalutils.validators import (
@@ -10,8 +13,13 @@ from evalutils.validators import (
     UniqueImagesValidator,
 )
 
-import PosPadUNet3D
+# import PosPadUNet3D
+# import MemTransPosPadUNet3D
 
+def preprocessing(x):
+    x[x > 2100] = 2100
+    x[x < 0] = 0
+    return x/2100
 
 def get_default_device():
     """ Set device """
@@ -19,14 +27,6 @@ def get_default_device():
         return torch.device('cuda')
     else:
         return torch.device('cpu')
-
-class SimpleNet(nn.Module):
-    def __init__(self,):
-        super().__init__()
-
-    def forward(self, x):
-        avg = x.double().mean()
-        return torch.where(x > avg, 1, 0)
 
 class Toothfairy_algorithm(SegmentationAlgorithm):
     def __init__(self):
@@ -48,16 +48,13 @@ class Toothfairy_algorithm(SegmentationAlgorithm):
 
         input_tensor = torch.from_numpy(input_array.astype(np.float32))
         input_tensor = input_tensor[None, ...].to(get_default_device())
+        input_tensor = preprocessing(input_tensor)
 
-        net = PosPadUNet3D.PosPadUNet3D(1, [10, 10, 10], 1)
-        net = net.to(get_default_device())
-
-        input_tensor = PosPadUNet3D.preprocessing(input_tensor)
-        output = net(input_tensor)
-
+        output = input_tensor.squeeze(0)
+        output = (output > 0.5).int()
         output = output.detach().cpu().numpy().squeeze().astype(np.uint8)
-        output = np.where(output > 0.5, 1, 0)
         output = sitk.GetImageFromArray(output)
+        print(output)
 
         return output
 
