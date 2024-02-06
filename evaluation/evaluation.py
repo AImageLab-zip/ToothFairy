@@ -5,6 +5,8 @@ import json
 from pathlib import Path
 import os
 from typing import Dict
+from skimage.measure import euler_number, label
+from skimage.morphology import skeletonize
 
 from evalutils.io import SimpleITKLoader
 import pandas as pd
@@ -83,6 +85,91 @@ def compute_hd95(gt, pred):
     all_surface_distances = seg2ref_distances + ref2seg_distances
     return np.percentile(all_surface_distances, 95)
 
+def compute_cldice(gt, pred):
+    """
+    Code adapted from: https://github.com/jocpae/clDice/blob/master/cldice_metric/cldice.py
+    """
+    if isinstance(gt, sitk.Image):
+        gt = sitk.GetArrayFromImage(gt)
+    if isinstance(pred, sitk.Image):
+        pred = sitk.GetArrayFromImage(pred)
+    s_gt = skeletonize(gt)
+    s_pred = skeletonize(pred)
+    t_prec = np.sum(gt*s_pred)/np.sum(s_pred) if np.sum(s_pred) > 0 else 1
+    t_rec = np.sum(pred*s_gt)/np.sum(s_gt) if np.sum(s_gt) > 0 else 1
+    cldice = 0 if t_prec+t_rec == 0 else 2*t_prec*t_rec/(t_prec+t_rec)
+    return cldice
+
+def betti_number(img: np.array):
+    """
+    calculates the Betti number B0, B1, and B2 for a 3D or 2D img
+    from the Euler characteristic number
+    """
+
+    # 6 or 26 neighborhoods are defined for 3D images,
+    # (connectivity 1 and 3, respectively)
+    # If foreground is 26-connected, then background is 6-connected, and conversely
+    N6 = 1
+    N26 = 3
+
+    # important first step is to
+    # pad the image with background (0) around the border!
+    padded = np.pad(img, pad_width=1)
+
+    # make sure the image is binary with
+    assert set(np.unique(padded)).issubset({0, 1})
+
+    # calculate the Betti numbers B0, B2
+    # then use Euler characteristic to get B1
+
+    # get the label connected regions for foreground
+    _, b0 = label(
+        padded,
+        # return the number of assigned labels
+        return_num=True,
+        # 26 neighborhoods for foreground
+        connectivity=N26,
+    )
+
+    euler_char_num = euler_number(
+        padded,
+        # 26 neighborhoods for foreground
+        connectivity=N26,
+    )
+
+    # get the label connected regions for background
+    _, b2 = label(
+        1 - padded,
+        # return the number of assigned labels
+        return_num=True,
+        # 6 neighborhoods for background
+        connectivity=N6,
+    )
+
+    # NOTE: need to substract 1 from b2
+    b2 -= 1
+
+    b1 = b0 + b2 - euler_char_num  # Euler number = Betti:0 - Bett:1 + Betti:2
+
+    # print(f"Betti number: b0 = {b0}, b1 = {b1}, b2 = {b2}")
+
+    return [b0, b1]
+
+def compute_betti_errors(gt, pred):
+    """
+    Betti error calculation adapted from the TopCoW evaluation script
+    https://github.com/CoWBenchmark/TopCoW_Eval_Metrics/blob/master/metric_functions.py
+    """
+    if isinstance(gt, sitk.Image):
+        gt = sitk.GetArrayFromImage(gt)
+    if isinstance(pred, sitk.Image):
+        pred = sitk.GetArrayFromImage(pred)
+    gt_betti_number = betti_number(gt)
+    pred_betti_number = betti_number(pred)
+    betti_0_error = abs(gt_betti_number[0] - pred_betti_number[0])
+    betti_1_error = abs(gt_betti_number[1] - pred_betti_number[1])
+    return betti_0_error, betti_1_error
+
 class ToothfairyEvaluation():
     def __init__(self,):
         self.mapping = load_predictions_json(Path('/input/predictions.json'))
@@ -130,11 +217,16 @@ class ToothfairyEvaluation():
         gt = caster.Execute(gt)
         pred = caster.Execute(pred)
 
-        dice = compute_dice(pred, gt)
-        hd95 = compute_hd95(pred, gt)
+        dice = compute_dice(gt, pred)
+        hd95 = compute_hd95(gt, pred)
+        cldice = compute_cldice(gt, pred)
+        betti_0, betti_1 = compute_betti_errors(gt, pred)
         return {
             'DiceCoefficient': dice,
             'HausdorffDistance95': hd95,
+            'clDice': cldice,
+            'Betti_0': betti_0,
+            'Betti_1': betti_1,
             'pred_fname': case,
             'gt_fname': self.mapping[case],
         }
