@@ -1,0 +1,14 @@
+{
+    "channel_names": {
+        "0": "CT"
+    },
+    "description": "toothfairy dataset",
+    "file_ending": ".npy",
+    "labels": {
+        "background": 0,
+        "foreground": 1
+    },
+    "overwrite_image_reader_writer": "NumpyIO",
+    "name": "Dataset902_toothfairy_onlyct",
+    "numTraining": 428
+}

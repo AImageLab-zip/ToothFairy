@@ -1,0 +1,2 @@
+- to use nnUNet with the toothfairy data you will need to bring it into the nnUNet format, as specified in the nnUNet documentation. I attached the dataset.json file I used, the specified NumpyIO reader/writer lets nnUNet work with npy files directly, so you don't need to convert the data to nifti or any other file format
+- all loss functions and trainers used can be found in the directories nnunetv2/training/loss and nnunetv2/training/nnUNetTrainer/variants/loss, respectively
