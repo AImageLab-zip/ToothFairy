@@ -13,3 +13,5 @@ This repository contains the information and source code of [algorithm template]
 For any information about the challenge, please visit the [Grand-Challenge website](https://toothfairy.grand-challenge.org/).
 For any information about the dataset, please visit the [ToothFairy page on Ditto](https://ditto.ing.unimore.it/toothfairy).
 
+### Submission Code and Dockers
+The source-code of the challenge submissions can be found in the `algorithm` subfolder of this repository.  Docker images are also available in the corresponding docker-hub repository @ [https://hub.docker.com/repository/docker/toothfairychallenge/toothfairy-1/](https://hub.docker.com/repository/docker/toothfairychallenge/toothfairy-1/)
