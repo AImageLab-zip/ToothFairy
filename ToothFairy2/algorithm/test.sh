@@ -30,10 +30,10 @@ docker run --rm \
 docker run --rm \
         -v toothfairy_algorithm-output-$VOLUME_SUFFIX:/output/ \
         python:3.10-slim cat /output/results.json | python -m json.tool
-
-docker run --rm \
-        -v toothfairy_algorithm-output-$VOLUME_SUFFIX:/output/ \
-        python:3.10-slim ls -lah /output/images/inferior-alveolar-canal/
+#
+# docker run --rm \
+#         -v toothfairy_algorithm-output-$VOLUME_SUFFIX:/output/ \
+#         python:3.10-slim ls -lah /output/images/inferior-alveolar-canal/
 
 cp -r /var/lib/docker/volumes/toothfairy_algorithm-output-$VOLUME_SUFFIX/ output
 chown llumetti:llumetti -R output

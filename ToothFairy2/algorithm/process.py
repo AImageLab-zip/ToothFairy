@@ -20,6 +20,14 @@ def get_default_device():
     else:
         return torch.device('cpu')
 
+def your_awesome_algorithm(input_tensor):
+    # Just as example, provide your algorithm logic here
+    output_tensor = (input_tensor > 1500)
+
+    # These are important
+    assert input_tensor.shape == output_tensor.shape, f"Your output tensor should have the same shape of the input tensor! {input_tensor.shape=} != {output_tensor.shape=}"
+    return output_tensor.detach().cpu().numpy().squeeze().astype(np.uint8)
+
 class Toothfairy2_algorithm(SegmentationAlgorithm):
     def __init__(self):
         super().__init__(
@@ -39,12 +47,13 @@ class Toothfairy2_algorithm(SegmentationAlgorithm):
     def predict(self, *, input_image: sitk.Image):
         input_array = sitk.GetArrayFromImage(input_image)
 
+        # prepare tensor for a nn.Module
         input_tensor = torch.from_numpy(input_array.astype(np.float32))
         input_tensor = input_tensor[None, ...].to(get_default_device())
 
-        output = input_tensor.squeeze(0)
-        output = (output > 1500).int()
-        output = output.detach().cpu().numpy().squeeze().astype(np.uint8)
+        output = your_awesome_algorithm(input_tensor)
+
+
         output = sitk.GetImageFromArray(output)
 
         return output
