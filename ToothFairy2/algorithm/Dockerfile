@@ -15,6 +15,7 @@ RUN python -m pip install --user -U pip && python -m pip install --user pip-tool
 
 
 COPY --chown=user:user requirements.txt /opt/app/
+COPY --chown=user:user resources /opt/app/
 # RUN python -m piptools sync requirements.txt
 RUN python -m pip install --user -r requirements.txt
 
