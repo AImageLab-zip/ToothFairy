@@ -1,0 +1,2 @@
+ground-truth/* filter=lfs diff=lfs merge=lfs -text
+test/* filter=lfs diff=lfs merge=lfs -text
