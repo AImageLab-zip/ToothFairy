@@ -98,10 +98,12 @@ def compute_binary_dice(pred, label):
 
 
 def compute_binary_hd95(pred, gt):
-    if pred.sum() == 0 and gt.sum() == 0:
+    pred_sum = pred.sum()
+    gt_sum = gt.sum()
+
+    if pred_sum == 0 and gt_sum == 0:
         return 0.0
-    if pred.sum() == 0 or gt.sum() == 0:
-        # return np.sqrt(np.sum(np.square(pred.shape)))
+    if pred_sum == 0 or gt_sum == 0:
         return np.linalg.norm(pred.shape)
     return binary.hd95(pred, gt)
 
