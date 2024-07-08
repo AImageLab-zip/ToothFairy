@@ -7,6 +7,51 @@ from skimage.measure import euler_number, label
 from skimage.morphology import skeletonize
 from medpy.metric import binary
 
+LABELS = {
+    "Lower Jawbone": 1,
+    "Upper Jawbone": 2,
+    "Left Inferior Alveolar Canal": 3,
+    "Right Inferior Alveolar Canal": 4,
+    "Left Maxillary Sinus": 5,
+    "Right Maxillary Sinus": 6,
+    "Pharynx": 7,
+    "Bridge": 8,
+    "Crown": 9,
+    "Implant": 10,
+    "Upper Right Central Incisor": 11,
+    "Upper Right Lateral Incisor": 12,
+    "Upper Right Canine": 13,
+    "Upper Right First Premolar": 14,
+    "Upper Right Second Premolar": 15,
+    "Upper Right First Molar": 16,
+    "Upper Right Second Molar": 17,
+    "Upper Right Third Molar (Wisdom Tooth)": 18,
+    "Upper Left Central Incisor": 21,
+    "Upper Left Lateral Incisor": 22,
+    "Upper Left Canine": 23,
+    "Upper Left First Premolar": 24,
+    "Upper Left Second Premolar": 25,
+    "Upper Left First Molar": 26,
+    "Upper Left Second Molar": 27,
+    "Upper Left Third Molar (Wisdom Tooth)": 28,
+    "Lower Left Central Incisor": 31,
+    "Lower Left Lateral Incisor": 32,
+    "Lower Left Canine": 33,
+    "Lower Left First Premolar": 34,
+    "Lower Left Second Premolar": 35,
+    "Lower Left First Molar": 36,
+    "Lower Left Second Molar": 37,
+    "Lower Left Third Molar (Wisdom Tooth)": 38,
+    "Lower Right Central Incisor": 41,
+    "Lower Right Lateral Incisor": 42,
+    "Lower Right Canine": 43,
+    "Lower Right First Premolar": 44,
+    "Lower Right Second Premolar": 45,
+    "Lower Right First Molar": 46,
+    "Lower Right Second Molar": 47,
+    "Lower Right Third Molar (Wisdom Tooth)": 48
+}
+
 from evalutils.io import SimpleITKLoader
 import pandas as pd
 
@@ -33,35 +78,49 @@ def load_predictions_json(fname: Path):
         input_entry = e['inputs'][0]
         output_entry = e['outputs'][0]
         m_key = f"/input/{pk}/output/images/oral-pharyngeal-segmentation/{output_entry['image']['pk']}.mha"
-        print(f'{m_key=}')
         m_value = f"/opt/app/ground-truth/{input_entry['image']['name']}"
         mapping[m_key] = m_value
 
     return mapping
 
-def compute_dice(pred, label):
-    print(f'{pred.shape=}')
-    print(f'{label.shape=}')
+
+def mean(l):
+    if len(l) == 0:
+        return 0
+    return sum(l)/len(l)
+
+
+def compute_binary_dice(pred, label):
     addition = pred.sum() + label.sum()
     if addition == 0:
         return 1.0
     return 2. * np.logical_and(pred, label).sum() / addition
 
-def compute_hd95(pred, gt):
+
+def compute_binary_hd95(pred, gt):
     if pred.sum() == 0 or gt.sum() == 0:
         return 0.0
     return binary.hd95(pred, gt)
 
-def compute_cldice(gt, pred):
-    """
-    Code adapted from: https://github.com/jocpae/clDice/blob/master/cldice_metric/cldice.py
-    """
-    s_gt = skeletonize(gt)
-    s_pred = skeletonize(pred)
-    t_prec = np.sum(gt*s_pred)/np.sum(s_pred) if np.sum(s_pred) > 0 else 1
-    t_rec = np.sum(pred*s_gt)/np.sum(s_gt) if np.sum(s_gt) > 0 else 1
-    cldice = 0 if t_prec+t_rec == 0 else 2*t_prec*t_rec/(t_prec+t_rec)
-    return cldice
+
+def compute_multiclass_dice_and_hd95(pred, label):
+
+    dice_per_class = {}
+    hd_per_class = {}
+
+    for label_name, label_id in LABELS.items():
+        print(f'{label_name=}')
+        binary_class_pred = pred == label_id
+        binary_class_label = label == label_id
+        dice = compute_binary_dice(binary_class_pred, binary_class_label)
+        hd = compute_binary_hd95(binary_class_pred, binary_class_label)
+        dice_per_class[label_name] = dice
+        hd_per_class[label_name] = hd
+
+    dice_per_class['average'] = mean(dice_per_class.values())
+    hd_per_class['average'] = mean(hd_per_class.values())
+    return dice_per_class, hd_per_class
+
 
 
 class ToothfairyEvaluation():
@@ -105,25 +164,22 @@ class ToothfairyEvaluation():
         pred = self.loader.load_image(case)
         gt = self.loader.load_image(self.mapping[case])
 
-        print(f'{case=}')
-        print(f'{self.mapping[case]=}')
-
         pred = sitk.GetArrayFromImage(pred).squeeze()
         gt = sitk.GetArrayFromImage(gt).squeeze()
 
+        dice, hd95 = compute_multiclass_dice_and_hd95(gt, pred)
 
-
-        dice = compute_dice(gt, pred)
-        hd95 = compute_hd95(gt, pred)
-        cldice = compute_cldice(gt, pred)
-
-        return {
-            'DiceCoefficient': dice,
-            'HausdorffDistance95': hd95,
-            'clDice': cldice,
+        metrics_dict = {
+            'DiceCoefficient': dice['average'],
+            'HausdorffDistance95': hd95['average'],
             'pred_fname': case,
             'gt_fname': self.mapping[case],
         }
+
+        for label_name in LABELS.keys():
+            metrics_dict[f'Dice {label_name}'] = dice[label_name]
+            metrics_dict[f'HD95 {label_name}'] = hd95[label_name]
+        return metrics_dict
 
     def aggregate_series(self, *, series: pd.Series) -> Dict:
         summary = series.describe()

@@ -15,6 +15,7 @@ def get_default_device():
         return torch.device('cuda')
     return torch.device('cpu')
 
+
 def your_awesome_algorithm(input_tensor):
     # Just as example, provide your algorithm logic here
     output_tensor = (input_tensor > 1500)
