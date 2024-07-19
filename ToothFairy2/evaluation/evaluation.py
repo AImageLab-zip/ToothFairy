@@ -172,7 +172,7 @@ class ToothfairyEvaluation():
         pred = sitk.GetArrayFromImage(pred).squeeze()
         gt = sitk.GetArrayFromImage(gt).squeeze()
 
-        dice, hd95 = compute_multiclass_dice_and_hd95(gt, pred)
+        dice, hd95 = compute_multiclass_dice_and_hd95(pred, gt)
 
         metrics_dict = {
             'DiceCoefficient': dice['average'],
