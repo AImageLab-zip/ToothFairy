@@ -3,8 +3,6 @@ import numpy as np
 import json
 from pathlib import Path
 from typing import Dict
-from skimage.measure import euler_number, label
-from skimage.morphology import skeletonize
 from medpy.metric import binary
 
 LABELS = {
@@ -114,7 +112,6 @@ def compute_multiclass_dice_and_hd95(pred, label):
     hd_per_class = {}
 
     for label_name, label_id in LABELS.items():
-        print(f'{label_name=}')
         binary_class_pred = pred == label_id
         binary_class_label = label == label_id
         dice = compute_binary_dice(binary_class_pred, binary_class_label)
