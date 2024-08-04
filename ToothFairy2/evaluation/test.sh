@@ -6,7 +6,7 @@ SCRIPTPATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 VOLUME_SUFFIX=$(dd if=/dev/urandom bs=32 count=1 | md5sum | cut --delimiter=' ' --fields=1)
 
-MEM_LIMIT="4g"
+MEM_LIMIT="16g"
 
 docker volume create toothfairy_evaluation-output-$VOLUME_SUFFIX
 
@@ -15,6 +15,7 @@ docker run --rm \
         --memory="${MEM_LIMIT}" \
         --memory-swap="${MEM_LIMIT}" \
         --network="none" \
+        --cpus="4" \
         --cap-drop="ALL" \
         --security-opt="no-new-privileges" \
         --shm-size="128m" \

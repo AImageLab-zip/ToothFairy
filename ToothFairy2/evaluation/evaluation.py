@@ -1,9 +1,16 @@
-import SimpleITK as sitk
-import numpy as np
 import json
+import multiprocessing as mp
 from pathlib import Path
 from typing import Dict
+
+import numpy as np
+import pandas as pd
+import SimpleITK as sitk
+from evalutils.io import SimpleITKLoader
 from medpy.metric import binary
+
+pd.set_option("display.max_columns", None)
+pd.set_option("max_colwidth", None)
 
 LABELS = {
     "Lower Jawbone": 1,
@@ -47,24 +54,21 @@ LABELS = {
     "Lower Right Second Premolar": 45,
     "Lower Right First Molar": 46,
     "Lower Right Second Molar": 47,
-    "Lower Right Third Molar (Wisdom Tooth)": 48
+    "Lower Right Third Molar (Wisdom Tooth)": 48,
 }
 
-from evalutils.io import SimpleITKLoader
-import pandas as pd
-
-pd.set_option('display.max_columns', None)
-pd.set_option('max_colwidth', None)
 
 def fix_filename_format(filename: str) -> str:
-    if len(filename) < 4: raise Exception()
-
-    if filename[-4:] != '.mha' and filename[-4] == '.':
+    if len(filename) < 4:
         raise Exception()
 
-    if filename[-4:] != '.mha':
-        filename += '.mha'
+    if filename[-4:] != ".mha" and filename[-4] == ".":
+        raise Exception()
+
+    if filename[-4:] != ".mha":
+        filename += ".mha"
     return filename
+
 
 def load_predictions_json(fname: Path):
     with open(fname, "r") as f:
@@ -72,9 +76,9 @@ def load_predictions_json(fname: Path):
 
     mapping = {}
     for e in entries:
-        pk = e['pk']
-        input_entry = e['inputs'][0]
-        output_entry = e['outputs'][0]
+        pk = e["pk"]
+        input_entry = e["inputs"][0]
+        output_entry = e["outputs"][0]
         m_key = f"/input/{pk}/output/images/oral-pharyngeal-segmentation/{output_entry['image']['pk']}.mha"
         m_value = f"/opt/app/ground-truth/{input_entry['image']['name']}"
         mapping[m_key] = m_value
@@ -85,24 +89,33 @@ def load_predictions_json(fname: Path):
 def mean(l):
     if len(l) == 0:
         return 0
-    return sum(l)/len(l)
+    return sum(l) / len(l)
 
 
-def compute_binary_dice(pred, label):
-    addition = pred.sum() + label.sum()
+def compute_binary_dice(pred, gt, pred_sum=None, gt_sum=None):
+    if pred_sum is None:
+        pred_sum = pred.sum()
+    if gt_sum is None:
+        gt_sum = gt.sum()
+
+    addition = pred_sum + gt_sum
     if addition == 0:
         return 1.0
-    return 2. * np.logical_and(pred, label).sum() / addition
+    return 2.0 * np.logical_and(pred, gt).sum() / addition
 
 
-def compute_binary_hd95(pred, gt):
-    pred_sum = pred.sum()
-    gt_sum = gt.sum()
+def compute_binary_hd95(pred, gt, pred_sum=None, gt_sum=None):
+    if pred_sum is None:
+        pred_sum = pred.sum()
+    if gt_sum is None:
+        gt_sum = gt.sum()
 
     if pred_sum == 0 and gt_sum == 0:
         return 0.0
+
     if pred_sum == 0 or gt_sum == 0:
         return np.linalg.norm(pred.shape)
+
     return binary.hd95(pred, gt)
 
 
@@ -111,23 +124,59 @@ def compute_multiclass_dice_and_hd95(pred, label):
     dice_per_class = {}
     hd_per_class = {}
 
+    unique_pred = set(pred.flatten())
+    unique_label = set(label.flatten())
+
     for label_name, label_id in LABELS.items():
-        binary_class_pred = pred == label_id
-        binary_class_label = label == label_id
-        dice = compute_binary_dice(binary_class_pred, binary_class_label)
-        hd = compute_binary_hd95(binary_class_pred, binary_class_label)
+        label_id_not_in_unique_label = label_id not in unique_label
+        label_id_not_in_unique_pred = label_id not in unique_pred
+
+        if label_id_not_in_unique_label and label_id_not_in_unique_pred:
+            dice_per_class[label_name] = 1.0
+            hd_per_class[label_name] = 0.0
+            continue
+
+        pred_sum = None
+        gt_sum = None
+        if label_id_not_in_unique_label:
+            binary_class_label = np.zeros_like(label)
+            gt_sum = 0
+        else:
+            binary_class_label = label == label_id
+            gt_sum = binary_class_label.sum()
+
+        if label_id_not_in_unique_pred:
+            binary_class_pred = np.zeros_like(pred)
+            pred_sum = 0
+        else:
+            binary_class_pred = pred == label_id
+            pred_sum = binary_class_pred.sum()
+
+        dice = compute_binary_dice(
+            pred=binary_class_pred,
+            gt=binary_class_label,
+            pred_sum=pred_sum,
+            gt_sum=gt_sum,
+        )
+        hd = compute_binary_hd95(
+            pred=binary_class_pred,
+            gt=binary_class_label,
+            pred_sum=pred_sum,
+            gt_sum=gt_sum,
+        )
         dice_per_class[label_name] = dice
         hd_per_class[label_name] = hd
 
-    dice_per_class['average'] = mean(dice_per_class.values())
-    hd_per_class['average'] = mean(hd_per_class.values())
+    dice_per_class["average"] = mean(dice_per_class.values())
+    hd_per_class["average"] = mean(hd_per_class.values())
     return dice_per_class, hd_per_class
 
 
-
-class ToothfairyEvaluation():
-    def __init__(self,):
-        self.mapping = load_predictions_json(Path('/input/predictions.json'))
+class ToothfairyEvaluation:
+    def __init__(
+        self,
+    ):
+        self.mapping = load_predictions_json(Path("/input/predictions.json"))
         self.loader = SimpleITKLoader()
         self.case_results = pd.DataFrame()
         self.aggregates = {
@@ -143,12 +192,13 @@ class ToothfairyEvaluation():
             "freq",
         }
 
-    def evaluate(self,):
-        for k in self.mapping.keys():
-            score = self.score_case(k)
-            self.case_results = self.case_results.append(
-                score, ignore_index=True
-            )
+    def evaluate(
+        self,
+    ):
+        process = mp.Pool(processes=4)
+
+        results = process.map(self.score_case, self.mapping.keys())
+        self.case_results = pd.concat(results, ignore_index=True)
 
         aggregate_results = {}
         for col in self.case_results.columns:
@@ -156,11 +206,15 @@ class ToothfairyEvaluation():
                 series=self.case_results[col]
             )
 
-        with open('/output/metrics.json', "w") as f:
-            f.write(json.dumps({
-                "case": self.case_results.to_dict(),
-                "aggregates": aggregate_results,
-            }))
+        with open("/output/metrics.json", "w") as f:
+            f.write(
+                json.dumps(
+                    {
+                        "case": self.case_results.to_dict(),
+                        "aggregates": aggregate_results,
+                    }
+                )
+            )
 
     def score_case(self, case):
         pred = self.loader.load_image(case)
@@ -172,16 +226,16 @@ class ToothfairyEvaluation():
         dice, hd95 = compute_multiclass_dice_and_hd95(pred, gt)
 
         metrics_dict = {
-            'DiceCoefficient': dice['average'],
-            'HausdorffDistance95': hd95['average'],
-            'pred_fname': case,
-            'gt_fname': self.mapping[case],
+            "DiceCoefficient": dice["average"],
+            "HausdorffDistance95": hd95["average"],
+            "pred_fname": case,
+            "gt_fname": self.mapping[case],
         }
 
         for label_name in LABELS.keys():
-            metrics_dict[f'Dice {label_name}'] = dice[label_name]
-            metrics_dict[f'HD95 {label_name}'] = hd95[label_name]
-        return metrics_dict
+            metrics_dict[f"Dice {label_name}"] = dice[label_name]
+            metrics_dict[f"HD95 {label_name}"] = hd95[label_name]
+        return pd.DataFrame.from_records([metrics_dict])
 
     def aggregate_series(self, *, series: pd.Series) -> Dict:
         summary = series.describe()
@@ -203,6 +257,7 @@ class ToothfairyEvaluation():
             series_summary[key] = value
 
         return series_summary
+
 
 if __name__ == "__main__":
     ToothfairyEvaluation().evaluate()
