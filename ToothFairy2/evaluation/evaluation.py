@@ -128,6 +128,7 @@ def compute_multiclass_dice_and_hd95(pred, label):
     unique_label = set(label.flatten())
 
     for label_name, label_id in LABELS.items():
+        print(f"Computing metrics for {label_name} ({label_id})")
         label_id_not_in_unique_label = label_id not in unique_label
         label_id_not_in_unique_pred = label_id not in unique_pred
 
@@ -195,7 +196,8 @@ class ToothfairyEvaluation:
     def evaluate(
         self,
     ):
-        process = mp.Pool(processes=4)
+        num_cpu = min(mp.cpu_count(), len(self.mapping.keys()))
+        process = mp.Pool(processes=num_cpu)
 
         results = process.map(self.score_case, self.mapping.keys())
         self.case_results = pd.concat(results, ignore_index=True)
