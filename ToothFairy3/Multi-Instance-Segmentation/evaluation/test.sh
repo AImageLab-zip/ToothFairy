@@ -12,6 +12,21 @@ EVALUATION_OUTPUT="$RESULTS_DIR/evaluation-output"
 
 echo "Running ToothFairy3 Multi-Instance-Segmentation evaluation..."
 
+# Cleanup function to fix permissions after container run
+cleanup_permissions() {
+    echo "Cleaning up permissions..."
+    # Ensure permissions are set correctly on the output
+    # This allows the host user to access and handle these files
+    docker run --rm \
+        --platform=linux/amd64 \
+        --quiet \
+        --volume "$EVALUATION_OUTPUT":/output \
+        --entrypoint /bin/sh \
+        $DOCKER_TAG \
+        -c "chmod -R -f o+rwX /output/* || true"
+}
+
+# Create evaluation output directory
 mkdir -p "$EVALUATION_OUTPUT"
 
 # Check if algorithm output exists
@@ -53,4 +68,31 @@ docker run --rm \
     -v "$EVALUATION_OUTPUT":/output/ \
     $DOCKER_TAG
 
-echo "Evaluation completed. Check results in $EVALUATION_OUTPUT/metrics.json"
+if [ $? -eq 0 ]; then
+    cleanup_permissions
+    echo "Evaluation completed successfully!"
+    METRICS_FILE="$EVALUATION_OUTPUT/metrics.json"
+    if [ -f "$METRICS_FILE" ]; then
+        echo "Results saved to: $METRICS_FILE"
+        echo ""
+        echo "=== Evaluation Results Preview ==="
+        # Try to extract some basic metrics if jq is available
+        if command -v jq >/dev/null 2>&1; then
+            if jq -e '.aggregates.DiceCoefficient_Average_All.mean' "$METRICS_FILE" >/dev/null 2>&1; then
+                echo "Average Dice Coefficient: $(jq -r '.aggregates.DiceCoefficient_Average_All.mean' "$METRICS_FILE")"
+            fi
+            if jq -e '.aggregates.HausdorffDistance95_Average_All.mean' "$METRICS_FILE" >/dev/null 2>&1; then
+                echo "Average HD95: $(jq -r '.aggregates.HausdorffDistance95_Average_All.mean' "$METRICS_FILE")"
+            fi
+        else
+            echo "Install 'jq' for metrics preview"
+        fi
+        echo "==================================="
+    else
+        echo "Warning: Metrics file not found at expected location: $METRICS_FILE"
+    fi
+    echo "Results available in: $EVALUATION_OUTPUT"
+else
+    echo "Error: Evaluation failed with exit code $?"
+    exit 1
+fi

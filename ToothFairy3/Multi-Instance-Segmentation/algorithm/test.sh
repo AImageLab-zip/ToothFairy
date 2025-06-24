@@ -42,6 +42,11 @@ docker run --rm \
 echo "Copying results to shared location: $ALGORITHM_OUTPUT"
 cp -r "$SCRIPTPATH/test/output/"* "$ALGORITHM_OUTPUT/"
 
-echo "Algorithm test completed successfully!"
-echo "Results copied to: $ALGORITHM_OUTPUT"
-echo "Ready for evaluation step."
+if [ $? -eq 0 ]; then
+    echo "Algorithm test completed successfully!"
+    echo "Results copied to: $ALGORITHM_OUTPUT"
+    echo "Ready for evaluation step."
+else
+    echo "Error: Algorithm test failed with exit code $?"
+    exit 1
+fi

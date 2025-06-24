@@ -10,6 +10,7 @@ echo ""
 # Step 1: Run Algorithm
 echo "Step 1: Running Algorithm..."
 cd "$SCRIPT_DIR/algorithm"
+./build.sh
 ./test.sh
 
 if [ $? -ne 0 ]; then
@@ -20,6 +21,7 @@ fi
 echo ""
 echo "Step 2: Running Evaluation..."
 cd "$SCRIPT_DIR/evaluation"
+./build.sh
 ./test.sh
 
 if [ $? -ne 0 ]; then
