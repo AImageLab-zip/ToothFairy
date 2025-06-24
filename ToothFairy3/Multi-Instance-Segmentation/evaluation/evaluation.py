@@ -117,7 +117,6 @@ def load_predictions_json(fname: Path):
         'outputs' in entries[0] and 
         'inputs' in entries[0] and 
         'pk' not in entries[0]):
-        print(f"Converting {fname} format to predictions format...")
         return convert_results_to_predictions(entries)
     
     # Original predictions.json format
@@ -282,31 +281,22 @@ class ToothfairyOralPharyngealEvaluation():
         """Find image file, checking for .mha first, then .nii.gz fallback."""
         path_obj = Path(file_path)
         
-        # If the file exists as specified, return it
         if path_obj.exists():
             return str(path_obj)
         
-        # Try .mha extension first
         mha_path = path_obj.with_suffix('.mha')
         if mha_path.exists():
-            print(f"Found .mha file: {mha_path}")
             return str(mha_path)
         
-        # Fallback to .nii.gz
         nii_gz_path = path_obj.with_suffix('.nii.gz')
         if nii_gz_path.exists():
-            print(f"Found .nii.gz file: {nii_gz_path}")
             return str(nii_gz_path)
         
         # If neither exists, try replacing .mha with .nii.gz in the original path
         if str(path_obj).endswith('.mha'):
             nii_gz_fallback = str(path_obj).replace('.mha', '.nii.gz')
             if Path(nii_gz_fallback).exists():
-                print(f"Found .nii.gz fallback: {nii_gz_fallback}")
                 return nii_gz_fallback
-        
-        # If nothing found, return original path (will fail later with clear error)
-        print(f"No file found for: {path_obj}")
         return str(path_obj)
 
     def find_ground_truth_file(self, filename):
@@ -334,7 +324,6 @@ class ToothfairyOralPharyngealEvaluation():
             # Try exact filename first
             exact_path = dir_path / filename
             if exact_path.exists():
-                print(f"Found ground truth file: {exact_path}")
                 return str(exact_path)
             
             # Try without extension and add .mha
@@ -344,13 +333,11 @@ class ToothfairyOralPharyngealEvaluation():
             
             mha_path = dir_path / f"{base_name}.mha"
             if mha_path.exists():
-                print(f"Found ground truth .mha file: {mha_path}")
                 return str(mha_path)
             
             # Try with .nii.gz extension
             nii_path = dir_path / f"{base_name}.nii.gz"
             if nii_path.exists():
-                print(f"Found ground truth .nii.gz file: {nii_path}")
                 return str(nii_path)
           # If not found, return the expected path for better error messages
         expected_path = gt_dir / filename
@@ -380,8 +367,6 @@ class ToothfairyOralPharyngealEvaluation():
         # Extract just the filename from the mapped ground truth path
         gt_filename = Path(self.mapping[case]).name
         gt_path = self.find_ground_truth_file(gt_filename)
-        
-        print(f"Evaluating: {pred_path} vs {gt_path}")
         
         pred = self.loader.load_image(pred_path)
         gt = self.loader.load_image(gt_path)
