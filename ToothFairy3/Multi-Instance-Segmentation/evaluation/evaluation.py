@@ -392,15 +392,12 @@ class ToothfairyOralPharyngealEvaluation():
         dice, hd95 = compute_multiclass_dice_and_hd95(pred, gt)
 
         metrics_dict = {
-            'DiceCoefficient': dice['average'],
-            'HausdorffDistance95': hd95['average'],
+            'Dice Average': dice['average'],
+            'HD95 Average': hd95['average'],
             'pred_fname': pred_path,
             'gt_fname': gt_path,
         }
 
-        for label_name in LABELS.keys():
-            metrics_dict[f'Dice {label_name}'] = dice[label_name]
-            metrics_dict[f'HD95 {label_name}'] = hd95[label_name]
         return metrics_dict
 
     def aggregate_series(self, *, series: pd.Series) -> Dict:
