@@ -19,7 +19,7 @@ def get_default_device():
     return torch.device('cpu')
 
 
-def your_multi_instance_segmentation_algorithm(input_tensor: torch.Tensor) -> np.ndarray:
+def your_oral_pharyngeal_segmentation_algorithm(input_tensor: torch.Tensor) -> np.ndarray:
     """
     Simple example algorithm using a single linear layer with random weights
     
@@ -27,34 +27,16 @@ def your_multi_instance_segmentation_algorithm(input_tensor: torch.Tensor) -> np
         input_tensor: Preprocessed CBCT volume tensor [1, H, W, D]
         
     Returns:
-        Tuple of (segmentation_mask, metadata)
+        Segmentation mask as numpy array
     """
+    # Remove batch dimension for processing
+    volume = input_tensor.squeeze(0)  # Remove batch dimension: [H, W, D]
     
-    # Get tensor shape
-    batch_size, height, width, depth = input_tensor.shape
-    
-    # Flatten the volume for linear layer
-    flattened = input_tensor.view(batch_size, -1)  # [1, H*W*D]
-    
-    # Simple linear layer with random weights (7 classes just for example)
-    # I definetly suggest to compress the labels to be contiguous and use the correct number of classes
-    num_classes = 7
-    linear_layer = nn.Linear(flattened.shape[1], num_classes)
-    
-    # Generate random output logits
-    with torch.no_grad():
-        logits = linear_layer(flattened)
-        logits_volume = logits.unsqueeze(-1).repeat(1, 1, height * width * depth)
-        logits_volume = logits_volume.permute(0, 2, 1)
-        predictions = torch.argmax(logits_volume, dim=-1)
-        output_volume = predictions.view(height, width, depth)
-    
-    output_array = output_volume.cpu().numpy().astype(np.uint8)
-    
-    return output_array
+    # Return zeros with same shape as original volume (without batch dimension)
+    return np.zeros_like(volume.cpu().numpy(), dtype=np.uint8)
 
 
-class ToothFairy3_MultiInstanceSegmentation(SegmentationAlgorithm):
+class ToothFairy3_OralPharyngealSegmentation(SegmentationAlgorithm):
     def __init__(self):
         super().__init__(
             input_path=Path('/input/images/cbct/'),
@@ -102,7 +84,7 @@ class ToothFairy3_MultiInstanceSegmentation(SegmentationAlgorithm):
         input_tensor = torch.from_numpy(input_array)
         input_tensor = input_tensor.unsqueeze(0).to(self.device)  # Add batch dimension
         
-        output_array = your_multi_instance_segmentation_algorithm(input_tensor)
+        output_array = your_oral_pharyngeal_segmentation_algorithm(input_tensor)
         
         output_image = sitk.GetImageFromArray(output_array)
         output_image.CopyInformation(input_image)
@@ -111,4 +93,4 @@ class ToothFairy3_MultiInstanceSegmentation(SegmentationAlgorithm):
 
 
 if __name__ == "__main__":
-    ToothFairy3_MultiInstanceSegmentation().process()
+    ToothFairy3_OralPharyngealSegmentation().process()

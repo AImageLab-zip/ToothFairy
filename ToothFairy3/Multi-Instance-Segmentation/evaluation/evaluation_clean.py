@@ -108,7 +108,7 @@ def fix_filename_format(filename: str) -> str:
     return filename
 
 def load_predictions_json(fname: Path):
-    """Load predictions JSON for oral-pharyngeal segmentation evaluation."""
+    """Load predictions JSON for multi-instance segmentation evaluation."""
     with open(fname, "r") as f:
         entries = json.load(f)
 
@@ -125,47 +125,13 @@ def load_predictions_json(fname: Path):
     for e in entries:
         pk = e['pk']
         input_entry = e['inputs'][0]
-        output_entry = e['outputs'][0]        # Update path for oral-pharyngeal segmentation output
+        output_entry = e['outputs'][0]
+        # Update path for multi-instance segmentation output
         m_key = f"/input/{pk}/output/images/oral-pharyngeal-segmentation/{output_entry['image']['pk']}.mha"
-        m_value = f"/opt/ml/input/data/ground_truth/{input_entry['image']['name']}"
+        m_value = f"/opt/app/ground-truth/{input_entry['image']['name']}"
         mapping[m_key] = m_value
 
     return mapping
-
-def compute_ground_truth_filename(input_filename):
-    """
-    Compute the ground truth filename based on the input filename.
-    
-    Examples:
-    - ToothFairy3P_381_0000.nii -> ToothFairy3P_381.mha (grand-challenge)
-    - ToothFairy3P_077_0000.mha -> ToothFairy3P_077.mha (grand-challenge)
-    - ToothFairy3S_0042_0000.nii -> ToothFairy3S_0042.mha (grand-challenge)
-    - ToothFairy3P_077.mha -> ToothFairy3P_077.mha (test with same files as GT)
-    - 5f29221f-88b9-43a8-af27-c8ea49eba32f.mha -> 5f29221f-88b9-43a8-af27-c8ea49eba32f.mha
-    """
-    from pathlib import Path
-    
-    input_path = Path(input_filename)
-    name_without_ext = input_path.stem
-    
-    # Remove .nii extension if present (for .nii.gz files)
-    if name_without_ext.endswith('.nii'):
-        name_without_ext = name_without_ext[:-4]
-    
-    # Check for grand-challenge pattern: ends with _0000 
-    if name_without_ext.endswith('_0000'):
-        # Grand-challenge files: ToothFairy3P_381_0000 -> ToothFairy3P_381
-        gt_base_name = name_without_ext[:-5]  # Remove '_0000'
-        gt_filename = f"{gt_base_name}.mha"
-    else:
-        # For files that don't have '_0000' suffix, keep the same filename
-        # but ensure it has .mha extension (ground truth is always .mha)
-        if input_filename.endswith('.mha'):
-            gt_filename = input_filename
-        else:
-            gt_filename = f"{name_without_ext}.mha"
-    
-    return gt_filename
 
 def convert_results_to_predictions(results_entries):
     """Convert evalutils results.json format to predictions format for evaluation."""
@@ -181,13 +147,15 @@ def convert_results_to_predictions(results_entries):
         
         # Extract filenames
         output_filename = entry['outputs'][0]['filename']
-        input_filename = entry['inputs'][0]['filename'] 
-
-        # Compute ground truth filename based on input filename
-        gt_filename = compute_ground_truth_filename(input_filename)
-
-        m_key = f"/input/images/oral-pharyngeal-segmentation/{output_filename}"
-        m_value = f"/opt/ml/input/data/ground_truth/{gt_filename}"
+        input_filename = entry['inputs'][0]['filename']
+        
+        # Convert input filename to .mha for ground truth matching
+        input_name = input_filename.replace('.nii.gz', '.mha')
+        
+        # Create mapping in expected format
+        # The key should match where the algorithm actually puts the output files
+        m_key = f"/input/images/multi-instance-segmentation/{output_filename}"
+        m_value = f"/opt/app/ground-truth/{input_name}"
         mapping[m_key] = m_value
 
     return mapping
@@ -250,7 +218,7 @@ def compute_multiclass_dice_and_hd95(pred, gt):
     hd_per_class['average'] = mean(hd_per_class.values())
     return dice_per_class, hd_per_class
 
-class ToothfairyOralPharyngealEvaluation():
+class ToothfairyMultiInstanceEvaluation():
     def __init__(self,):
         # Try to load predictions.json first, fallback to results.json
         predictions_file = Path('/input/predictions.json')
@@ -309,54 +277,6 @@ class ToothfairyOralPharyngealEvaluation():
         print(f"No file found for: {path_obj}")
         return str(path_obj)
 
-    def find_ground_truth_file(self, filename):
-        """
-        Find ground truth file in the extracted tarball location.
-        The tarball is extracted to /opt/ml/input/data/ground_truth/ at runtime.
-        """
-        # Primary location where grand-challenge extracts the tarball
-        gt_dir = Path('/opt/ml/input/data/ground_truth')
-        
-        # Fallback locations for testing/development
-        fallback_dirs = [
-            Path('/opt/app/ground-truth'),  # Original location
-            Path('./ground-truth'),         # Local testing
-            Path('./test/ground-truth'),    # Test directory
-            Path('../test/ground-truth'),   # Test directory up one level
-        ]
-        
-        all_dirs = [gt_dir] + fallback_dirs
-        
-        for dir_path in all_dirs:
-            if not dir_path.exists():
-                continue
-                
-            # Try exact filename first
-            exact_path = dir_path / filename
-            if exact_path.exists():
-                print(f"Found ground truth file: {exact_path}")
-                return str(exact_path)
-            
-            # Try without extension and add .mha
-            base_name = Path(filename).stem
-            if base_name.endswith('.nii'):
-                base_name = base_name[:-4]  # Remove .nii part
-            
-            mha_path = dir_path / f"{base_name}.mha"
-            if mha_path.exists():
-                print(f"Found ground truth .mha file: {mha_path}")
-                return str(mha_path)
-            
-            # Try with .nii.gz extension
-            nii_path = dir_path / f"{base_name}.nii.gz"
-            if nii_path.exists():
-                print(f"Found ground truth .nii.gz file: {nii_path}")
-                return str(nii_path)
-          # If not found, return the expected path for better error messages
-        expected_path = gt_dir / filename
-        print(f"Ground truth file not found in any location. Expected: {expected_path}")
-        return str(expected_path)
-
     def evaluate(self,):
         for k in self.mapping.keys():
             score = self.score_case(k)
@@ -376,10 +296,7 @@ class ToothfairyOralPharyngealEvaluation():
 
     def score_case(self, case):
         pred_path = self.find_image_file(case)
-        
-        # Extract just the filename from the mapped ground truth path
-        gt_filename = Path(self.mapping[case]).name
-        gt_path = self.find_ground_truth_file(gt_filename)
+        gt_path = self.find_image_file(self.mapping[case])
         
         print(f"Evaluating: {pred_path} vs {gt_path}")
         
@@ -414,4 +331,4 @@ class ToothfairyOralPharyngealEvaluation():
         }
 
 if __name__ == "__main__":
-    ToothfairyOralPharyngealEvaluation().evaluate()
+    ToothfairyMultiInstanceEvaluation().evaluate()

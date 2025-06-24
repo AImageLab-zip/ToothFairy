@@ -1,7 +1,7 @@
-# Export script for ToothFairy3 Multi-Instance-Segmentation algorithm container
+# Export script for ToothFairy3 Multi-Instance-Segmentation evaluation container
 
 $ErrorActionPreference = "Stop"
-$DOCKER_TAG = "toothfairy3-multiinstance-algorithm"
+$DOCKER_TAG = "toothfairy3-multi-instance-evaluation"
 $OUTPUT_FILE = "$DOCKER_TAG.tar.gz"
 
 # Find Docker executable
