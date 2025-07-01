@@ -1,0 +1,16 @@
+[
+    {
+        "file": null,
+        "image": {
+            "name": "the_original_filename_of_the_file_that_was_uploaded.suffix"
+        },
+        "value": null,
+        "interface": {
+            "slug": "cbct-image",
+            "kind": "Image",
+            "super_kind": "Image",
+            "relative_path": "images/cbct",
+            "example_value": null
+        }
+    }
+]

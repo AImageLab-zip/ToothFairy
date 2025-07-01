@@ -1,0 +1,4 @@
+evalutils==0.4.2
+SimpleITK==2.3.1
+torch>=2.0.0
+numpy>=1.21.0
