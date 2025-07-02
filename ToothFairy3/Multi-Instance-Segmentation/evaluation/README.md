@@ -4,4 +4,5 @@ This is the source code for the evaluation of the submitted algorithms on the Gr
 
 If you found any problem related to such algorithms, please report it to us by opening an issue in this repository.
 
-You can evaluate your algorithm locally by running `./test` or the `run-pipeline.sh` in the parent directory
+You can evaluate your algorithm locally by running `./test` or the `run-pipeline.sh` in the parent directory.
+Ensure to modify some hardcoded path with the correct ones before running the scripts
