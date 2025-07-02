@@ -7,7 +7,7 @@ To run it, you'll need to install [docker](https://docs.docker.com/engine/instal
 First of all, you have to clone this repository and `cd` in the algorithm directory:
 ```
 git clone https://github.com/AImageLab-zip/ToothFairy.git
-cd ToothFairy3/Multi-Instance-Segmentation/algorithm
+cd ToothFairy/ToothFairy3/Multi-Instance-Segmentation/algorithm
 ```
 
 All the code has been tested on both Linux (6.2.8-arch1-1) and Windows 11
