@@ -1,8 +1,8 @@
-# ToothFairy3 Multi-Instance-Segmentation Algorithm Template
+# ToothFairy3 - Multi-Instance-Segmentation Algorithm Template
 
 This is a template that you can use to develop and test your algorithm.
 
-To run it, you'll need to install [docker](https://docs.docker.com/engine/install/) and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+To run it, you'll need to install [docker](https://docs.docker.com/engine/install/) and [git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
 
 First of all, you have to clone this repository and `cd` in the algorithm directory:
 ```
