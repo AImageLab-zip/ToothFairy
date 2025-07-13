@@ -1,4 +1,4 @@
-# ToothFairy3 Multi-Instance-Segmentation Evaluation
+# ToothFairy3 - Multi-Instance-Segmentation Evaluation
 
 This is the source code for the evaluation of the submitted algorithms on the Grand-Challenge platform. The exact code for computing the Dice coefficient and the Hausdorff distance 95% can be found inside the evaluation.py file, under the `compute_dice()` and `compute_hd95()` functions.
 
