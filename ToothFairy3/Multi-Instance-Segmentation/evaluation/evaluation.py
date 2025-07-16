@@ -96,7 +96,7 @@ def load_predictions_json(fname: Path):
     for e in entries:
         pk = e['pk']
         input_entry = e['inputs'][0]
-        output_entry = e['outputs'][0]
+        output_entry = e['outputs'][0]        # Update path for oral-pharyngeal segmentation output
         m_key = f"/input/{pk}/output/images/oral-pharyngeal-segmentation/{output_entry['image']['pk']}.mha"
 
         m_value = f"/opt/ml/input/data/ground_truth/{input_entry['image']['name']}"

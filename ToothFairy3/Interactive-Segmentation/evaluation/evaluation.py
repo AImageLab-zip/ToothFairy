@@ -25,6 +25,8 @@ class SimpleITKLoader:
 def fix_filename_format(filename: str) -> str:
     if len(filename) < 4:
         raise Exception()
+    if len(filename) < 4:
+        raise Exception()
     if filename[-4:] != '.mha' and filename[-4] == '.':
         raise Exception()
     if filename[-4:] != '.mha':
@@ -32,6 +34,7 @@ def fix_filename_format(filename: str) -> str:
     return filename
 
 def load_predictions_json(fname: Path):
+    """Load predictions JSON for oral-pharyngeal segmentation evaluation."""
     """Load predictions JSON for oral-pharyngeal segmentation evaluation."""
     with open(fname, "r") as f:
         entries = json.load(f)
@@ -120,6 +123,9 @@ def compute_binary_hd95(pred, gt):
     """Compute HD95 for binary masks."""
     pred = pred.astype(bool)
     gt = gt.astype(bool)
+    """Compute HD95 for binary masks."""
+    pred = pred.astype(bool)
+    gt = gt.astype(bool)
 
     if not pred.any() and not gt.any():
         return 0.0
@@ -130,12 +136,15 @@ def compute_binary_hd95(pred, gt):
 
 def compute_multiclass_dice_and_hd95(pred, gt):
     """Compute multiclass Dice and HD95 metrics."""
+def compute_multiclass_dice_and_hd95(pred, gt):
+    """Compute multiclass Dice and HD95 metrics."""
 
     dice_per_class = {}
     hd_per_class = {}
 
     for label_name, label_id in LABELS.items():
         binary_class_pred = pred == label_id
+        binary_class_label = gt == label_id
         binary_class_label = gt == label_id
         dice = compute_binary_dice(binary_class_pred, binary_class_label)
         hd = compute_binary_hd95(binary_class_pred, binary_class_label)
@@ -146,6 +155,7 @@ def compute_multiclass_dice_and_hd95(pred, gt):
     hd_per_class['average'] = mean(hd_per_class.values())
     return dice_per_class, hd_per_class
 
+class ToothfairyOralPharyngealEvaluation():
 class ToothfairyOralPharyngealEvaluation():
     def __init__(self,):
         predictions_file = Path('/input/predictions.json')
@@ -313,6 +323,12 @@ class ToothfairyOralPharyngealEvaluation():
             key: float(value) if isinstance(value, (int, float, np.number)) else str(value)
             for key, value in summary.items()
         }
+        summary = summary[valid_keys]
+        return {
+            key: float(value) if isinstance(value, (int, float, np.number)) else str(value)
+            for key, value in summary.items()
+        }
 
 if __name__ == "__main__":
+    ToothfairyOralPharyngealEvaluation().evaluate()
     ToothfairyOralPharyngealEvaluation().evaluate()
