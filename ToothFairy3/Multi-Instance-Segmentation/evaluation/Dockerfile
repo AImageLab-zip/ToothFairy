@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 python:3.10-slim
+FROM --platform=linux/amd64 python:3.11-slim
 
 # Ensures that Python output to stdout/stderr is not buffered
 ENV PYTHONUNBUFFERED=1
