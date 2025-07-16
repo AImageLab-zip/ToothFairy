@@ -4,8 +4,6 @@ from typing import Dict
 import SimpleITK as sitk
 import numpy as np
 import pandas as pd
-from scipy.spatial.distance import cdist
-from scipy.ndimage import binary_erosion
 import re
 from medpy.metric import binary
 import multiprocessing as mp
@@ -38,7 +36,6 @@ def load_predictions_json(fname: Path):
     with open(fname, "r") as f:
         entries = json.load(f)
 
-    # Check if this is the new evalutils format (results.json)
     if (len(entries) > 0 and
         'outputs' in entries[0] and
         'inputs' in entries[0] and
@@ -48,9 +45,10 @@ def load_predictions_json(fname: Path):
     # Original predictions.json format
     mapping = {}
     for e in entries:
+        pk = e['pk']
         input_entry = e['inputs'][0]
         output_entry = e['outputs'][0]
-        m_key = f"/input/images/iac-segmentation/{output_entry['image']['pk']}.mha"
+        m_key = f"/input/{pk}/output/images/iac-segmentation/{output_entry['image']['pk']}.mha"
 
         m_value = f"/opt/ml/input/data/ground_truth/{input_entry['image']['name']}"
         mapping[m_key] = m_value
@@ -61,31 +59,19 @@ def load_predictions_json(fname: Path):
 def compute_ground_truth_filename(input_filename):
     """
     Compute the ground truth filename based on the input filename.
-
-    Examples:
-    - ToothFairy3P_381_0000.nii -> ToothFairy3P_381.mha (grand-challenge)
-    - ToothFairy3P_077_0000.mha -> ToothFairy3P_077.mha (grand-challenge)
-    - ToothFairy3S_0042_0000.nii -> ToothFairy3S_0042.mha (grand-challenge)
-    - ToothFairy3P_077.mha -> ToothFairy3P_077.mha (test with same files as GT)
-    - 5f29221f-88b9-43a8-af27-c8ea49eba32f.mha -> 5f29221f-88b9-43a8-af27-c8ea49eba32f.mha
     """
     from pathlib import Path
 
     input_path = Path(input_filename)
     name_without_ext = input_path.stem
 
-    # Remove .nii extension if present (for .nii.gz files)
     if name_without_ext.endswith('.nii'):
         name_without_ext = name_without_ext[:-4]
 
-    # Check for grand-challenge pattern: ends with _0000
     if name_without_ext.endswith('_0000'):
-        # Grand-challenge files: ToothFairy3P_381_0000 -> ToothFairy3P_381
-        gt_base_name = name_without_ext[:-5]  # Remove '_0000'
+        gt_base_name = name_without_ext[:-5]
         gt_filename = f"{gt_base_name}.mha"
     else:
-        # For files that don't have '_0000' suffix, keep the same filename
-        # but ensure it has .mha extension (ground truth is always .mha)
         if input_filename.endswith('.mha'):
             gt_filename = input_filename
         else:
@@ -126,7 +112,7 @@ def compute_binary_dice(pred, gt):
     union = pred.sum() + gt.sum()
 
     if union == 0:
-        return 1.0  # Both masks are empty
+        return 1.0
 
     return 2.0 * intersection / union
 
@@ -136,9 +122,9 @@ def compute_binary_hd95(pred, gt):
     gt = gt.astype(bool)
 
     if not pred.any() and not gt.any():
-        return 0.0  # Both masks are empty
+        return 0.0
     if not pred.any() or not gt.any():
-        return float(np.linalg.norm(pred.shape))  # One mask is empty
+        return float(np.linalg.norm(pred.shape))
 
     return binary.hd95(pred, gt)
 
