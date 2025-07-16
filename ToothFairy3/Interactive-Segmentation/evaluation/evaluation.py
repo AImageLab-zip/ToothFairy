@@ -7,37 +7,11 @@ import pandas as pd
 from scipy.spatial.distance import cdist
 from scipy.ndimage import binary_erosion
 import re
+from medpy.metric import binary
+import multiprocessing as mp
 
 pd.set_option('display.max_columns', None)
 pd.set_option('max_colwidth', None)
-
-# Simple replacement for medpy.metric.binary.hd95
-def hd95(pred, gt):
-    """Simple HD95 implementation."""
-    # Get surface points using edge detection
-    pred_edges = pred ^ binary_erosion(pred)
-    gt_edges = gt ^ binary_erosion(gt)
-
-    pred_surface = np.argwhere(pred_edges)
-    gt_surface = np.argwhere(gt_edges)
-
-    if len(pred_surface) == 0 or len(gt_surface) == 0:
-        return float(np.linalg.norm(pred.shape))
-
-    # Compute distances
-    distances_pred_to_gt = cdist(pred_surface, gt_surface, metric='euclidean')
-    min_distances_pred = np.min(distances_pred_to_gt, axis=1)
-
-    distances_gt_to_pred = cdist(gt_surface, pred_surface, metric='euclidean')
-    min_distances_gt = np.min(distances_gt_to_pred, axis=1)
-
-    all_distances = np.concatenate([min_distances_pred, min_distances_gt])
-    return float(np.percentile(all_distances, 95))
-
-class binary:
-    @staticmethod
-    def hd95(pred, gt):
-        return hd95(pred, gt)
 
 LABELS = {
     "Left Inferior Alveolar Canal": 1,
@@ -74,10 +48,8 @@ def load_predictions_json(fname: Path):
     # Original predictions.json format
     mapping = {}
     for e in entries:
-        pk = e['pk']
         input_entry = e['inputs'][0]
-        output_entry = e['outputs'][0]        # Update path for oral-pharyngeal segmentation output
-        #m_key = f"/input/{pk}/output/images/iac-segmentation/{output_entry['image']['pk']}.mha"
+        output_entry = e['outputs'][0]
         m_key = f"/input/images/iac-segmentation/{output_entry['image']['pk']}.mha"
 
         m_value = f"/opt/ml/input/data/ground_truth/{input_entry['image']['name']}"
@@ -123,21 +95,15 @@ def compute_ground_truth_filename(input_filename):
 
 def convert_results_to_predictions(results_entries):
     """Convert evalutils results.json format to predictions format for evaluation."""
-    import uuid
 
     mapping = {}
     for i, entry in enumerate(results_entries):
         if not entry.get('outputs') or not entry.get('inputs'):
             continue
 
-        # Generate a unique pk for this entry
-        pk = str(uuid.uuid4())
-
-        # Extract filenames
         output_filename = entry['outputs'][0]['filename']
         input_filename = entry['inputs'][0]['filename']
 
-        # Compute ground truth filename based on input filename
         gt_filename = compute_ground_truth_filename(input_filename)
 
         m_key = f"/input/images/iac-segmentation/{output_filename}"
@@ -145,8 +111,6 @@ def convert_results_to_predictions(results_entries):
         mapping[m_key] = m_value
 
     return mapping
-
-
 
 def mean(l):
     if len(l) == 0:
@@ -198,11 +162,8 @@ def compute_multiclass_dice_and_hd95(pred, gt):
 
 class ToothfairyOralPharyngealEvaluation():
     def __init__(self,):
-        # Try to load predictions.json first, fallback to results.json
         predictions_file = Path('/input/predictions.json')
         results_file = Path('/input/results.json')
-
-
 
         if predictions_file.exists():
             self.mapping = load_predictions_json(predictions_file)
@@ -241,7 +202,6 @@ class ToothfairyOralPharyngealEvaluation():
         if nii_gz_path.exists():
             return str(nii_gz_path)
 
-        # If neither exists, try replacing .mha with .nii.gz in the original path
         if str(path_obj).endswith('.mha'):
             nii_gz_fallback = str(path_obj).replace('.mha', '.nii.gz')
             if Path(nii_gz_fallback).exists():
@@ -256,15 +216,13 @@ class ToothfairyOralPharyngealEvaluation():
         Find ground truth file in the extracted tarball location.
         The tarball is extracted to /opt/ml/input/data/ground_truth/ at runtime.
         """
-        # Primary location where grand-challenge extracts the tarball
         gt_dir = Path('/opt/ml/input/data/ground_truth')
 
-        # Fallback locations for testing/development
         fallback_dirs = [
-            Path('/opt/app/ground-truth'),  # Original location
-            Path('./ground-truth'),         # Local testing
-            Path('./test/ground-truth'),    # Test directory
-            Path('../test/ground-truth'),   # Test directory up one level
+            Path('/opt/app/ground-truth'),
+            Path('./ground-truth'),
+            Path('./test/ground-truth'),
+            Path('../test/ground-truth'),
         ]
 
         all_dirs = [gt_dir] + fallback_dirs
@@ -273,39 +231,35 @@ class ToothfairyOralPharyngealEvaluation():
             if not dir_path.exists():
                 continue
 
-            # Try exact filename first
             exact_path = dir_path / filename
             if exact_path.exists():
                 return str(exact_path)
 
-            # Try without extension and add .mha
             base_name = Path(filename).stem
             if base_name.endswith('.nii'):
-                base_name = base_name[:-4]  # Remove .nii part
+                base_name = base_name[:-4]
 
             mha_path = dir_path / f"{base_name}.mha"
             if mha_path.exists():
                 return str(mha_path)
 
-            # Try with .nii.gz extension
             nii_path = dir_path / f"{base_name}.nii.gz"
             if nii_path.exists():
                 return str(nii_path)
-          # If not found, return the expected path for better error messages
+
         expected_path = gt_dir / filename
         print(f"Ground truth file not found in any location. Expected: {expected_path}")
         return str(expected_path)
 
     def evaluate(self,):
-        # Collect all individual case scores into self.case_results (a DataFrame)
-        for k in self.mapping.keys():
-            score = self.score_case(k)
-            self.case_results = pd.concat([self.case_results, pd.DataFrame([score])], ignore_index=True)
+        num_cpu = min(mp.cpu_count(), len(self.mapping.keys()))
+        process = mp.Pool(processes=num_cpu)
+        results = process.map(self.score_case, self.mapping.keys())
+        self.case_results = pd.concat(results, ignore_index=True)
 
-        # Extract base case name and slice index N from 'pred_fname'
         def parse_case_and_index(path):
             fname = path.split('/')[-1]
-            base = re.sub(r'_\d+\.(nii\.gz|mha)$', '', fname)  # base_case e.g. ToothFairy3P_381
+            base = re.sub(r'_\d+\.(nii\.gz|mha)$', '', fname)
             idx_match = re.search(r'_(\d+)\.(nii\.gz|mha)$', fname)
             idx = int(idx_match.group(1)) if idx_match else -1
             return base, idx
@@ -323,7 +277,7 @@ class ToothfairyOralPharyngealEvaluation():
                 y = group_sorted[col].values
                 x = np.arange(0, len(y))
                 result[f'{col}'] = float(np.trapz(y, x))
-                result[f'{col.replace("AUC", "Final")}'] = float(y[-1])  # last element value at max N
+                result[f'{col.replace("AUC", "Final")}'] = float(y[-1])
             return pd.Series(result)
 
         self.case_results = self.case_results.groupby('gt_fname').apply(trapezoidal_integral_and_last)
@@ -344,8 +298,6 @@ class ToothfairyOralPharyngealEvaluation():
     def score_case(self, case):
         pred_path = self.find_image_file(case)
 
-        # Extract just the filename from the mapped ground truth path
-
         gt_filename = Path(self.mapping[case]).name
         gt_path = self.find_ground_truth_file(gt_filename)
 
@@ -364,7 +316,7 @@ class ToothfairyOralPharyngealEvaluation():
             'gt_fname': gt_path,
         }
 
-        return metrics_dict
+        return pd.DataFrame([metrics_dict])
 
     def aggregate_series(self, *, series: pd.Series) -> Dict:
         summary = series.describe()
