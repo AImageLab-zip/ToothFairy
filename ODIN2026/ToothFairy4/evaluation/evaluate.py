@@ -5,6 +5,8 @@ import os
 from dataclasses import asdict
 from pathlib import Path
 from typing import Any
+import importlib
+import sys
 
 
 INPUT_DIR = Path("/input")
@@ -38,7 +40,9 @@ def main() -> int:
     online = online_metrics(cases)
     if online.get("enabled") and "error" not in online:
         merge_online_metrics(metrics, online)
-    metrics["online_metrics"] = {key: value for key, value in online.items() if key not in {"aggregates", "results"}}
+    
+    keys_to_filter = {"aggregates", "results"}
+    metrics["online_metrics"] = {k: v for k, v in online.items() if k not in keys_to_filter}
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUTPUT_DIR / "metrics.json").write_text(json.dumps(metrics, indent=4), encoding="utf-8")
@@ -122,10 +126,7 @@ def online_metrics(cases: list[tuple[str, str, str]]) -> dict[str, Any]:
         return {"enabled": False, "reason": "not_enabled"}
 
     try:
-        import sys
-
         print("Computing RadFact online metrics with OpenAI; this can take several minutes.", flush=True)
-        sys.path.insert(0, str(Path(__file__).resolve().parent / "radfact" / "radfact_light" / "src"))
         from radfact_lite import ModelConfig, PipelineModels, RadFactLitePipeline, ReportType
 
         model = ModelConfig(
@@ -195,9 +196,6 @@ def meteor(predictions: list[str], references: list[str]) -> float:
 def load_metric(name: str):
     if name in METRICS:
         return METRICS[name]
-
-    import importlib
-    import sys
 
     app_dir = Path(__file__).resolve().parent
     old_path = sys.path[:]
