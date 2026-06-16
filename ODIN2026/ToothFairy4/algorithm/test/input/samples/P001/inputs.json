@@ -1,0 +1,18 @@
+[
+    {
+        "socket": {
+            "slug": "cbct-image",
+            "relative_path": "images/cbct",
+            "is_image_kind": true,
+            "is_panimg_kind": true,
+            "is_dicom_image_kind": false,
+            "is_json_kind": false,
+            "is_file_kind": false
+        },
+        "file": null,
+        "image": {
+            "name": "P001.mha"
+        },
+        "value": null
+    }
+]

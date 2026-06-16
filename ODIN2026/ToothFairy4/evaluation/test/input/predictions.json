@@ -1,0 +1,125 @@
+[
+    {
+        "pk": "job-a003",
+        "status": "Succeeded",
+        "inputs": [
+            {
+                "image": {
+                    "name": "A003.mha"
+                },
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "cbct-image",
+                    "relative_path": "images/cbct",
+                    "is_image_kind": true,
+                    "is_panimg_kind": true,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "image": null,
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "diagnostic-imaging-report",
+                    "relative_path": "diagnostic-imaging-report.json",
+                    "example_value": {
+                        "report": "potential long text"
+                    },
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": true,
+                    "is_file_kind": false
+                }
+            }
+        ]
+    },
+    {
+        "pk": "job-f001",
+        "status": "Succeeded",
+        "inputs": [
+            {
+                "image": {
+                    "name": "F001.mha"
+                },
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "cbct-image",
+                    "relative_path": "images/cbct",
+                    "is_image_kind": true,
+                    "is_panimg_kind": true,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "image": null,
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "diagnostic-imaging-report",
+                    "relative_path": "diagnostic-imaging-report.json",
+                    "example_value": {
+                        "report": "potential long text"
+                    },
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": true,
+                    "is_file_kind": false
+                }
+            }
+        ]
+    },
+    {
+        "pk": "job-p001",
+        "status": "Succeeded",
+        "inputs": [
+            {
+                "image": {
+                    "name": "P001.mha"
+                },
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "cbct-image",
+                    "relative_path": "images/cbct",
+                    "is_image_kind": true,
+                    "is_panimg_kind": true,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "image": null,
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "diagnostic-imaging-report",
+                    "relative_path": "diagnostic-imaging-report.json",
+                    "example_value": {
+                        "report": "potential long text"
+                    },
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": true,
+                    "is_file_kind": false
+                }
+            }
+        ]
+    }
+]
