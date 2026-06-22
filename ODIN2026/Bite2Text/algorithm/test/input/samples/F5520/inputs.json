@@ -1,0 +1,50 @@
+[
+    {
+        "socket": {
+            "slug": "3d-lower-teeth-scan",
+            "relative_path": "files/ios-lower",
+            "is_image_kind": false,
+            "is_panimg_kind": false,
+            "is_dicom_image_kind": false,
+            "is_json_kind": false,
+            "is_file_kind": true
+        },
+        "file": {
+            "name": "ios_lower.stl"
+        },
+        "image": null,
+        "value": null
+    },
+    {
+        "socket": {
+            "slug": "3d-upper-teeth-scan",
+            "relative_path": "files/ios-upper",
+            "is_image_kind": false,
+            "is_panimg_kind": false,
+            "is_dicom_image_kind": false,
+            "is_json_kind": false,
+            "is_file_kind": true
+        },
+        "file": {
+            "name": "ios_upper.stl"
+        },
+        "image": null,
+        "value": null
+    },
+    {
+        "socket": {
+            "slug": "2d-intraoral-photographs",
+            "relative_path": "images/intraoral-photo",
+            "is_image_kind": true,
+            "is_panimg_kind": true,
+            "is_dicom_image_kind": false,
+            "is_json_kind": false,
+            "is_file_kind": false
+        },
+        "file": null,
+        "image": {
+            "name": "intraoral-photo.tiff"
+        },
+        "value": null
+    }
+]

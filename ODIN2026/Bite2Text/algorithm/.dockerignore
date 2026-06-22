@@ -1,0 +1,5 @@
+test/
+*.tar.gz
+model.tar.gz
+__pycache__/
+*.pyc
