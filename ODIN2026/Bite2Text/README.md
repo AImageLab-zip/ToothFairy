@@ -42,7 +42,7 @@ The final metrics are written to:
 pipeline_work/evaluation_output/metrics.json
 ```
 
-`pipeline_work/` is created by the local pipeline run, is safe to delete, and is already ignored by Git. It should not be included in a Grand Challenge upload.
+`pipeline_work/` is created by the local pipeline run, is safe to delete, and is already ignored by Git.
 
 To use a different raw data location:
 
