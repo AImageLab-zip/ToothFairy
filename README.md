@@ -7,7 +7,7 @@
 This repository contains the information and materials for the ToothFairy challenge series and the ODIN challenge cluster.
 
 ## ODIN 2026 (MICCAI 2026)
-ODIN 2026 has been organized by the [University of Modena and Reggio Emilia](https://www.unimore.it/) with the collaboration of [Radboud University](https://www.ru.nl/) and [Karlsruhe Institute of Technology](https://www.kit.edu/english/), hosted by [Grand-Challenge](https://odin2026.grand-challenge.org/) and is part of [MICCAI 2026](https://conferences.miccai.org/2026/en/).
+ODIN 2026 has been organized by the [University of Modena and Reggio Emilia](https://www.unimore.it/) with the collaboration of [Radboud University](https://www.ru.nl/), hosted by [Grand-Challenge](https://odin2026.grand-challenge.org/) and is part of [MICCAI 2026](https://conferences.miccai.org/2026/en/).
 
 Challenge results and discussion will be presented in the framework of the [ODIN 2026 workshop](https://odin-workshops.org/2026/) at MICCAI 2026. The cluster includes two tracks: [ToothFairy4](https://ditto.ing.unimore.it/toothfairy4/) (maxillofacial and surgical report generation from CBCT) and [Bite2Text](https://ditto.ing.unimore.it/bite2text/) (orthodontic report generation from intraoral scans and photographs).
 
