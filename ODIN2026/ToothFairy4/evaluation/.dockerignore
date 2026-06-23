@@ -1,0 +1,13 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+*.tar.gz
+*.gz
+test/
+ground_truth/
+resources/
+radfact/radfact_reference/
+radfact/radfact_light/.git/
+radfact/radfact_light/.pytest_cache/
+radfact/radfact_light/tests/

@@ -1,0 +1,4 @@
+evaluate>=0.4,<1
+nltk>=3.9,<4
+openai>=1.0.0
+radfact_lite>=0.1.0

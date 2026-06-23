@@ -1,0 +1,221 @@
+[
+    {
+        "pk": "job-f5535",
+        "status": "Succeeded",
+        "inputs": [
+            {
+                "image": null,
+                "file": {
+                    "name": "ios_lower.stl"
+                },
+                "value": null,
+                "socket": {
+                    "slug": "ios-lower-scan",
+                    "relative_path": "files/ios-lower",
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": true
+                }
+            },
+            {
+                "image": null,
+                "file": {
+                    "name": "ios_upper.stl"
+                },
+                "value": null,
+                "socket": {
+                    "slug": "ios-upper-scan",
+                    "relative_path": "files/ios-upper",
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": true
+                }
+            },
+            {
+                "image": {
+                    "name": "intraoral-photo.tiff"
+                },
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "intraoral-photo",
+                    "relative_path": "images/intraoral-photo",
+                    "is_image_kind": true,
+                    "is_panimg_kind": true,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "image": null,
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "diagnostic-imaging-report",
+                    "relative_path": "diagnostic-imaging-report.json",
+                    "example_value": {
+                        "report": "potential long text"
+                    },
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": true,
+                    "is_file_kind": false
+                }
+            }
+        ]
+    },
+    {
+        "pk": "job-f5520",
+        "status": "Succeeded",
+        "inputs": [
+            {
+                "image": null,
+                "file": {
+                    "name": "ios_lower.stl"
+                },
+                "value": null,
+                "socket": {
+                    "slug": "ios-lower-scan",
+                    "relative_path": "files/ios-lower",
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": true
+                }
+            },
+            {
+                "image": null,
+                "file": {
+                    "name": "ios_upper.stl"
+                },
+                "value": null,
+                "socket": {
+                    "slug": "ios-upper-scan",
+                    "relative_path": "files/ios-upper",
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": true
+                }
+            },
+            {
+                "image": {
+                    "name": "intraoral-photo.tiff"
+                },
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "intraoral-photo",
+                    "relative_path": "images/intraoral-photo",
+                    "is_image_kind": true,
+                    "is_panimg_kind": true,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "image": null,
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "diagnostic-imaging-report",
+                    "relative_path": "diagnostic-imaging-report.json",
+                    "example_value": {
+                        "report": "potential long text"
+                    },
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": true,
+                    "is_file_kind": false
+                }
+            }
+        ]
+    },
+    {
+        "pk": "job-f5405",
+        "status": "Succeeded",
+        "inputs": [
+            {
+                "image": null,
+                "file": {
+                    "name": "ios_lower.stl"
+                },
+                "value": null,
+                "socket": {
+                    "slug": "ios-lower-scan",
+                    "relative_path": "files/ios-lower",
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": true
+                }
+            },
+            {
+                "image": null,
+                "file": {
+                    "name": "ios_upper.stl"
+                },
+                "value": null,
+                "socket": {
+                    "slug": "ios-upper-scan",
+                    "relative_path": "files/ios-upper",
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": true
+                }
+            },
+            {
+                "image": {
+                    "name": "intraoral-photo.tiff"
+                },
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "intraoral-photo",
+                    "relative_path": "images/intraoral-photo",
+                    "is_image_kind": true,
+                    "is_panimg_kind": true,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": false,
+                    "is_file_kind": false
+                }
+            }
+        ],
+        "outputs": [
+            {
+                "image": null,
+                "file": null,
+                "value": null,
+                "socket": {
+                    "slug": "diagnostic-imaging-report",
+                    "relative_path": "diagnostic-imaging-report.json",
+                    "example_value": {
+                        "report": "potential long text"
+                    },
+                    "is_image_kind": false,
+                    "is_panimg_kind": false,
+                    "is_dicom_image_kind": false,
+                    "is_json_kind": true,
+                    "is_file_kind": false
+                }
+            }
+        ]
+    }
+]

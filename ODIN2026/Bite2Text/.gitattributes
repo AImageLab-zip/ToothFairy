@@ -1,0 +1,8 @@
+# sh (and their template counter parts) should always be lf their line endings
+*.sh text=lf eol=lf
+*.sh.template text=lf eol=lf
+
+# Test and data assets should be treated as binary to avoid EOL rewrites.
+*.stl -text
+*.tiff -text
+*.tif -text

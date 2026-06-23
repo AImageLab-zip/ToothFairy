@@ -1,0 +1,12 @@
+Mandible:
+Right mandibular canal with a regular course.
+Left mandibular canal with a regular course.
+
+No definite osteolytic or osteocondensing lesions.
+
+Maxilla:
+
+Maxilla partially included in the acquisition.
+
+Mandibular condyles:
+Excluded from the acquisition and not visible.
