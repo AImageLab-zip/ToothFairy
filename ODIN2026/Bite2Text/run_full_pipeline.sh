@@ -36,7 +36,12 @@ for case_id in cases:
     case_source = raw_data_dir / case_id
     lower_source = case_source / "ios" / "ios_lower.stl"
     upper_source = case_source / "ios" / "ios_upper.stl"
-    photo_source = case_source / "intraoral-photo.tiff"
+    image_candidates = []
+    for pattern in ("*.tif", "*.tiff", "*.jpg", "*.jpeg", "*.png"):
+        image_candidates.extend(sorted(case_source.glob(pattern)))
+
+    # Keep up to five intraoral photos for the baseline interface.
+    photo_sources = image_candidates[:5]
 
     case_dir = sample_root / case_id
     lower_dir = case_dir / "files" / "ios-lower"
@@ -44,28 +49,37 @@ for case_id in cases:
     photo_dir = case_dir / "images" / "intraoral-photo"
     inputs_json = case_dir / "inputs.json"
 
-    for source in (lower_source, upper_source, photo_source):
+    for source in (lower_source, upper_source):
         if not source.exists():
             raise FileNotFoundError(source)
+
+    if not photo_sources:
+        raise FileNotFoundError(f"No intraoral photos found in {case_source}")
 
     lower_dir.mkdir(parents=True, exist_ok=True)
     upper_dir.mkdir(parents=True, exist_ok=True)
     photo_dir.mkdir(parents=True, exist_ok=True)
+    for existing in photo_dir.glob("*"):
+        if existing.is_file():
+            existing.unlink()
 
     lower_target = lower_dir / "ios_lower.stl"
     upper_target = upper_dir / "ios_upper.stl"
-    photo_target = photo_dir / "intraoral-photo.tiff"
 
     for source, target in (
         (lower_source, lower_target),
         (upper_source, upper_target),
-        (photo_source, photo_target),
     ):
         if not target.exists() or target.stat().st_mtime < source.stat().st_mtime:
             shutil.copy2(source, target)
             print(f"Copied {source} -> {target}")
         else:
             print(f"Using existing {target}")
+
+    for index, source in enumerate(photo_sources, start=1):
+        photo_target = photo_dir / f"intraoral-photo-{index}{source.suffix.lower()}"
+        shutil.copy2(source, photo_target)
+        print(f"Copied {source} -> {photo_target}")
 
     inputs_json.write_text(
         json.dumps(
@@ -109,7 +123,7 @@ for case_id in cases:
                         "is_file_kind": False,
                     },
                     "file": None,
-                    "image": {"name": "intraoral-photo.tiff"},
+                    "image": {"name": photo_sources[0].name},
                     "value": None,
                 }
             ],
