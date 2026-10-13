@@ -1,0 +1,45 @@
+# =============================================================================
+# configs/postprocess/no_source_rules.yaml -- the source-rule ablation.
+#
+# default.yaml with all eleven rules off, and NOTHING ELSE CHANGED. That is the
+# point: it isolates what the source rules are worth -- docs/postprocess.md
+# §2.1, Table 2 at fact level -- which is +0.06 official on validate-40
+# (0.4557 -> 0.4658 for the last three of them alone).
+#
+#   STAGE=post POSTPROCESS_CONFIG=configs/postprocess/no_source_rules.yaml \n#       scripts/run_infer.sh validate
+#
+# THIS IS NOT THE SAME ABLATION AS NO_FACTS=1, and the difference is worth
+# knowing before quoting either number. The environment variable works by
+# dropping --facts-dir, which takes away one more thing that is not a source
+# rule and does not travel under that name: the maxilla's FOV scope, where
+# structured.fov.maxilla overrides the model's maxilla_scope answer in BOTH
+# directions. This file keeps the facts file and turns off only the rules, so
+# it is the CLEAN per-rule ablation; NO_FACTS=1 is the whole facts-derived
+# layer at once. Run both if the question is "what do the facts
+# buy", run this one if the question is "what do the rules buy".
+# =============================================================================
+
+arm: aksssr_v7_trained_arm6_no_source_rules
+based_on: configs/postprocess/default.yaml
+notes: >-
+  Every rule off, facts file still read. Pre-rules baseline for arm 5 was
+  0.3524 against 0.4115 with the rules; measure this arm against 0.4658.
+
+source_rules:
+  absent_teeth:   false
+  impaction:      false
+  endodontic:     false
+  fillings:       false
+  crown:          false
+  implants:       false
+  canal_adjacent: false
+  canal_location: false
+  atrophy:        false
+  bridges:        false
+  condyle_fov:    false
+
+report:
+  # The fillings sentence is gated on the rules having run (`rules_applied`),
+  # so this is already dead with the rules off. Set false so the arm says so
+  # rather than depending on that coupling holding.
+  render_fillings: false

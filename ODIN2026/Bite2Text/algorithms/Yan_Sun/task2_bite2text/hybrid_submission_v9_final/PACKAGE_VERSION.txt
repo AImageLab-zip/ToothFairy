@@ -1,0 +1,4 @@
+Bite2Text model package v9-final-risk-rerank
+
+This marker makes the Grand Challenge model tarball checksum unique.
+It is not read by the inference pipeline and does not alter model behavior.

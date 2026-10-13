@@ -1,0 +1,112 @@
+ODIN 2026 Bite2Text - Third-Party Notices
+==========================================
+
+This file records third-party projects referenced by or used to develop the
+ODIN 2026 Bite2Text submission. It does not grant rights to challenge data,
+clinical reports, third-party pretrained weights, or other excluded assets.
+The author's own trained-model contributions are addressed in MODEL_LICENSE.
+
+1. Bits2Bites / Pointcept
+-------------------------
+
+Project: https://github.com/AImageLab-zip/Bits2Bites
+Pinned commit: 8c3c685160c9cabe2462e9e23d2ffcd9ca78c63a
+License reported by the upstream repository: MIT
+
+The local PTv3 integration and compatibility patches were developed against
+this pinned revision. The upstream repository's LICENSE contains the following
+notice:
+
+MIT License
+
+Copyright (c) 2023 Pointcept
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+2. RadFact-Lite
+---------------
+
+Project: https://github.com/AImageLab-zip/radfact_lite
+Pinned commit: 053f680be1c57225f94d67b198a34aa871b1127d
+License reported by the upstream repository: MIT
+
+The repository contains an OpenAI-compatible evaluation adapter; it does not
+vendor the RadFact-Lite source. The upstream LICENSE contains the following
+notice:
+
+MIT License
+
+Copyright (c) 2026 Luca Lumetti
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+3. IOS-Normalizer
+-----------------
+
+Project: https://github.com/AImageLab-zip/IOS-Normalizer
+Pinned commit: ecebe110a15081ea435e5970bbe6cf472d8f2882
+
+No LICENSE file was exposed by the upstream repository when this notice was
+prepared on 18 August 2026. Its source and pretrained weights are therefore not
+vendored here as a complete source tree or weights. The reproduction patch
+records local modifications against the pinned upstream; this does not grant
+an upstream license. Users must obtain the upstream source and confirm the
+terms that apply to their intended use. Separately linked IOS-Normalizer assets
+are not relicensed by this repository's MIT license or MODEL_LICENSE.
+
+4. Challenge data and pretrained assets
+----------------------------------------
+
+ODIN 2026 and Bits2Bites datasets, patient-level clinical reports, third-party
+pretrained weights, retrieval banks, and Docker/model archives are not stored
+in Git. Their applicable challenge, upstream and source-data terms remain in
+force. Links to archives do not make every component MIT-licensed.
+
+The two author-trained photo models were initialized from torchvision
+ResNet18_Weights.IMAGENET1K_V1. The torchvision source is BSD-3-Clause;
+pretrained models may also have terms derived from their training datasets.
+The author's model license does not remove applicable upstream rights or
+terms. See the publisher's pretrained-weight notice:
+https://docs.pytorch.org/vision/stable/models.html#general-information-on-pre-trained-weights
+
+Repository-wide licensing
+-------------------------
+
+The original ODIN 2026 Bite2Text code and the author's own trained-model
+contributions are released under MIT. LICENSE contains the code license;
+MODEL_LICENSE identifies the covered model contributions and exact published
+checkpoint hashes. Neither notice alters third-party terms or grants rights
+to challenge data, patient-level records, reports, third-party pretrained
+weights, retrieval banks, or excluded upstream source code.

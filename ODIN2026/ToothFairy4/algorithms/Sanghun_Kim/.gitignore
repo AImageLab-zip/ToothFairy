@@ -1,0 +1,21 @@
+# Model artefacts and caches (not distributed with the code)
+/models/
+/experiments/
+/data/
+*.pt
+*.npz
+*.tar.gz
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store

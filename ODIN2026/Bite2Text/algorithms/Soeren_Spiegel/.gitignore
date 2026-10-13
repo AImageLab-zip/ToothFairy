@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+wandb/
+**/runs/
+**/outputs/
+*.tar.gz
+*.log
+
+# challenge-derived data is never committed
+data_canonical/raw_batches/
+data_canonical/raw_reports/
+data_canonical/cases/
+splits/canonical/
+data_bite2text/raw_cases/
+data_bite2text/splits/canonical/

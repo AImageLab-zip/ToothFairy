@@ -1,0 +1,507 @@
+{
+  "description": "CBCT dental findings schema - single source of truth for QA and extraction.",
+  "version": "7.1",
+  "_definitions": {
+    "restoration_types": "BRIGHTNESS + SHAPE CALIBRATION -- settle this before choosing any value: a NATURAL tooth crown is ALREADY very bright on CBCT, because enamel is the densest tissue in the body. That brightness is normal and is NOT by itself evidence of restorative material. Brightness alone does not settle it in either direction: metal and dense cements read far brighter than enamel and throw streak artifact, but tooth-coloured composite and ceramic are made to sit in enamel's own range. Judge brightness, SHAPE and POSITION together. Restorative material has geometry a tooth does not: a uniform shell or block with a SHARP, straight margin against tooth substance, a flat floor or a prepared-cavity outline, and it hides or replaces the structure beneath it. Natural enamel caps the crown only, follows the cusp shape, thins away smoothly at the neck, and the dark canal still shows through beneath it. Compare against the enamel of the neighbouring teeth in the same image as ONE input, not as the whole test: distinctly brighter than they are = restorative material, and you should say so; the same brightness but with a prosthetic outline = still restorative material; the same brightness AND natural tooth shape = a normal unrestored crown. filling = a well-defined radiopaque area confined within the tooth's own crown outline, sitting inside part of a prepared cavity -- it does not replace the whole crown. crown = the ENTIRE visible crown replaced by prosthetic material, uniform radiodensity, different from natural enamel. post_and_core = a distinct radiopaque post extending DOWN INTO the root canal space (thicker/shorter than an RCT fill line, never reaches the apex), topped by a core buildup, usually under a crown. A tooth with a post belongs under post_and_core even if a crown also sits on top -- never double-count as crown.",
+    "root_canal_fill": "A distinctly uniform, sharply-defined radiopaque line running down the CENTER of the canal space, clearly brighter than the surrounding natural root dentin -- not just normal dense dentin or a hollow pulp chamber, and not a crown/post sitting only in the coronal portion.",
+    "implant_vs_root": "An implant is a uniformly bright, sharply-edged, screw/cylinder-shaped metal post embedded directly in bone with a threaded surface, in direct contact with bone (no periodontal-ligament radiolucent line around it, unlike a natural root). Never count a dense natural root as an implant just because it looks radiopaque.",
+    "impaction_direction": "Which way the crown is tipped or displaced, relative to the arch. Judge it on the 3D render from the geometry of the jaw itself -- soft tissue is not rendered, so never look for a tongue or a cheek. normal = the crown is upright and in line with the neighbouring teeth, tipped no more than they are; this is the ANSWER FOR MOST TEETH. When the tooth is ABSENT the answer is null instead, since there is no crown to be tipped and normal would be a claim about a tooth that is not there. mesial = crown tilted toward the front of the arch, often wedged under the back of the adjacent tooth (e.g. 38 against 37), root tilted posteriorly. distal = mirror of mesial. buccal = crown displaced toward the OUTER surface of the jaw, the side of the bone facing away from the midline of the arch (the cheek side). lingual = crown displaced toward the INNER surface of the jaw, the side of the bone facing the middle of the arch (the tongue side in the mandible, the palate side in the maxilla). ALWAYS ANSWERED, not only for an impacted tooth: a wrong orientation is one of the two things that MAKES a tooth impacted, so it is judged first and independently -- see _definitions.impacted.",
+    "eruption_state": "complete_bony_inclusion = no crown surface above bone; the tooth is fully enclosed in bone. partially_erupted = some but not all of the crown exposed. fully_erupted = entire crown clear of bone. absent = no tooth structure present at this position.",
+    "impacted": "An impacted tooth is one that CANNOT ERUPT NORMALLY, or cannot erupt INTO THE RIGHT POSITION. There are therefore two ways to be impacted and either one on its own is enough: (a) the tooth has not fully erupted -- eruption_state is complete_bony_inclusion or partially_erupted, i.e. bone still covers some or all of the crown; (b) the tooth has come up but out of line -- orientation is anything other than normal, i.e. the crown is tipped or displaced mesially, distally, buccally or lingually. A fully erupted tooth tipped hard against its neighbour is impacted under (b) even though (a) does not apply. Decided FROM those two answers, not judged separately: impacted = true when (eruption_state is complete_bony_inclusion or partially_erupted) OR (orientation is not normal); impacted = false only when the tooth is fully_erupted AND its orientation is normal. absent is the one exception, and it is answered with null rather than false: false is the claim \"this tooth is not impacted\", which presupposes a tooth. Where nothing is segmented there is no claim to make, so eruption_state absent takes impacted = null and orientation = null. The difference is not cosmetic -- postprocessing reads false as a vote AGAINST an impaction another image reported at that position, and null as no vote at all; absence is settled separately, after the vote. So the judgments to make are eruption_state and orientation (see _definitions.eruption_state and _definitions.impaction_direction); impacted follows from them, and all three answers in the same block must agree by this rule.",
+    "bone_loss_extent": "Judged as bone loss relative to root length, from the CEJ (cemento-enamel junction) down to where the bone crest currently sits. none = crest at/near the CEJ. mild = loss <1/3 of root length. moderate = roughly 1/3-2/3. severe = >2/3, root largely unsupported.",
+    "unremarkable_tooth": "What a tooth looks like when NONE of the findings this schema lists is visible on it. 'unremarkable' is exactly that and nothing more -- it is the value every position takes when no listed finding is seen, and it is NOT a claim that the tooth is healthy. The enum has no not-assessable value and all sixteen positions must carry one, so this is where everything that is not a named finding lands; when the reason is that you cannot see the tooth properly, say so in uncertain_teeth, which is the only place doubt can be recorded. Knowing what an untreated tooth looks like still matters, because most of the over-calling on these images is normal anatomy read as a finding. An unremarkable tooth shows: a continuous, unbroken enamel outline around the whole crown, with no dark notch eating inward at the occlusal surface, at a proximal contact point, or at the cervical margin; brightness no greater than the enamel of the neighbouring teeth in the same image (enamel is ALREADY very bright, so brightness on its own is never evidence of material -- see _definitions.restoration_types); a continuous root outline with no line crossing it; and a crown clear of bone, upright and in line with its neighbours. TWO DARK FEATURES ARE NORMAL ANATOMY and must never be read as findings: the thin dark line running down the CENTRE of the tooth is the pulp chamber and root canal space, and the thin dark line following the OUTSIDE of the root outline is the periodontal ligament. Unremarkable does not mean perfect -- physiological wear/attrition, mild rotation or crowding, and unremarkable variation in root shape or number all still read unremarkable. Unremarkable here is a statement about the TOOTH only: bone around it is captured by tooth_{fdi}_bone_quality and periodontal_bone_resorption_{arch}, and this field has no value for either, so a tooth with bone loss but no decay and no restorative material still reads unremarkable."
+  },
+  "mandible": [
+    {
+      "fact_id": "mandible_condyle_right",
+      "question_text": "First describe what you see at the right condyle, then answer: is it included in the scan volume?",
+      "description": "The condyle is the rounded knob at the TOP of the mandibular ramus, posterior, articulating with the skull base -- distinct from the pointed/triangular coronoid process which sits anterior. Morphology classification is out of scope; inclusion only.",
+      "type": "object",
+      "images_needed": [
+        "3d_right"
+      ],
+      "output_field": "mandible_condyle_right",
+      "object_fields": {
+        "visual_evidence": "string -- describe whether a rounded condylar head is visible and whether it's cut off by the volume boundary",
+        "scope": "enum:fully_included|partially_included|not_included"
+      }
+    },
+    {
+      "fact_id": "mandible_condyle_left",
+      "question_text": "First describe what you see at the left condyle, then answer: is it included in the scan volume?",
+      "description": "The condyle is the rounded knob at the TOP of the mandibular ramus, posterior, articulating with the skull base -- distinct from the pointed/triangular coronoid process which sits anterior. Morphology classification is out of scope; inclusion only. Mirrors mandible_condyle_right on the left side.",
+      "type": "object",
+      "images_needed": [
+        "3d_left"
+      ],
+      "output_field": "mandible_condyle_left",
+      "object_fields": {
+        "visual_evidence": "string -- describe whether a rounded condylar head is visible and whether it's cut off by the volume boundary",
+        "scope": "enum:fully_included|partially_included|not_included"
+      }
+    },
+    {
+      "fact_id": "mandible_canal_right",
+      "question_text": "First describe the right mandibular canal's course and, root by root, the bone between it and the posterior tooth roots above it. Then answer: does the canal run on the lingual or the buccal side of those roots, and does any root apex actually reach the canal? Answer an empty list when every root still has bone between it and the canal, which is the usual case.",
+      "description": "location = which side of the mandible the canal runs along, relative to the roots it passes: lingual = the inner surface of the jaw, the side of the bone facing the middle of the arch (tongue side); buccal = the outer surface, facing away from the midline (cheek side). There is no 'regular' value -- the canal always runs to one side or the other, so answer the side you can actually see rather than looking for an abnormality. adjacent_teeth = BASE RATE, READ THIS FIRST: AN EMPTY LIST IS THE NORMAL ANSWER. This is NOT \"which teeth are nearest the canal\" -- some tooth is always the nearest one, and naming it because it is nearest is a false finding, not a cautious one. What is asked is WHETHER any root apex actually reaches the canal: touching its upper wall, indenting it, or crossing it, with no clear bone left between the two. If every root ends with a visible band of bone between its apex and the canal roof -- however thin -- the list is empty, and that is the answer for most sides. When it does happen it is nearly always a third or second molar, because that is where the canal runs highest and the roots reach deepest; a premolar or canine almost never qualifies. Judge each posterior root on its own and list only the ones that reach the canal.",
+      "type": "object",
+      "images_needed": [
+        "3d_right"
+      ],
+      "output_field": "mandible_canal_right",
+      "object_fields": {
+        "visual_evidence": "string -- trace the canal's course and say which side of the roots it passes on; then take the posterior roots it runs under ONE AT A TIME and say, for each, whether a band of bone still separates its apex from the canal or whether the root actually touches or crosses it",
+        "location": "enum:lingual|buccal",
+        "adjacent_teeth": "list[int] -- FDI numbers; empty if none"
+      }
+    },
+    {
+      "fact_id": "mandible_canal_left",
+      "question_text": "First describe the left mandibular canal's course and, root by root, the bone between it and the posterior tooth roots above it. Then answer: does the canal run on the lingual or the buccal side of those roots, and does any root apex actually reach the canal? Answer an empty list when every root still has bone between it and the canal, which is the usual case.",
+      "description": "location = which side of the mandible the canal runs along, relative to the roots it passes: lingual = the inner surface of the jaw, the side of the bone facing the middle of the arch (tongue side); buccal = the outer surface, facing away from the midline (cheek side). There is no 'regular' value -- the canal always runs to one side or the other, so answer the side you can actually see rather than looking for an abnormality. adjacent_teeth = BASE RATE, READ THIS FIRST: AN EMPTY LIST IS THE NORMAL ANSWER. This is NOT \"which teeth are nearest the canal\" -- some tooth is always the nearest one, and naming it because it is nearest is a false finding, not a cautious one. What is asked is WHETHER any root apex actually reaches the canal: touching its upper wall, indenting it, or crossing it, with no clear bone left between the two. If every root ends with a visible band of bone between its apex and the canal roof -- however thin -- the list is empty, and that is the answer for most sides. When it does happen it is nearly always a third or second molar, because that is where the canal runs highest and the roots reach deepest; a premolar or canine almost never qualifies. Judge each posterior root on its own and list only the ones that reach the canal. Mirrors mandible_canal_right on the left side.",
+      "type": "object",
+      "images_needed": [
+        "3d_left"
+      ],
+      "output_field": "mandible_canal_left",
+      "object_fields": {
+        "visual_evidence": "string -- trace the canal's course and say which side of the roots it passes on; then take the posterior roots it runs under ONE AT A TIME and say, for each, whether a band of bone still separates its apex from the canal or whether the root actually touches or crosses it",
+        "location": "enum:lingual|buccal",
+        "adjacent_teeth": "list[int] -- FDI numbers; empty if none"
+      }
+    },
+    {
+      "fact_id": "alveolar_bone_atrophy_mandible",
+      "question_text": "Long-term tooth loss can lead to alveolar bone resorption, which affects future implant or restorative planning. Look for an edentulous area in the mandible (3 or more missing teeth in a row, or the whole arch if the patient has no teeth at all). If one exists, say whether the remaining bone height there shows resorption.",
+      "description": "Edentulous area = 3 or more missing teeth in a row, or the whole mandible if completely edentulous (mark this with fully_edentulous). Use the mandibular canal as your main reference for judging atrophy: if the canal sits close to, or exposed at, the ridge crest, that's resorption. If teeth remain nearby to compare against, a ridge height noticeably lower than the roots of those neighboring teeth is also resorption, even if the canal itself still looks deep. If the canal sits well below the crest and (where a comparison is available) the ridge height looks close to neighboring tooth-bearing areas, there's no resorption.",
+      "type": "object",
+      "images_needed": [
+        "3d_frontal"
+      ],
+      "output_field": "alveolar_bone_atrophy_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- bone height where teeth are missing, compared to nearby areas that still have teeth (if any), and how close the nerve canal is to the top of the ridge",
+        "present": "bool -- true if there's at least one stretch of 3+ missing teeth in a row (or the whole arch is edentulous)",
+        "fully_edentulous": "bool, only when present == true -- true if there are NO teeth left anywhere in this jaw",
+        "atrophy": "bool, only when present == true -- true if the bone height in that edentulous area is reduced, per the canal-proximity/adjacent-root criteria above"
+      }
+    },
+    {
+      "fact_id": "primary_teeth_mandible",
+      "question_text": "First describe any small, bulbous teeth typical of the primary dentition, then list which primary teeth are present.",
+      "description": "FDI 71-75 (lower left), 81-85 (lower right). Smaller, more bulbous, thinner enamel, shorter flared roots than permanent teeth; often an unerupted permanent crown visible beneath.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "primary_teeth_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- describe any such teeth and their positions",
+        "primary_teeth": "list[int] -- FDI numbers (71-75, 81-85)"
+      }
+    },
+    {
+      "fact_id": "lower_left_wisdom_tooth",
+      "question_text": "Find the lower left wisdom tooth -- the lower left third molar, FDI 38, drawn in slate blue (if no slate blue tooth is there, it is not segmented: answer eruption_state absent). First describe how much of its crown is clear of bone and which way the crown is tipped, then answer BOTH the eruption state and the orientation. Impaction is not a separate judgment -- it follows from those two: a tooth that has not fully erupted is impacted, and so is one that has erupted out of line (orientation not normal). Either one alone is enough.",
+      "description": "Independent 3D-render read of tooth 38, cross-checked in postprocessing against this tooth's entry in dental_arch_findings_mandible (panoramic), and its eruption_state also against tooth_38_eruption (composite). There is no composite impaction read any more, so the impaction direction here is corroborated by the panoramic entry alone. See _definitions.impacted, _definitions.impaction_direction and _definitions.eruption_state.",
+      "type": "object",
+      "images_needed": [
+        "3d_left"
+      ],
+      "output_field": "lower_left_wisdom_tooth",
+      "object_fields": {
+        "visual_evidence": "string -- name the slate blue tooth you are describing and where it sits in the arch, then its tipping angle and how much of its crown is above vs below the bone line; or state that no slate blue tooth is present",
+        "eruption_state": "enum:complete_bony_inclusion|partially_erupted|fully_erupted|absent",
+        "orientation": "enum:normal|mesial|distal|lingual|buccal -- which way the crown is tipped or displaced; normal = upright and in line with its neighbours, and null when the tooth is absent. Answered for every tooth, not only an impacted one. See _definitions.impaction_direction.",
+        "impacted": "bool -- DERIVED from the two answers above by the rule in _definitions.impacted; do not judge it separately. null when eruption_state is absent."
+      }
+    },
+    {
+      "fact_id": "lower_right_wisdom_tooth",
+      "question_text": "Find the lower right wisdom tooth -- the lower right third molar, FDI 48, drawn in brick red (if no brick red tooth is there, it is not segmented: answer eruption_state absent). First describe how much of its crown is clear of bone and which way the crown is tipped, then answer BOTH the eruption state and the orientation. Impaction is not a separate judgment -- it follows from those two: a tooth that has not fully erupted is impacted, and so is one that has erupted out of line (orientation not normal). Either one alone is enough.",
+      "description": "Independent 3D-render read of tooth 48, cross-checked in postprocessing against this tooth's entry in dental_arch_findings_mandible (panoramic), and its eruption_state also against tooth_48_eruption (composite). There is no composite impaction read any more, so the impaction direction here is corroborated by the panoramic entry alone. See _definitions.impacted, _definitions.impaction_direction and _definitions.eruption_state.",
+      "type": "object",
+      "images_needed": [
+        "3d_right"
+      ],
+      "output_field": "lower_right_wisdom_tooth",
+      "object_fields": {
+        "visual_evidence": "string -- name the brick red tooth you are describing and where it sits in the arch, then its tipping angle and how much of its crown is above vs below the bone line; or state that no brick red tooth is present",
+        "eruption_state": "enum:complete_bony_inclusion|partially_erupted|fully_erupted|absent",
+        "orientation": "enum:normal|mesial|distal|lingual|buccal -- which way the crown is tipped or displaced; normal = upright and in line with its neighbours, and null when the tooth is absent. Answered for every tooth, not only an impacted one. See _definitions.impaction_direction.",
+        "impacted": "bool -- DERIVED from the two answers above by the rule in _definitions.impacted; do not judge it separately. null when eruption_state is absent."
+      }
+    },
+    {
+      "fact_id": "implants_mandible",
+      "question_text": "First describe any uniformly bright, sharply-edged screw/cylinder shapes embedded directly in the mandible bone, quadrant by quadrant. Then answer: how many implants are in quadrant III (31-38)? Quadrant IV (41-48)? For each, describe position, osseointegration, and crown.",
+      "description": "See _definitions.implant_vs_root. Go quadrant by quadrant before counting.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "implants_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- per quadrant (III: 31-38, IV: 41-48), describe/count any implant-like structure and its bone interface",
+        "quadrant_3_implant_count": "int",
+        "quadrant_4_implant_count": "int",
+        "implants": "list[object] -- length must equal quadrant_3_implant_count + quadrant_4_implant_count; each: {fdi_number: int, location: string e.g. 'position 35', osseointegration_status: enum:well|poor -- poor = radiolucent gap along the threaded surface, with_crown: bool}"
+      }
+    },
+    {
+      "fact_id": "fixed_bridges_mandible",
+      "question_text": "First describe any series of connected, uniformly-bright crown-shaped structures spanning a gap, then answer presence and describe each bridge.",
+      "description": "A bridge = connected crowns spanning missing teeth, anchored on natural teeth or implants at each end.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "fixed_bridges_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- describe any spanning structure and what anchors each end",
+        "present": "bool",
+        "bridges": "list[object] -- each: {span_start: int, span_end: int, abutment_teeth: list[int], implant_supported_teeth: list[int], pontic_teeth: list[int], details: string}"
+      }
+    },
+    {
+      "fact_id": "bone_quality_mandible",
+      "question_text": "First describe the mandible's bone texture and flag the single most notable area distinctly brighter or darker than its surroundings, then answer presence, type, and location.",
+      "description": "Compare against surrounding trabecular bone, NOT a tooth's own crown/root density (normal root radiopacity is not a bone finding). radiopaque = brighter than surrounding bone (e.g. retained material, sclerotic patch). radiolucent = darker, usually bordered (e.g. cyst, near a root apex or extraction site). Report only the single most notable finding per arch. Cross-checked in postprocessing against tooth_{fdi}_bone_quality for the teeth this location names: the arch-level lesion is reported only where a tooth's own composite read confirms it, since this panoramic read is otherwise the single unverifiable source for it.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "bone_quality_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- describe general trabecular texture and call out the single most notable area (excluding tooth roots/crowns)",
+        "present": "bool",
+        "type": "enum:radiopaque|radiolucent, only when present == true",
+        "location": "string, only when present == true -- from which tooth to which tooth, by FDI tags"
+      }
+    },
+    {
+      "fact_id": "periodontal_bone_resorption_mandible",
+      "question_text": "First describe the bone crest position relative to the CEJ across the mandibular teeth, then answer extent and pattern.",
+      "description": "Arch-level generalization (about bone loss around teeth still present, not edentulous-ridge atrophy). See _definitions.bone_loss_extent. Distinct from the per-tooth bone_loss value in tooth_{fdi}_periodontal_status -- this fact captures the arch-wide pattern (diffuse vs focal, vertical vs horizontal) needed for narrative synthesis.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "periodontal_bone_resorption_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- bone crest position relative to CEJ, as a fraction of root length, across the arch",
+        "extent": "enum:none|mild|moderate|severe",
+        "pattern": "list[string] -- one or both of vertical, horizontal; only when extent != none. horizontal = even, roughly parallel recession across adjacent teeth. vertical = angular/uneven, steeper along one tooth than its neighbor"
+      }
+    },
+    {
+      "fact_id": "dental_arch_findings_mandible",
+      "question_text": "Going tooth by tooth through FDI 48-41, 31-38 using the panoramic tags as your index, what is the single most notable finding at each of the sixteen positions? Answer every position -- where no tooth is there, the answer is 'absent'.",
+      "description": "BASE RATE -- READ THIS FIRST: most teeth carry no finding at all, and _definitions.unremarkable_tooth says what that looks like. 'unremarkable' is the residual -- every position must carry a value and none of them means not-assessable -- so it says only that you saw none of the five findings, never that the tooth is healthy. Do not manufacture findings to fill the arch, and do not suppress one you can plainly see. CONFIDENCE IS THE OTHER JUDGEMENT THIS FIELD MAKES. Give a finding only when its feature is unmistakable at this scale; when you are unsure which of two values it is, or cannot see the tooth properly at all, still answer the value you believe and list that FDI in uncertain_teeth. Doubt goes there, never into a hedged value. THE FIVE VALUES. root_canal_treatment = radiopaque material INSIDE the canal space: the thin full-length line of a canal filling, the thick short rod of a post, or both. A posted tooth reads root_canal_treatment -- there is no post_and_core value here. See _definitions.root_canal_fill. restoration = restorative or prosthetic material ON the tooth rather than in its canal: a filling inside the crown outline, a full crown, or a bridge abutment carrying a pontic, all three under the one value. See _definitions.restoration_types. defect = tooth substance LOST: caries eating inward from the outer surface, or a root remnant with no crown left. impacted = 38/48 only, meaning the same thing as in lower_left_wisdom_tooth / lower_right_wisdom_tooth: not fully erupted, OR erupted out of line with its neighbours. Either one alone is enough. See _definitions.impacted. absent = no tooth at this position. unremarkable = none of the above is confidently visible. One finding per tooth, priority when more than one applies: impacted > root_canal_treatment > restoration > defect > unremarkable. The order runs from the finding that accounts for most of the tooth's history to the one that accounts for least, so a restored tooth reads restoration rather than defect unless fresh destruction is visible elsewhere on it. Cross-checked in postprocessing against tooth_{fdi}_morphology and tooth_{fdi}_endodontic_treatment, which read the same tooth at composite resolution and under the finer vocabulary this field collapses.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "dental_arch_findings_mandible",
+      "object_fields": {
+        "visual_evidence": "string -- go tooth by tooth through present mandibular teeth by FDI tag, naming each tooth's OUTLINE COLOR alongside its number (the tag and its tooth share one color; position alone can point at the neighbour); note for each any material INSIDE the canal, any material ON the crown, any lost tooth substance, or (38/48 only) tipping angle",
+        "findings": "object -- FIXED KEYS: answer for ALL SIXTEEN mandibular FDI numbers as strings, in the order \"48\",\"47\",\"46\",\"45\",\"44\",\"43\",\"42\",\"41\",\"31\",\"32\",\"33\",\"34\",\"35\",\"36\",\"37\",\"38\" -- every key present, none added, none omitted. Values: enum absent|impacted|root_canal_treatment|defect|restoration|unremarkable. Use \"absent\" when there is no tooth at that position (an empty socket or healed ridge under that FDI tag); otherwise give the single most notable finding per the priority order above, and list any FDI whose value you are not confident about in uncertain_teeth.",
+        "uncertain_teeth": "list[int] -- FDI numbers from `findings` above whose finding you are NOT confident about. Admitting uncertainty is part of a correct CBCT report, not a failure of one: a radiologist writes what the scan can support and says so when it cannot. List a tooth here whenever ANY of the following applies. (a) APPEARANCE: the feature is suggested but not unmistakable, or you were choosing between two values. (b) OUTSIDE THE VOLUME: the acquisition boundary cuts across the tooth. If this arch is only partially included -- the crowns are present but the root apices are cut off, or the arch runs out of the volume laterally -- list every FDI the boundary clips. A tooth you cannot see the whole of is not a tooth you can judge. 'unremarkable' does not rescue you there: it says you saw no finding, which on a tooth you cannot see is still the wrong thing to say -- list it here as well. (c) UNREADABLE: metal streak artefact, motion blur, beam hardening or noise sits over that tooth and you cannot tell what is underneath. Postprocessing treats every tooth listed here as unremarkable, so listing a doubtful tooth costs nothing and guessing costs a false statement in the report. Empty list only if every finding you gave is unmistakable."
+      }
+    }
+  ],
+  "maxilla": [
+    {
+      "fact_id": "maxilla_scope",
+      "question_text": "Look at the TAN maxillary bone above the upper teeth. First describe whether any tan bone is drawn at all, and if it is, how far up it extends and whether its top edge is cut flat by the volume boundary. Then answer: is the maxilla included in the scan volume?",
+      "description": "JUDGE THE TAN BONE, NOT THE TEETH. Upper teeth are drawn in their own individual colors and are segmented separately from the maxilla, so a row of upper crowns floating above the mandible with no tan behind them means the maxillary bone was NOT in the volume. TWO ANSWERS ONLY. not_included = no tan maxillary bone drawn at all -- upper teeth alone, or nothing above the mandible. included = tan maxillary bone is present, in any amount, typically a band covering part or most of the upper tooth roots with its upper extent cut flat by the volume boundary. There is deliberately no 'fully included' answer: that would require both blue maxillary sinuses to be closed at their superior borders inside the volume, which a dental CBCT essentially never reaches, so the distinction was dropped rather than left as a value to guess at. Any tan bone at all is 'included'. Remember a structure absent from the segmentation is simply not drawn, so missing tan is real absence, not a rendering artifact.",
+      "type": "object",
+      "images_needed": [
+        "3d_frontal"
+      ],
+      "output_field": "maxilla_scope",
+      "object_fields": {
+        "visual_evidence": "string -- state first whether ANY tan maxillary bone is drawn; if it is, say how far up it extends and whether its top edge is cut flat by the volume boundary. Do not cite upper teeth as evidence that the maxilla is present.",
+        "maxilla_included": "enum:included|not_included -- not_included: no tan maxillary bone drawn, whatever upper teeth are visible. included: any tan maxillary bone present."
+      }
+    },
+    {
+      "fact_id": "maxilla_sinus_right",
+      "question_text": "First describe, across the coronal and sagittal views, whether the right maxillary sinus's outer boundary is fully closed or only partially visible, then answer scope, mucosa_state, sinus_content, and intrasinusal_teeth.",
+      "description": "This fact is only asked when the sinus has at least some voxels in the scan, so there is no not_included scope value. fully_included = the boundary (including the upper/superior border) is fully closed across both views. partially_included = only part (typically the inferior border) is visible, upper border cut off by the crop. mucosa_state is normal|thickening only (cyst/polypoid intentionally dropped for this fact). intrasinusal_teeth is answered on its own evidence, NOT gated on either of the other two answers: the sinus floor is the inferior border, which is the part a partially included sinus still shows, and a root reaching the sinus is a finding whether or not the lining beside it is thickened. The only thing that silences it is a sinus that is not in the volume at all -- and then this fact is not asked. Where thickening IS present, still say in visual_evidence whether it sits at the same place as the root, since a root-related thickening and a root that merely shares the sinus are different findings.",
+      "type": "object",
+      "images_needed": [
+        "sinus_right_detail"
+      ],
+      "output_field": "maxilla_sinus_right",
+      "object_fields": {
+        "visual_evidence": "string -- trace the boundary across both views noting which borders are closed vs cut off; describe lining and content density; if thickening is present, note where; then, root by root, whether a posterior root tip reaches the sinus floor and whether it sits at the same place as any thickening",
+        "scope": "enum:fully_included|partially_included",
+        "mucosa_state": "enum:normal|thickening",
+        "sinus_content": "enum:air|fluid|mixed",
+        "intrasinusal_teeth": "list[int] -- FDI 11-18 whose root tip projects into or through the sinus floor, judged on the floor itself and answered whatever the scope and mucosa_state are. BASE RATE: an empty list is the normal answer -- most posterior roots end with a visible band of bone, however thin, between the apex and the floor, and that is not this finding. List a tooth only when its apex touches, indents or breaks through the floor with no bone left between the two."
+      }
+    },
+    {
+      "fact_id": "maxilla_sinus_left",
+      "question_text": "First describe, across the coronal and sagittal views, whether the left maxillary sinus's outer boundary is fully closed or only partially visible, then answer scope, mucosa_state, sinus_content, and intrasinusal_teeth.",
+      "description": "This fact is only asked when the sinus has at least some voxels in the scan, so there is no not_included scope value. fully_included = the boundary (including the upper/superior border) is fully closed across both views. partially_included = only part (typically the inferior border) is visible, upper border cut off by the crop. mucosa_state is normal|thickening only (cyst/polypoid intentionally dropped for this fact). intrasinusal_teeth is answered on its own evidence, NOT gated on either of the other two answers: the sinus floor is the inferior border, which is the part a partially included sinus still shows, and a root reaching the sinus is a finding whether or not the lining beside it is thickened. The only thing that silences it is a sinus that is not in the volume at all -- and then this fact is not asked. Where thickening IS present, still say in visual_evidence whether it sits at the same place as the root, since a root-related thickening and a root that merely shares the sinus are different findings. Mirrors maxilla_sinus_right on the left side (FDI 21-28).",
+      "type": "object",
+      "images_needed": [
+        "sinus_left_detail"
+      ],
+      "output_field": "maxilla_sinus_left",
+      "object_fields": {
+        "visual_evidence": "string -- trace the boundary across both views noting which borders are closed vs cut off; describe lining and content density; if thickening is present, note where; then, root by root, whether a posterior root tip reaches the sinus floor and whether it sits at the same place as any thickening",
+        "scope": "enum:fully_included|partially_included",
+        "mucosa_state": "enum:normal|thickening",
+        "sinus_content": "enum:air|fluid|mixed",
+        "intrasinusal_teeth": "list[int] -- FDI 21-28 whose root tip projects into or through the sinus floor, judged on the floor itself and answered whatever the scope and mucosa_state are. BASE RATE: an empty list is the normal answer -- most posterior roots end with a visible band of bone, however thin, between the apex and the floor, and that is not this finding. List a tooth only when its apex touches, indents or breaks through the floor with no bone left between the two."
+      }
+    },
+    {
+      "fact_id": "alveolar_bone_atrophy_maxilla",
+      "question_text": "Long-term tooth loss can lead to alveolar bone resorption, which affects future implant or restorative planning. Look for an edentulous area in the maxilla (3 or more missing teeth in a row, or the whole arch if the patient has no teeth at all). If one exists, say whether the remaining bone height there shows resorption.",
+      "description": "Edentulous area = 3 or more missing teeth in a row, or the whole maxilla if completely edentulous (mark this with fully_edentulous). In the back of the mouth (premolar/molar region), use the maxillary sinus floor as your main reference for judging atrophy: if only a thin amount of bone separates the ridge crest from the sinus floor, that's resorption. In the front of the mouth there's no sinus to check against -- if teeth remain nearby to compare against, a ridge height noticeably lower than the roots of those neighboring teeth is resorption. If no teeth remain anywhere in the arch, judge the front ridge by its own shape instead: a healthy ridge is wide and rounded, a resorbed one is thin like a knife edge or flattened, level with or below the surrounding bone. If there's ample bone between the crest and the sinus floor posteriorly, and (where a comparison is available) the ridge height anteriorly looks close to neighboring tooth-bearing areas, there's no resorption.",
+      "type": "object",
+      "images_needed": [
+        "3d_frontal"
+      ],
+      "output_field": "alveolar_bone_atrophy_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- bone height where teeth are missing (compared to a nearby tooth-bearing spot if one exists, or judged on its own shape if the whole jaw has no teeth), and in the back of the mouth, how much bone separates the ridge top from the sinus above it",
+        "present": "bool -- true if there's at least one stretch of 3+ missing teeth in a row (or the whole arch is edentulous)",
+        "fully_edentulous": "bool, only when present == true -- true if there are NO teeth left anywhere in this jaw",
+        "atrophy": "bool, only when present == true -- true if the bone height in that edentulous area is reduced, per the sinus-floor/adjacent-root criteria above"
+      }
+    },
+    {
+      "fact_id": "primary_teeth_maxilla",
+      "question_text": "First describe any small, bulbous teeth typical of the primary dentition, then list which primary teeth are present.",
+      "description": "FDI 51-55 (upper right), 61-65 (upper left). Smaller, more bulbous, thinner enamel, shorter flared roots than permanent teeth; often an unerupted permanent crown visible beneath.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "primary_teeth_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- describe any such teeth and their positions",
+        "primary_teeth": "list[int] -- FDI numbers (51-55, 61-65)"
+      }
+    },
+    {
+      "fact_id": "upper_right_wisdom_tooth",
+      "question_text": "Find the upper right wisdom tooth -- the upper right third molar, FDI 18, drawn in indigo (if no indigo tooth is there, it is not segmented: answer eruption_state absent). First describe how much of its crown is clear of bone and which way the crown is tipped, then answer BOTH the eruption state and the orientation. Impaction is not a separate judgment -- it follows from those two: a tooth that has not fully erupted is impacted, and so is one that has erupted out of line (orientation not normal). Either one alone is enough.",
+      "description": "Independent 3D-render read of tooth 18, cross-checked in postprocessing against this tooth's entry in dental_arch_findings_maxilla (panoramic), and its eruption_state also against tooth_18_eruption (composite). There is no composite impaction read any more, so the impaction direction here is corroborated by the panoramic entry alone. See _definitions.impacted, _definitions.impaction_direction and _definitions.eruption_state.",
+      "type": "object",
+      "images_needed": [
+        "3d_right"
+      ],
+      "output_field": "upper_right_wisdom_tooth",
+      "object_fields": {
+        "visual_evidence": "string -- name the indigo tooth you are describing and where it sits in the arch, then its tipping angle and how much of its crown is above vs below the bone line; or state that no indigo tooth is present",
+        "eruption_state": "enum:complete_bony_inclusion|partially_erupted|fully_erupted|absent",
+        "orientation": "enum:normal|mesial|distal|lingual|buccal -- which way the crown is tipped or displaced; normal = upright and in line with its neighbours, and null when the tooth is absent. Answered for every tooth, not only an impacted one. See _definitions.impaction_direction.",
+        "impacted": "bool -- DERIVED from the two answers above by the rule in _definitions.impacted; do not judge it separately. null when eruption_state is absent."
+      }
+    },
+    {
+      "fact_id": "upper_left_wisdom_tooth",
+      "question_text": "Find the upper left wisdom tooth -- the upper left third molar, FDI 28, drawn in olive (if no olive tooth is there, it is not segmented: answer eruption_state absent). First describe how much of its crown is clear of bone and which way the crown is tipped, then answer BOTH the eruption state and the orientation. Impaction is not a separate judgment -- it follows from those two: a tooth that has not fully erupted is impacted, and so is one that has erupted out of line (orientation not normal). Either one alone is enough.",
+      "description": "Independent 3D-render read of tooth 28, cross-checked in postprocessing against this tooth's entry in dental_arch_findings_maxilla (panoramic), and its eruption_state also against tooth_28_eruption (composite). There is no composite impaction read any more, so the impaction direction here is corroborated by the panoramic entry alone. See _definitions.impacted, _definitions.impaction_direction and _definitions.eruption_state.",
+      "type": "object",
+      "images_needed": [
+        "3d_left"
+      ],
+      "output_field": "upper_left_wisdom_tooth",
+      "object_fields": {
+        "visual_evidence": "string -- name the olive tooth you are describing and where it sits in the arch, then its tipping angle and how much of its crown is above vs below the bone line; or state that no olive tooth is present",
+        "eruption_state": "enum:complete_bony_inclusion|partially_erupted|fully_erupted|absent",
+        "orientation": "enum:normal|mesial|distal|lingual|buccal -- which way the crown is tipped or displaced; normal = upright and in line with its neighbours, and null when the tooth is absent. Answered for every tooth, not only an impacted one. See _definitions.impaction_direction.",
+        "impacted": "bool -- DERIVED from the two answers above by the rule in _definitions.impacted; do not judge it separately. null when eruption_state is absent."
+      }
+    },
+    {
+      "fact_id": "implants_maxilla",
+      "question_text": "First describe any uniformly bright, sharply-edged screw/cylinder shapes embedded directly in the maxilla bone, quadrant by quadrant. Then answer: how many implants are in quadrant I (11-18)? Quadrant II (21-28)? For each, describe position, osseointegration, and crown.",
+      "description": "See _definitions.implant_vs_root. Go quadrant by quadrant before counting.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "implants_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- per quadrant (I: 11-18, II: 21-28), describe/count any implant-like structure and its bone interface",
+        "quadrant_1_implant_count": "int",
+        "quadrant_2_implant_count": "int",
+        "implants": "list[object] -- length must equal quadrant_1_implant_count + quadrant_2_implant_count; each: {fdi_number: int, location: string e.g. 'position 15', osseointegration_status: enum:well|poor, with_crown: bool}"
+      }
+    },
+    {
+      "fact_id": "fixed_bridges_maxilla",
+      "question_text": "First describe any series of connected, uniformly-bright crown-shaped structures spanning a gap, then answer presence and describe each bridge.",
+      "description": "A bridge = connected crowns spanning missing teeth, anchored on natural teeth or implants at each end.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "fixed_bridges_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- describe any spanning structure and what anchors each end",
+        "present": "bool",
+        "bridges": "list[object] -- each: {span_start: int, span_end: int, abutment_teeth: list[int], implant_supported_teeth: list[int], pontic_teeth: list[int], details: string}"
+      }
+    },
+    {
+      "fact_id": "bone_quality_maxilla",
+      "question_text": "First describe the maxilla's bone texture and flag the single most notable area distinctly brighter or darker than its surroundings, then answer presence, type, and location.",
+      "description": "Compare against surrounding trabecular bone, NOT a tooth's own crown/root density (normal root radiopacity is not a bone finding). radiopaque = brighter than surrounding bone (e.g. retained material, sclerotic patch). radiolucent = darker, usually bordered (e.g. cyst, near a root apex or extraction site). Report only the single most notable finding per arch. Cross-checked in postprocessing against tooth_{fdi}_bone_quality for the teeth this location names: the arch-level lesion is reported only where a tooth's own composite read confirms it, since this panoramic read is otherwise the single unverifiable source for it.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "bone_quality_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- describe general trabecular texture and call out the single most notable area (excluding tooth roots/crowns)",
+        "present": "bool",
+        "type": "enum:radiopaque|radiolucent, only when present == true",
+        "location": "string, only when present == true -- from which tooth to which tooth, by FDI tags"
+      }
+    },
+    {
+      "fact_id": "periodontal_bone_resorption_maxilla",
+      "question_text": "First describe the bone crest position relative to the CEJ across the maxillary teeth, then answer extent and pattern.",
+      "description": "Arch-level generalization (about bone loss around teeth still present, not edentulous-ridge atrophy). See _definitions.bone_loss_extent. Distinct from the per-tooth bone_loss value in tooth_{fdi}_periodontal_status -- this fact captures the arch-wide pattern (diffuse vs focal, vertical vs horizontal) needed for narrative synthesis.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "periodontal_bone_resorption_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- bone crest position relative to CEJ, as a fraction of root length, across the arch",
+        "extent": "enum:none|mild|moderate|severe",
+        "pattern": "list[string] -- one or both of vertical, horizontal; only when extent != none"
+      }
+    },
+    {
+      "fact_id": "dental_arch_findings_maxilla",
+      "question_text": "Going tooth by tooth through FDI 18-11, 21-28 using the panoramic tags as your index, what is the single most notable finding at each of the sixteen positions? Answer every position -- where no tooth is there, the answer is 'absent'.",
+      "description": "BASE RATE -- READ THIS FIRST: most teeth carry no finding at all, and _definitions.unremarkable_tooth says what that looks like. 'unremarkable' is the residual -- every position must carry a value and none of them means not-assessable -- so it says only that you saw none of the five findings, never that the tooth is healthy. Do not manufacture findings to fill the arch, and do not suppress one you can plainly see. CONFIDENCE IS THE OTHER JUDGEMENT THIS FIELD MAKES. Give a finding only when its feature is unmistakable at this scale; when you are unsure which of two values it is, or cannot see the tooth properly at all, still answer the value you believe and list that FDI in uncertain_teeth. Doubt goes there, never into a hedged value. THE FIVE VALUES. root_canal_treatment = radiopaque material INSIDE the canal space: the thin full-length line of a canal filling, the thick short rod of a post, or both. A posted tooth reads root_canal_treatment -- there is no post_and_core value here. See _definitions.root_canal_fill. restoration = restorative or prosthetic material ON the tooth rather than in its canal: a filling inside the crown outline, a full crown, or a bridge abutment carrying a pontic, all three under the one value. See _definitions.restoration_types. defect = tooth substance LOST: caries eating inward from the outer surface, or a root remnant with no crown left. impacted = 18/28 only, meaning the same thing as in upper_right_wisdom_tooth / upper_left_wisdom_tooth: not fully erupted, OR erupted out of line with its neighbours. Either one alone is enough. See _definitions.impacted. absent = no tooth at this position. unremarkable = none of the above is confidently visible. One finding per tooth, priority when more than one applies: impacted > root_canal_treatment > restoration > defect > unremarkable. The order runs from the finding that accounts for most of the tooth's history to the one that accounts for least, so a restored tooth reads restoration rather than defect unless fresh destruction is visible elsewhere on it. Cross-checked in postprocessing against tooth_{fdi}_morphology and tooth_{fdi}_endodontic_treatment, which read the same tooth at composite resolution and under the finer vocabulary this field collapses.",
+      "type": "object",
+      "images_needed": [
+        "panoramic"
+      ],
+      "output_field": "dental_arch_findings_maxilla",
+      "object_fields": {
+        "visual_evidence": "string -- go tooth by tooth through present maxillary teeth by FDI tag, naming each tooth's OUTLINE COLOR alongside its number (the tag and its tooth share one color; position alone can point at the neighbour); note for each any material INSIDE the canal, any material ON the crown, any lost tooth substance, or (18/28 only) tipping angle",
+        "findings": "object -- FIXED KEYS: answer for ALL SIXTEEN maxillary FDI numbers as strings, in the order \"18\",\"17\",\"16\",\"15\",\"14\",\"13\",\"12\",\"11\",\"21\",\"22\",\"23\",\"24\",\"25\",\"26\",\"27\",\"28\" -- every key present, none added, none omitted. Values: enum absent|impacted|root_canal_treatment|defect|restoration|unremarkable. Use \"absent\" when there is no tooth at that position (an empty socket or healed ridge under that FDI tag); otherwise give the single most notable finding per the priority order above, and list any FDI whose value you are not confident about in uncertain_teeth.",
+        "uncertain_teeth": "list[int] -- FDI numbers from `findings` above whose finding you are NOT confident about. Admitting uncertainty is part of a correct CBCT report, not a failure of one: a radiologist writes what the scan can support and says so when it cannot. List a tooth here whenever ANY of the following applies. (a) APPEARANCE: the feature is suggested but not unmistakable, or you were choosing between two values. (b) OUTSIDE THE VOLUME: the acquisition boundary cuts across the tooth. If this arch is only partially included -- the crowns are present but the root apices are cut off, or the arch runs out of the volume laterally -- list every FDI the boundary clips. A tooth you cannot see the whole of is not a tooth you can judge. 'unremarkable' does not rescue you there: it says you saw no finding, which on a tooth you cannot see is still the wrong thing to say -- list it here as well. (c) UNREADABLE: metal streak artefact, motion blur, beam hardening or noise sits over that tooth and you cannot tell what is underneath. Postprocessing treats every tooth listed here as unremarkable, so listing a doubtful tooth costs nothing and guessing costs a false statement in the report. Empty list only if every finding you gave is unmistakable."
+      }
+    }
+  ],
+  "dental_elements": [
+    {
+      "fact_id": "tooth_{fdi}_morphology",
+      "question_text": "Judge tooth {fdi}'s state -- only mark a flag true if you're confident, not on a maybe.",
+      "description": "If no crown remains at all, that's a root remnant (is_remnant = true); with_caries/with_fillings/with_full_crown then don't apply (no crown surface left to judge), but with_root_fracture/with_endo/with_post_and_core still can (e.g. a residual post in a fractured root). caries = an irregular dark/radiolucent area in enamel or dentin, starting at the margin and possibly extending toward the pulp. Do not confuse this with (a) the normal, unfilled pulp/root canal space itself -- a small, round, radiolucent (dark) area centered in the root, not itself a finding -- or (b) root canal treatment fill material, which is the OPPOSITE appearance: a radiopaque (bright) line, see _definitions.root_canal_fill. fractured = a line crossing the root's normally continuous structure. fillings = smaller than the crown, usually confined to the margin. full_crown = the whole crown replaced by prosthetic material: uniform density behind a SHARP margin at the neck, hiding the tooth structure under it. Metal reads far brighter than enamel and streaks, but ceramic and composite crowns can read at enamel's own brightness -- so read the outline too: in axial view a crown fills nearly the whole tooth cross-section, while in coronal/sagittal views only the outer shell reads bright, the interior does not. post_and_core = a bright area filling the crown similarly across all three views (axial/coronal/sagittal) PLUS a connected bright post in the root canal that is thick and short (unlike the thin root_canal_fill line) -- both the core and the post must be present to set this true. with_full_crown and with_post_and_core are independent, not mutually exclusive: a post-and-core capped by a full crown should have both set true.",
+      "type": "object",
+      "images_needed": [
+        "tooth_{fdi}_composite"
+      ],
+      "output_field": "tooth_{fdi}_morphology",
+      "object_fields": {
+        "visual_evidence": "string -- describe the crown surface and root outline for this tooth across the available views, or note if no crown remains at all",
+        "is_remnant": "bool -- true if no crown remains, only root structure",
+        "with_caries": "bool -- true only if a dark/radiolucent area is visible in enamel or dentin per the caries criteria above; false if is_remnant is true",
+        "with_root_fracture": "bool -- true only if a line crosses the root's normally continuous structure",
+        "with_endo": "bool -- true when radiopaque filling material is visible in the canal space (see _definitions.root_canal_fill). This is where root canal treatment is ESTABLISHED: tooth_{fdi}_endodontic_treatment runs only when this is true and merely characterises the filling, and the report claims the treatment off this flag -- so answer it on visible material, not on a canal that merely looks worth a second look.",
+        "with_fillings": "bool -- true if a smaller, margin-confined radiopaque area is visible per the fillings criteria above; false if is_remnant is true",
+        "with_full_crown": "bool -- true per the full_crown criteria above (axial vs coronal/sagittal appearance); false if is_remnant is true",
+        "with_post_and_core": "bool -- true only when BOTH the core and the post are present, per the post_and_core criteria above"
+      }
+    },
+    {
+      "fact_id": "tooth_{fdi}_eruption",
+      "question_text": "First describe how much of the crown sits above versus below the bone line for tooth {fdi}, then answer the eruption state.",
+      "description": "See _definitions.eruption_state. Use the coronal and sagittal composite panels.",
+      "type": "object",
+      "images_needed": [
+        "tooth_{fdi}_composite"
+      ],
+      "output_field": "tooth_{fdi}_eruption",
+      "object_fields": {
+        "visual_evidence": "string -- using the coronal and sagittal panels, describe crown exposure above vs below the bone line, or note if absent",
+        "eruption_state": "enum:complete_bony_inclusion|partially_erupted|fully_erupted|absent"
+      }
+    },
+    {
+      "fact_id": "tooth_{fdi}_endodontic_treatment",
+      "question_text": "Only answer this fact when tooth_{fdi}_morphology.with_endo == true. First describe exactly what fills the canal space and the area around the root apex for tooth {fdi}, then answer filling quality and whether a periapical lesion is present.",
+      "description": "Gated by tooth_{fdi}_morphology.with_endo -- presence of root canal treatment is established by that gate, not re-asked here; this fact only characterizes it. See _definitions.root_canal_fill. Separately check the area around the apex for an enlarged dark region beyond the normal thin periodontal ligament line before setting periapical_lesion.",
+      "type": "object",
+      "images_needed": [
+        "tooth_{fdi}_composite"
+      ],
+      "output_field": "tooth_{fdi}_endodontic_treatment",
+      "object_fields": {
+        "visual_evidence": "string -- describe the radiopaque fill line in the canal: how far toward the apex it extends and whether it is continuous; separately describe the apical region for any enlarged dark area",
+        "filling_quality": "enum:adequate|inadequate|overfilled|discontinuous -- adequate = full length near the apex, no gaps; inadequate = stops short of the apex; overfilled = extends past the apex; discontinuous = visible gaps/voids",
+        "periapical_lesion": "bool -- true only if an enlarged radiolucent area around the apex, distinctly beyond the normal ligament line, is described"
+      }
+    },
+    {
+      "fact_id": "tooth_{fdi}_periodontal_status",
+      "question_text": "First locate the CEJ and describe the bone crest position for tooth {fdi}, then answer bone loss extent and furcation involvement.",
+      "description": "See _definitions.bone_loss_extent, applied to this one tooth. furcation_involvement (multi-rooted teeth only) = bone loss between the roots, visible as a radiolucent notch/triangle where the roots split.",
+      "type": "object",
+      "images_needed": [
+        "tooth_{fdi}_composite"
+      ],
+      "output_field": "tooth_{fdi}_periodontal_status",
+      "object_fields": {
+        "visual_evidence": "string -- CEJ location and bone crest position as a fraction of root length; for multi-rooted teeth, whether bone fills the furcation notch",
+        "bone_loss": "enum:none|mild|moderate|severe",
+        "furcation_involvement": "bool",
+        "findings": "string -- describe periodontal status, consistent with visual_evidence"
+      }
+    },
+    {
+      "fact_id": "tooth_{fdi}_bone_quality",
+      "question_text": "Describe the bone immediately AROUND the root(s) of tooth {fdi} -- not the tooth itself -- then answer whether a distinct radiopaque or radiolucent area is present there.",
+      "description": "The periapical and peri-radicular bone of this one tooth, at composite resolution. Compare against the trabecular bone elsewhere in the same panel, NOT against the tooth's own crown or root: a normal root is denser than bone and is not a bone finding, and the dark periodontal ligament line following the root outline is normal anatomy, not a lesion. radiopaque = distinctly brighter than surrounding trabecular bone (sclerotic patch, retained material). radiolucent = distinctly darker and usually bordered (cyst, periapical rarefaction, extraction socket). Answer present = false unless the area is unmistakable -- most teeth sit in unremarkable bone. This is the SECOND source for bone_quality_{arch}: postprocessing reports that arch-level lesion only for teeth this per-tooth read confirms, so a false positive here manufactures a lesion in the report and a false negative merely withholds one.",
+      "type": "object",
+      "images_needed": [
+        "tooth_{fdi}_composite"
+      ],
+      "output_field": "tooth_{fdi}_bone_quality",
+      "object_fields": {
+        "visual_evidence": "string -- describe the trabecular bone around this tooth's root(s) and apex, and say explicitly whether it matches the bone elsewhere in the panel or differs from it",
+        "present": "bool -- true only if visual_evidence describes a distinct brighter or darker area in the BONE around this tooth",
+        "type": "enum:radiopaque|radiolucent, only when present == true"
+      }
+    },
+    {
+      "fact_id": "tooth_{fdi}_mandible_canal",
+      "applies_to_fdi": [
+        36,
+        37,
+        38,
+        46,
+        47,
+        48
+      ],
+      "question_text": "Read ONLY the coronal row (the middle row) of tooth {fdi}'s composite. First describe, in those panels alone, where the mandibular canal sits between the buccal and the lingual cortical plate, and root by root how much bone lies between tooth {fdi}'s apices and the canal. Then answer which plate the canal runs closer to, and whether a root of THIS tooth actually reaches it.",
+      "description": "Asked for the lower molars only (36-38, 46-48) -- the canal runs beneath them, and there is nothing to judge at a position it does not pass. ONE ROW ONLY: answer from the coronal panels. A coronal cut is the only one that shows both cortical plates and the canal in the same picture; the axial row is cut at crown/mid/root height and zoomed differently, and the sagittal row cuts ALONG the canal rather than across it, so neither can show a buccal-lingual position at all. In those coronal panels the canal is the structure filled with the translucent YELLOW wash (see the image caption); if no yellow appears anywhere in the row the canal was not segmented for this side, and you are then reading the canal itself -- a round, dark, cortically outlined tube in the bone below the roots. location = which cortical plate the canal lies CLOSER to, compared as the shortest distance from the canal's outer border to the INNER surface of that plate: lingual = the plate facing the middle of the arch (tongue side), buccal = the plate facing away from the midline (cheek side). It is a comparison between the two distances, not a threshold and not an abnormality: the canal is always nearer one plate than the other, so answer the side you can see is closer; there is no 'central' value. adjacent_to_teeth = BASE RATE, READ THIS FIRST: FALSE IS THE NORMAL ANSWER. This is NOT \"is tooth {fdi} near the canal\" -- under a molar the canal always runs somewhere below the roots, and answering true because it is nearby is a false finding, not a cautious one. True means a root of THIS tooth reaches the canal: touching its wall, indenting it, or crossing it, with no clear bone left between the two. If every root of tooth {fdi} ends with a visible band of bone between its apex and the canal -- however thin -- the answer is false, and that is the answer for most molars. Judge tooth {fdi}'s own roots only: a neighbouring molar's root reaching the canal in the same panel is not this tooth's finding. This is the same judgement mandible_canal_right/mandible_canal_left make for a whole side, asked here one tooth at a time and read off the coronal cut instead of the 3D render.",
+      "type": "object",
+      "images_needed": [
+        "tooth_{fdi}_composite"
+      ],
+      "output_field": "tooth_{fdi}_mandible_canal",
+      "object_fields": {
+        "visual_evidence": "string -- from the coronal panels only: where the canal sits between the buccal and the lingual plate and which one it is nearer; then, root by root, whether a band of bone still separates tooth {fdi}'s apex from the canal or whether the root touches or crosses it",
+        "location": "enum:lingual|buccal -- the plate whose inner surface is the shorter distance from the canal's outer border",
+        "adjacent_to_teeth": "bool -- true only if a root of tooth {fdi} touches, indents or crosses the canal with no bone left between them"
+      }
+    }
+  ]
+}

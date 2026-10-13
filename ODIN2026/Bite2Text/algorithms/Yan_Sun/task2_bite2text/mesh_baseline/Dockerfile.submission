@@ -1,0 +1,13 @@
+FROM --platform=linux/amd64 pytorch/pytorch:2.9.1-cuda12.6-cudnn9-runtime
+
+ENV PYTHONUNBUFFERED=1
+LABEL gc_upload_version="2026-08-07-bite2text-ios-direct-geometry-ensemble"
+
+RUN groupadd -r user && useradd -m --no-log-init -r -g user user
+USER user
+
+WORKDIR /opt/baseline
+COPY --chown=user:user train.py inference.py ./
+COPY --chown=user:user models/direct_geometry_ensemble/ /opt/ml/model/checkpoints/
+
+ENTRYPOINT ["python", "inference.py"]

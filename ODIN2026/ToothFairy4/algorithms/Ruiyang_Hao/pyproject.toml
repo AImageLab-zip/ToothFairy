@@ -1,0 +1,38 @@
+[project]
+name = "evident-cbct"
+version = "0.1.0"
+description = "Challenge inference pipeline for evidence-bottlenecked dental CBCT report generation"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.10"
+dependencies = [
+    "accelerate>=1.0",
+    "acvl-utils>=0.2.3,<0.3",
+    "batchgenerators>=0.25.1",
+    "blosc2>=3.0",
+    "connected-components-3d>=3.20",
+    "dynamic-network-architectures>=0.4.1,<0.5",
+    "einops>=0.8",
+    "mamba-ssm==2.2.5",
+    "nibabel>=5.0",
+    "nnunetv2>=2.6.2",
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "peft>=0.15",
+    "PyYAML>=6.0",
+    "scipy>=1.11",
+    "SimpleITK>=2.3",
+    "torch>=2.4,!=2.9.*",
+    "tqdm>=4.66",
+    "transformers>=4.52,<5",
+]
+
+[project.scripts]
+evident-cbct = "evigre.inference.run_cases:main"
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["evigre*"]

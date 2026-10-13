@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+PROJECT_ROOT=${BITE2TEXT_PROJECT_ROOT:-$(cd -- "${SCRIPT_DIR}/../.." && pwd)}
+TASK_ROOT=${PROJECT_ROOT}/task2_bite2text
+REPO_DIR=${BITE2TEXT_BITS2BITES_ROOT:-${BITE2TEXT_VENDOR_ROOT:-${PROJECT_ROOT}/.vendor}/Bits2Bites}
+DATA_ROOT=${REPO_DIR}/data/bite2text_ptv3_surface32k_v3_official_12head_cv5
+CONFIG_DIR=${REPO_DIR}/configs/dental
+ENCODER=${REPO_DIR}/exp/dental/ptv3_mesh_mtl_all200_seed2026/model/ptv3_encoder_all200_seed2026.pth
+STATUS_LOG=${TASK_ROOT}/bite2text_ptv3_v3_cv5_status.log
+MASTER_LOG=${TASK_ROOT}/bite2text_ptv3_v3_cv5_master.log
+STAGE1_EPOCHS=${BITE2TEXT_STAGE1_EPOCHS:-10}
+STAGE2_EPOCHS=${BITE2TEXT_STAGE2_EPOCHS:-60}
+BASE_SEED=${BITE2TEXT_CV_BASE_SEED:-20260810}
+
+export CUDA_HOME=${CUDA_HOME:-/usr/local/cuda-12.4}
+export PATH=${CUDA_HOME}/bin:${PATH}
+export LD_LIBRARY_PATH=${CUDA_HOME}/lib64:${LD_LIBRARY_PATH:-}
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-1}
+export PYTHONPATH=${REPO_DIR}:${PYTHONPATH:-}
+export WANDB_MODE=disabled
+
+mkdir -p "${REPO_DIR}/logs"
+exec 9>"${TASK_ROOT}/bite2text_ptv3_v3_cv5.lock"
+if ! flock -n 9; then
+  echo "Another Bite2Text v3 CV workflow holds the lock." >&2
+  exit 1
+fi
+
+status() {
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1" | tee -a "${STATUS_LOG}"
+}
+
+checkpoint_epoch() {
+  "${REPO_DIR}/.venv/bin/python" - "$1" <<'PY'
+import sys
+from pathlib import Path
+import torch
+path = Path(sys.argv[1])
+print(torch.load(path, map_location="cpu", weights_only=False).get("epoch", -1) if path.is_file() else -1)
+PY
+}
+
+train_config() {
+  local config=$1
+  local run_name=$2
+  local expected_epoch=$3
+  local checkpoint="${REPO_DIR}/exp/dental/${run_name}/model/model_last.pth"
+  if [[ "$(checkpoint_epoch "${checkpoint}")" == "${expected_epoch}" ]]; then
+    status "${run_name} already complete; reusing epoch ${expected_epoch}"
+    return
+  fi
+  status "Starting ${run_name} (${expected_epoch} epochs)"
+  cd "${REPO_DIR}"
+  .venv/bin/python -u tools/train.py \
+    --config-file "${CONFIG_DIR}/${config}" \
+    --num-gpus 1 --num-machines 1 --dist-url auto \
+    2>&1 | tee "logs/${run_name}.log"
+  local actual
+  actual=$(checkpoint_epoch "${checkpoint}")
+  if [[ "${actual}" != "${expected_epoch}" ]]; then
+    status "ERROR: ${run_name} checkpoint epoch=${actual}, expected=${expected_epoch}"
+    exit 1
+  fi
+  status "Completed ${run_name}"
+}
+
+status "CV5 workflow started on CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES}"
+for fold in 1 2 3 4 5; do
+  seed=$((BASE_SEED + fold - 1))
+  prefix="bite2text_ptv3_v3_official_12head_fold${fold}"
+  "${REPO_DIR}/.venv/bin/python" "${TASK_ROOT}/ptv3_finetune/make_ptv3_configs.py" \
+    --dataset-root "${DATA_ROOT}/fold${fold}" \
+    --encoder "${ENCODER}" \
+    --output-dir "${CONFIG_DIR}" \
+    --stage1-epochs "${STAGE1_EPOCHS}" \
+    --stage2-epochs "${STAGE2_EPOCHS}" \
+    --seed "${seed}" \
+    --config-prefix "${prefix}"
+  train_config \
+    "${prefix}_stage1_frozen.py" \
+    "${prefix}_stage1_frozen_seed${seed}" \
+    "${STAGE1_EPOCHS}"
+  train_config \
+    "${prefix}_stage2_joint.py" \
+    "${prefix}_stage2_joint_seed${seed}" \
+    "${STAGE2_EPOCHS}"
+  status "Fold ${fold}/5 complete"
+done
+status "CV5 WORKFLOW COMPLETE"

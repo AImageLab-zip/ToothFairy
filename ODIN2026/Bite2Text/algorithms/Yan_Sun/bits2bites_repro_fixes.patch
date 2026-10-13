@@ -1,0 +1,76 @@
+diff --git a/pointcept/engines/hooks/evaluator.py b/pointcept/engines/hooks/evaluator.py
+index 64a9694..cfe6683 100644
+--- a/pointcept/engines/hooks/evaluator.py
++++ b/pointcept/engines/hooks/evaluator.py
+@@ -35,7 +35,7 @@ def _get_label_name(idx):
+     return LABELS[idx]
+ 
+ @HOOKS.register_module()
+-class MultiClsEvaluator(HookBase):
++class LegacyMultiClsEvaluator(HookBase):
+     def before_train(self):
+         if self.trainer.writer is not None and self.trainer.cfg.enable_wandb:
+             wandb.define_metric("val/*", step_metric="Epoch")
+diff --git a/tools/train.py b/tools/train.py
+index c4c458f..f305fa0 100644
+--- a/tools/train.py
++++ b/tools/train.py
+@@ -10,7 +10,5 @@ from pointcept.engines.defaults import (
+ from pointcept.engines.train import TRAINERS
+ from pointcept.engines.launch import launch
+-import os
+-from dental_fold import prepare_folds
+ 
+ def main_worker(cfg):
+     cfg = default_setup(cfg)
+@@ -22,25 +20,6 @@ def main():
+     args = default_argument_parser().parse_args()
+     cfg = default_config_parser(args.config_file, args.options)
+ 
+-    cfg.wandb_project = os.environ.get("WANDB_PROJECT", "default_project")
+-    cfg.wandb_key = os.environ.get("WANDB_KEY", "no_key")
+-    cfg.wandb_entity = os.environ.get("WANDB_ENTITY", "default_entity")
+-    cfg.wandb_run_name = os.environ.get("WANDB_RUN_NAME", "default")
+-
+-    cfg.run_uuid = os.environ.get("PROJECT_UUID", "aaaaaa")
+-    cfg.dataset_type=dict(
+-        type='DentalDataset',
+-        data_root=os.path.join("data", "dt_" + cfg.run_uuid),
+-        debug=cfg.debug
+-    )
+-    cfg.save_path = os.path.join("exp", "dt_" + cfg.run_uuid)
+-    cfg.data_root = os.path.join("data", "dt_" + cfg.run_uuid)
+-    prepare_folds(cfg.fold_val, cfg.data_root)
+-
+-    cfg.data.train.data_root = cfg.data_root
+-    cfg.data.val.data_root = cfg.data_root
+-    cfg.data.test.data_root = cfg.data_root
+-
+     launch(
+         main_worker,
+         num_gpus_per_machine=args.num_gpus,
+diff --git a/configs/dental/_base_dental.py b/configs/dental/_base_dental.py
+index 29af6b9..f69dba7 100644
+--- a/configs/dental/_base_dental.py
++++ b/configs/dental/_base_dental.py
+@@ -23,7 +23,7 @@ num_worker = 4
+ empty_cache = False
+ enable_amp = True
+ clip_grad = 1.0
+-enable_wandb = True  # see BITS2BITES.md "Weights & Biases (wandb) setup"
++enable_wandb = False  # reproducible local runs must not require external W&B auth
+ # __import__ instead of a module-level `import os`: Config deepcopies every
+ # top-level name when merging base configs, and can't deepcopy a module object.
+ wandb_project = __import__("os").environ.get("WANDB_PROJECT", "bits2bites")
+diff --git a/scripts/train.sh b/scripts/train.sh
+index b763837..36d2193 100755
+--- a/scripts/train.sh
++++ b/scripts/train.sh
+@@ -70,6 +70,6 @@ EXP_DIR=exp/${DATASET}/${EXP_NAME}
+ MODEL_DIR=${EXP_DIR}/model
+ CODE_DIR=${EXP_DIR}/code
+-CONFIG_DIR=configs/dental/${CONFIG}
++CONFIG_DIR=configs/dental/${CONFIG}.py
+ 
+ echo " =========> CREATE EXP DIR <========="
+ echo "Experiment dir: $ROOT_DIR/$EXP_DIR"

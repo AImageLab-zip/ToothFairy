@@ -1,0 +1,95 @@
+diff --git a/pointcept/engines/hooks/evaluator.py b/pointcept/engines/hooks/evaluator.py
+--- a/pointcept/engines/hooks/evaluator.py
++++ b/pointcept/engines/hooks/evaluator.py
+@@ -387,8 +387,11 @@ class MultiClsEvaluator(HookBase):
+             wandb.log({"inference/mean_time": mean_time}, step=wandb.run.step)
+ 
+         self.trainer.logger.info("<<<<<<<<<<<<<<<<< End Evaluation <<<<<<<<<<<<<<<<<")
+-        self.trainer.comm_info["current_metric_value"] = avg["accuracy"]
+-        self.trainer.comm_info["current_metric_name"] = "avg_accuracy"
++        selection_metric = self.trainer.cfg.get("selection_metric", "accuracy")
++        if selection_metric not in avg:
++            raise ValueError(f"Unknown multi-task selection metric: {selection_metric}")
++        self.trainer.comm_info["current_metric_value"] = avg[selection_metric]
++        self.trainer.comm_info["current_metric_name"] = f"avg_{selection_metric}"
+ 
+ 
+ @HOOKS.register_module()
+diff --git a/pointcept/datasets/__init__.py b/pointcept/datasets/__init__.py
+index a735c83..0b517d9 100644
+--- a/pointcept/datasets/__init__.py
++++ b/pointcept/datasets/__init__.py
+@@ -27,6 +27,7 @@ from .hk import HKDataset
+ 
+ # Custom dental dataset
+ from .dental import DentalDataset
++from .bite2text import Bite2TextDataset
+ 
+ # object
+ from .modelnet import ModelNetDataset
+diff --git a/pointcept/models/multi_task_classifier/multi_task_classifier_v1m1_base.py b/pointcept/models/multi_task_classifier/multi_task_classifier_v1m1_base.py
+index c85ad53..2028318 100644
+--- a/pointcept/models/multi_task_classifier/multi_task_classifier_v1m1_base.py
++++ b/pointcept/models/multi_task_classifier/multi_task_classifier_v1m1_base.py
+@@ -21,7 +21,8 @@ class MultiTaskClassifier(nn.Module):
+         loss_type="ce",
+         class_weights=None,
+         label_smoothing=0.0,
+-        stl_task=-1
++        stl_task=-1,
++        freeze_backbone=False,
+     ):
+         super().__init__()
+ 
+@@ -29,6 +30,7 @@ class MultiTaskClassifier(nn.Module):
+         self.num_tasks = len(num_classes_list)
+         self.num_classes_list = list(num_classes_list)
+         self.stl_task=stl_task
++        self.freeze_backbone = freeze_backbone
+ 
+         # one MLP head per task  (Linear-BN-ReLU-Drop-Linear)
+         self.heads = nn.ModuleList()
+@@ -54,9 +56,21 @@ class MultiTaskClassifier(nn.Module):
+                 w = torch.tensor(class_weights[i], dtype=torch.float32)
+             self.criterions.append(CrossEntropyLoss(weight=w, ignore_index=-1, label_smoothing=label_smoothing))
+ 
++        if self.freeze_backbone:
++            for parameter in self.backbone.parameters():
++                parameter.requires_grad = False
++            # Keep normalization buffers in train mode during the frozen
++            # stage. Besides adapting them to the Bite2Text domain, this uses
++            # spconv's supported AMP training kernels while all learned
++            # backbone parameters remain gradient-free.
++
+     def forward(self, input_dict):
+         point = Point(input_dict)
+-        point = self.backbone(point)
++        if self.freeze_backbone:
++            with torch.no_grad():
++                point = self.backbone(point)
++        else:
++            point = self.backbone(point)
+ 
+         # PTv3 or SpuNet
+         if isinstance(point, Point):
+@@ -81,7 +95,12 @@ class MultiTaskClassifier(nn.Module):
+             losses = []
+             for i, logit in enumerate(logits):
+                 target = input_dict[f"label_{i}"].view(-1)
+-                loss_val = self.criterions[i](logit, target)
++                if (target != -1).any():
++                    loss_val = self.criterions[i](logit, target)
++                else:
++                    # A weak-label batch can have no target for one report
++                    # head. Keep the graph valid without producing NaN.
++                    loss_val = logit.sum() * 0.0
+                 if loss_val.ndim > 0:
+                     loss_val = loss_val.mean()
+ 
+@@ -93,4 +112,4 @@ class MultiTaskClassifier(nn.Module):
+                 out[f"loss_{i}"] = loss_val
+             out["loss"] = sum(losses)
+ 
+-        return out
+\ No newline at end of file
++        return out

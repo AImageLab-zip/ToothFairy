@@ -1,0 +1,18 @@
+# Datasets, obtained from the challenge organisers (see README)
+/toothfairy4_v03
+/Dataset123_ToothFairy3
+
+# Segmentation weights and container build artefacts
+algorithm/model/*.pth
+algorithm/*.tar.gz
+algorithm/vendor/
+algorithm/test/
+
+# Everything the scripts generate
+work/*
+!work/.gitkeep
+
+# Python
+__pycache__/
+*.pyc
+.venv/

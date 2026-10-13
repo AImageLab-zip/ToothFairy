@@ -1,0 +1,68 @@
+Bite2Text - MIT license for author-trained model contributions
+============================================================
+
+Declaration date: 26 September 2026
+Copyright holder: Yan Sun
+SPDX-License-Identifier: MIT
+
+Scope
+-----
+Yan Sun releases the original project code and his own trained-model
+contributions for this Bite2Text solution under the MIT License. This includes
+the self-trained Bits2Bites initialization encoder and the three final
+checkpoints identified below, to the extent of the rights he can license.
+For these model contributions, "Software" in the MIT text includes the model
+parameters and associated author-created configuration/documentation.
+
+Exact published final checkpoints (SHA-256):
+
+model_final.pth
+  d7f3be80fadc361248b970a85861660ad527d7cf5e82232e563fb1fe363c6811
+photo_model_final.pt
+  86829bf980fb96df5ae4bb0ef673c6cd10350b3fc6163883b18a3a0a4621ef0b
+photo_view_classifier.pt
+  aa47c53aaca03709767f5176971bccc2d240fd853f584cfada8284d926b0bcc9
+
+These checkpoints are present in Bite2Text_v9_public_weights.zip, SHA-256
+92f704a706604613e08cd560bd0594a52bd40d6e65487aa7c7660f511739e3a8,
+and in the complete runtime model bundle. This declaration applies to the
+identified files without changing their bytes or the published archives.
+It supersedes earlier uncertainty about the author's chosen license for his
+own model contributions; it does not override any third-party restriction.
+The initialization encoder is not a separate download in these final bundles.
+Redistributions of the covered contributions must include the MIT notice.
+
+Third-party boundaries
+----------------------
+This declaration does not relicense IOS-Normalizer or its checkpoint,
+third-party source code, upstream pretrained assets, Bits2Bites/ODIN datasets,
+patient records, clinical reports, or retrieval banks. It is not a blanket
+license for every component of the Docker image or complete submission bundle.
+The photo models were initialized from torchvision
+ResNet18_Weights.IMAGENET1K_V1; applicable upstream/model/data terms remain in force. The
+author's MIT grant is not a determination that all underlying third-party
+permissions or challenge-rule requirements have been independently verified.
+See THIRD_PARTY_NOTICES for provenance and scope.
+
+MIT License
+-----------
+
+Copyright (c) 2026 Yan Sun
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

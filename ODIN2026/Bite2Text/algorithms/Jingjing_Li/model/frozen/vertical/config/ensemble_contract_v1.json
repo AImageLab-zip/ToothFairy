@@ -1,0 +1,30 @@
+{
+  "overjet": {
+    "labels": [
+      "Normal",
+      "Increased",
+      "Decreased",
+      "Negative",
+      "Not_Assessable",
+      "Not_Mentioned"
+    ],
+    "extra_weight": 0.9,
+    "catboost_weight": 0.1,
+    "catboost_features": "rich geometry 111 + internal C17 segmentation 98",
+    "catboost_depth": 5
+  },
+  "overbite": {
+    "labels": [
+      "Normal",
+      "Increased",
+      "Decreased",
+      "Open_Bite",
+      "Not_Assessable",
+      "Not_Mentioned"
+    ],
+    "extra_weight": 0.15,
+    "catboost_weight": 0.85,
+    "catboost_features": "task overbite geometry 35 + internal C17 segmentation 98",
+    "catboost_depth": 3
+  }
+}

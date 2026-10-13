@@ -1,0 +1,15 @@
+# Install PyTorch + torchvision for your platform first: https://pytorch.org/get-started/locally/
+#
+# Pinned to the versions the expected output was produced with. Mesh decimation
+# (fast-simplification), mesh processing (trimesh) and the classifiers fitted at
+# start-up (scikit-learn) all change results between releases.
+numpy>=1.24,<2.3
+scipy==1.16.0
+pandas==2.2.3
+scikit-learn==1.6.1
+trimesh==4.6.1
+fast-simplification==0.1.13
+pillow>=10.0
+tifffile==2025.6.1     # Grand Challenge delivers photographs as (Big)TIFF / .mha
+imagecodecs>=2024.1.1
+SimpleITK==2.5.2

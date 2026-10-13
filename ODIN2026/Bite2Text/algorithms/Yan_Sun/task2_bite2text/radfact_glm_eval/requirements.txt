@@ -1,0 +1,3 @@
+radfact-lite @ git+https://github.com/AImageLab-zip/radfact_lite.git@053f680be1c57225f94d67b198a34aa871b1127d
+jsonschema>=4.20
+openai>=1.0.0

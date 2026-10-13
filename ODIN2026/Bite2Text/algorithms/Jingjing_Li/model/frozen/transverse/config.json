@@ -1,0 +1,51 @@
+{
+  "version": "transverse-final-freeze-v1",
+  "selection_source": {
+    "severity_type": "../evaluation_transverse_final_v1/transverse_final_summary_v1.json",
+    "crossbite_present": "../evaluation_fusion_v3/crossbite_branch_summary_v3.json",
+    "crossbite_location": "../evaluation_location_v1/crossbite_location_summary_v1.json",
+    "crossbite_type": "../finalized_experiments_20260809/evaluation_crossbite_type_v1/crossbite_type_summary_v1.json"
+  },
+  "raw_contract": {
+    "coordinates": "registered upper/lower STL in their original common coordinate system; never independently aligned arches",
+    "labels": "shared live DADSN per-vertex FDI labels",
+    "forbidden": ["training CSV", "OOF predictions", "ground truth", "precomputed geometry"]
+  },
+  "features": {
+    "posterior": "01_extract_crossbite_geometry.py; selected 52 posterior raw columns",
+    "anterior": "03_extract_anterior_crossbite_geometry.py; selected 45 anterior raw columns",
+    "concat_raw_reference": "posterior 52 + anterior 45 in the frozen feature_schema order"
+  },
+  "severity": {
+    "selected_model": "state_logistic_97",
+    "classes": ["Normal", "Mild", "Moderate", "Severe", "Not_Mentioned"],
+    "preprocessing": {"imputer": "median+missing_indicator", "scaler": "standard"},
+    "classifier": {"family": "LogisticRegression", "solver": "lbfgs", "max_iter": 5000, "class_weight": null, "C": 0.05, "C_policy": "median of frozen selected outer-fold C values [0.05,0.1,0.05,0.025,0.025]; no candidate reselection"}
+  },
+  "type": {
+    "selected_model": "state_logistic_97_no_na",
+    "classes": ["Maxillary_Constriction", "Mandibular_Widening", "Normal", "Not_Mentioned"],
+    "preprocessing": {"imputer": "median+missing_indicator", "scaler": "standard"},
+    "classifier": {"family": "LogisticRegression", "solver": "lbfgs", "max_iter": 5000, "class_weight": null, "C": 0.025, "C_policy": "mode of frozen selected outer-fold C values [0.025,0.025,0.025,0.025,0.1]; no candidate reselection"}
+  },
+  "crossbite_present": {
+    "selected_model": "concat_raw_reference",
+    "preprocessing": {"imputer": "median+missing_indicator", "scaler": "standard"},
+    "classifier": {"family": "LogisticRegression", "solver": "liblinear", "max_iter": 5000, "class_weight": "balanced", "C": 1.0},
+    "threshold": 0.715,
+    "threshold_policy": "median of frozen selected outer-fold thresholds [0.485,0.715,0.565,0.815,0.81]; no threshold optimization on full data"
+  },
+  "crossbite_type": {
+    "selected_model": "present_rule",
+    "rule": "Crossbite if crossbite_present else None"
+  },
+  "crossbite_location": {
+    "selected_model": "side_shared_raw4",
+    "side_classifier": {"family": "LogisticRegression", "solver": "liblinear", "max_iter": 5000, "class_weight": null, "C": 0.05, "C_policy": "mode of frozen selected outer-fold C values [0.05,0.1,0.05,0.05,0.05]"},
+    "bilateral_scale": 0.75,
+    "bilateral_scale_policy": "median of frozen selected outer-fold scales [1.0,1.0,0.75,0.5,0.75]",
+    "classes": ["None", "Left_Side", "Right_Side", "Bilateral"]
+  },
+  "crossbite_teeth": {"selected_model": "fixed_empty", "value": []},
+  "deployment_training": "One full-cohort train using only these fixed families, feature columns, preprocessing, parameters, thresholds, and label policies. No OOF rerun or candidate comparison."
+}

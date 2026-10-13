@@ -1,0 +1,25 @@
+# =============================================================================
+# configs/postprocess/cross_validate.yaml -- the precision-gate arm.
+#
+# The pre-2026-08-07 behaviour: a finding two sources disagree about is DROPPED
+# instead of reported. Every subordinate vote is already at its measured
+# setting in default.yaml, so this arm is genuinely the one line below -- which
+# is the property the config split was for. It was `--cross-validate` before,
+# and that flag still works and still means exactly this.
+#
+# WHAT IT COSTS. The union arm replaced it because recall is the binding
+# constraint on RadFact Logical F1 here: arm 6 is P 0.5306 / R 0.4982, and the
+# gate trades away the second number. Both arms are traceable from one run
+# either way -- the affected teeth are listed under
+# arch_findings.cross_source_dropped whichever way this is set.
+# =============================================================================
+
+arm: aksssr_v7_trained_arm6_cross_validate
+based_on: configs/postprocess/default.yaml
+notes: >-
+  Precision gates back on. Restores the cross-source agreement gate and
+  everything subordinate to it -- the per-finding votes, the caries gate, the
+  implant-on-present-tooth gate and the bone-quality per-tooth confirmation.
+
+cross_source:
+  require_agreement: true

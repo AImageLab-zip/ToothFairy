@@ -1,0 +1,15 @@
+# Downloaded official backbones; task weights and configs are committed.
+/model/report_runtime/model/
+/model/.downloads/
+/model/frozen/curves/models/shared/resnet18_imagenet_default_state_dict.pt
+/model/frozen/dental_hygiene/models/resnet18_imagenet_state_dict.pt
+/input/
+/output/
+/.venv/
+__pycache__/
+*.py[cod]
+.env
+.env.*
+*.log
+*.swp
+*.bak

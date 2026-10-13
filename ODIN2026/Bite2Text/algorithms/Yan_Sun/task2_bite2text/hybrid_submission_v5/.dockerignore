@@ -1,0 +1,5 @@
+model
+test
+artifacts
+*.tar.gz
+__pycache__

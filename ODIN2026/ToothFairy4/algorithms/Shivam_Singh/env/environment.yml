@@ -1,0 +1,32 @@
+# Curated, cross-platform recipe for the `cbct_base` host env.
+# This is the file to use when rebuilding on a new machine.
+#
+#   conda env create -f env/environment.yml
+#
+# Only python/ipykernel/nodejs were ever `conda install`-ed; everything the
+# pipeline actually imports came in via pip, so the real content lives in
+# requirements.txt and is pulled in by the `- pip: -r ...` line below.
+#
+# This is a curated recipe, not a bit-exact snapshot: it pins what the pipeline
+# imports and lets conda/pip resolve the rest for the platform being built on.
+# The machine-specific exports that used to sit beside it were dropped -- they
+# carried build strings and an absolute prefix, and neither survived a move to
+# any other machine.
+# ONE MANUAL STEP AFTERWARDS, and conda has no hook for it: the wordnet corpus
+# nltk's METEOR needs is data, not a package.
+#
+#   conda activate cbct_base && python -m nltk.downloader wordnet omw-1.4
+#
+# Skip it and official_ranking.py scores METEOR on its fallback implementation
+# instead -- no error, a different scale, and `meteor_backend` in summary.json
+# is how you find out. See the note in requirements.txt.
+name: cbct_base
+channels:
+  - defaults
+dependencies:
+  - python=3.13
+  - pip
+  - ipykernel
+  - nodejs
+  - pip:
+      - -r requirements.txt

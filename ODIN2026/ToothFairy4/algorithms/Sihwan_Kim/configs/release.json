@@ -1,0 +1,21 @@
+{
+  "release": "v1.0.0",
+  "weights": {
+    "url": "https://github.com/skk5215/REPGEN-ODIN2026/releases/download/v1.0.0/repgen-inference-weights-v1.0.0.tar.gz",
+    "sha256": "2ce5eeb32ea4d639f40a4f878b51648f7b2b63127bb14820ec750a7ab3fb90c4",
+    "bytes": 577282212,
+    "neural_checkpoints": 28,
+    "parameter_precision": "unchanged"
+  },
+  "validation": {
+    "all_weight_tensors_and_buffers_equal_to_submission": true,
+    "source_syntax": "passed",
+    "cpu_representative_forward_parity": "8_checks_passed_zero_difference",
+    "rebuilt_cuda_container_tested": false
+  },
+  "licences": {
+    "original_code": "CC-BY-NC-4.0",
+    "weights": "CC-BY-NC-SA-4.0",
+    "third_party": "See licenses/THIRD_PARTY.md"
+  }
+}

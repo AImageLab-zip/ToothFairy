@@ -1,0 +1,38 @@
+name: Source tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  final-decision-controls:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install test dependency
+        run: python -m pip install --requirement requirements-test.txt
+      - name: Run final v9 source tests
+        working-directory: task2_bite2text/hybrid_submission_v9_final
+        run: python -m unittest -v test_report_sanitizer.py test_risk_rerank.py
+      - name: Check reproduction helpers
+        run: python -m unittest discover -s tests -v
+      - name: Check report parser and renderer
+        run: python -m unittest -v task2_bite2text.labeling.test_parse_bite2text_reports task2_bite2text.ptv3_finetune.test_report_renderer
+      - name: Check shell syntax
+        run: |
+          for script in scripts/bootstrap_upstreams.sh scripts/build_v9_image.sh \
+            run_bits2bites_fold1.sh run_bits2bites_folds2_to5_all200.sh \
+            task2_bite2text/ptv3_finetune/run_ptv3_v3_cv5.sh \
+            task2_bite2text/ptv3_finetune/run_ptv3_v3_full867.sh \
+            task2_bite2text/hybrid_submission_v9_final/do_test_run.sh; do
+            bash -n "$script"
+          done

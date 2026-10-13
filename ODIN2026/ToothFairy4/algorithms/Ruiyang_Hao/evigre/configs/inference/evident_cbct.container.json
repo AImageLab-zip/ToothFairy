@@ -1,0 +1,32 @@
+{
+  "pipeline_version": "evident-cbct-v1",
+  "stage1": {
+    "checkpoint": "/opt/ml/model/stage1/fold_0/checkpoint_best.pth",
+    "task1_inference_py": "/opt/evident/U-Mamba2/documentation/competitions/Toothfairy3/task1_inference.py",
+    "backend": "umamba2_task1",
+    "reference_spacing": "0.3,0.3,0.3",
+    "tile_step_size": 0.95,
+    "accumulation_device": "cpu"
+  },
+  "stage2": {
+    "dataset_name": "Dataset401_EviDentCBCT_Stage2Evidence",
+    "checkpoint_name": "checkpoint_best.pth",
+    "global_folder": "/opt/ml/model/stage2/global/fold_0",
+    "global_thresholds": "/opt/ml/model/stage2/global/fold_0/thresholds.json",
+    "relation_folder": "/opt/ml/model/stage2/relation/fold_0",
+    "relation_thresholds": "/opt/ml/model/stage2/relation/fold_0/thresholds.json",
+    "tooth_folder": "/opt/ml/model/stage2/tooth/fold_0",
+    "tooth_thresholds": "/opt/ml/model/stage2/tooth/fold_0/thresholds.json",
+    "tooth_threshold_view": "tooth",
+    "tooth_region_mask_config": "/opt/evident/EviDent-CBCT/evigre/configs/inference/challenge_tooth_mask_v1.json"
+  },
+  "stage3": {
+    "min_probability": 0.6,
+    "add_preamble": true,
+    "evidence_filter": "trusted-global-relation-v1",
+    "consistency_projection": "dental-consistency-v1",
+    "qwen_base": "/opt/ml/model/stage3/qwen_base",
+    "qwen_adapter": "/opt/ml/model/stage3/qwen_adapter",
+    "max_new_tokens": 512
+  }
+}

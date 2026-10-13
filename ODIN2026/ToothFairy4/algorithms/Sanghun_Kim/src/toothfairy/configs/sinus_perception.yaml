@@ -1,0 +1,70 @@
+# [Curriculum stage 1 of 3] Train perception (aggregation encoder + findings head) with the
+# **gate loss only**: perception first, then freeze, then prefix, then LLM LoRA.
+# Motivation: earlier training optimised total = L_report + 0.5*L_gate, so the two losses were
+# mixed, and the soft probabilities of the findings head were injected into the decode path
+# without a detach, so **the gradient of L_report flowed back into the head** (realizer.py:120).
+# That made it unclear what perception was actually learning.
+#
+# This stage never loads the LLM (FindingsModel = ReportModel without the realizer).
+#   encoder(batch) -> ctx[B,38,d] -> findings head -> claim logits, loss = L_findings only.
+# Run: python -m toothfairy.cli.train --gpus 0 --stage perception
+#   (a classifier over cached features: a cheap stage, measured at ~10 s/epoch)
+#
+# The feature caches below are the soft-clip ones (see perception/softclip_norm.py); the later
+# curriculum stages read the same caches.
+
+perception:
+  backbone: hybrid
+  cache_dir: experiments/feature_cache/region_features_sc
+  tf2_teeth_cache_dir: experiments/feature_cache/tf2_tooth_density_sc
+
+encoder:
+  pe_k: 6
+  d_model: 128
+  n_heads: 4
+  gate_hidden: 128
+  dropout: 0.2
+  cl_layers: 2
+  cl_heads: 4
+  cl_dropout: 0.2
+  use_presence_emb: false
+  use_in_proj: false
+
+realizer:                        # not loaded in this stage (FindingsModel has no realizer)
+  llm_name: Qwen/Qwen3.5-9B
+  quant: 4bit
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  n_prefix_per_token: 1
+  proj_hidden: 512
+  dropout: 0.2
+  max_text_len: 512
+  grad_checkpointing: true
+  use_liger: true
+
+train:
+  run_name: sinus_perception
+  seed: 42
+  lr: 2.0e-4
+  weight_decay: 1.0e-2
+  batch_size: 1
+  grad_accum: 4
+  epochs: 100                    # cheap stage — early stopping decides the real end
+  early_stopping_patience: 5
+
+  # --- ground truth ---
+  anat_dir: experiments/extraction/per_structure_per_report_split
+  dense_dir: experiments/GT/categorical_GT/per_report
+
+  # --- findings (claim) loss = the only objective of this stage ---
+  findings_head: true
+  lambda_gate: 0.5               # sole loss here, so this is only a scale, not a weighting
+  gate_mode: soft
+  gate_class_weight: true
+  gate_class_weight_beta: 0.99
+  gate_state_weight: 1.0
+  gate_focal_gamma: 0.0
+  eos_include_not_available: true
+  use_siglip: true
+  lambda_siglip: 0.5

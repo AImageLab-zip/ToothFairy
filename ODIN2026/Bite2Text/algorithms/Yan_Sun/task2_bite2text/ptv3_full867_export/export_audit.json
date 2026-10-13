@@ -1,0 +1,38 @@
+{
+  "export_name": "bite2text_ptv3_v3_full867",
+  "exported_at": "2026-08-11T12:25:00+08:00",
+  "training": {
+    "cases": 867,
+    "stage1_epochs": 10,
+    "stage2_epochs": 47,
+    "seed": 20260815,
+    "checkpoint_epoch": 47,
+    "checkpoint_state_dict_keys": 490,
+    "checkpoint_selection": "fixed_epoch_model_last",
+    "validation_disabled": true,
+    "note": "best_metric_value is -Infinity by design because full-data validation was disabled"
+  },
+  "files": {
+    "model_final.pth": {
+      "bytes": 41772576,
+      "sha256": "d7f3be80fadc361248b970a85861660ad527d7cf5e82232e563fb1fe363c6811"
+    },
+    "config.py": {
+      "bytes": 7695,
+      "sha256": "596e70c607ef4bdde60ba2b34be94254803ea07d5d231a76d1773ed029765616"
+    },
+    "head_vocabs.json": {
+      "bytes": 1417,
+      "sha256": "3511edb5079db674be62202a51d341ac1cc277b117e67daa5c431d8d487ef3da"
+    },
+    "class_weights.json": {
+      "bytes": 998,
+      "sha256": "68185aba476b98d1ca00b19add3ce278d5ed34149458db49258ec64dd80b8765"
+    },
+    "full_dataset_audit.json": {
+      "bytes": 14367,
+      "sha256": "af2b064367d3f73b2b38158fe4f96ba3656f3e8f37f151181abba15bef3fe125"
+    }
+  },
+  "source_checkpoint": "task2_bite2text/Bits2Bites/exp/dental/bite2text_ptv3_v3_official_12head_full867_stage2_joint_seed20260815/model/model_last.pth"
+}

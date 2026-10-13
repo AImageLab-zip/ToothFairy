@@ -1,0 +1,52 @@
+{
+  "dataset_version": "v03",
+  "seed": 2026,
+  "scheme": "per-family stratified 80/10/10 by case",
+  "fracs": {
+    "train": 0.8,
+    "val": 0.1,
+    "test": 0.1
+  },
+  "n_cases_total": 622,
+  "splits": {
+    "train": {
+      "n_cases": 498,
+      "by_family": {
+        "A": 75,
+        "F": 51,
+        "P": 330,
+        "S": 42
+      },
+      "n_reports_en": 804,
+      "n_multi_report": 297
+    },
+    "val": {
+      "n_cases": 62,
+      "by_family": {
+        "A": 10,
+        "F": 6,
+        "P": 41,
+        "S": 5
+      },
+      "n_reports_en": 99,
+      "n_multi_report": 36
+    },
+    "test": {
+      "n_cases": 62,
+      "by_family": {
+        "A": 10,
+        "F": 6,
+        "P": 41,
+        "S": 5
+      },
+      "n_reports_en": 97,
+      "n_multi_report": 34
+    }
+  },
+  "notes": [
+    "Replaces the pre-v03 train/val_id/val_ood scheme (archived in splits/legacy_v02/).",
+    "No family-holdout OOD split: F now appears in all three splits. For an OOD-style read, evaluate on the F subset of test.",
+    "Split is by case, so multi-report cases keep all their reports in one split.",
+    "v03 removed 8 pre-v03 cases (A006, A045, A076, P120, P121, P262, P263, P378) and added 5 (A114, A120, A127, A128, A130); old split files are not a v03 partition."
+  ]
+}

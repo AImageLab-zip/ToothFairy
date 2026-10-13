@@ -1,0 +1,22 @@
+# RGBite — training dependencies (both tasks). Versions are those the submitted runs used.
+# torch is not pinned here: install the build matching your CUDA (runs used torch 2.11 / CUDA 13).
+
+transformers==5.12.1
+peft==0.20.0
+accelerate==1.14.0
+bitsandbytes==0.50.0      # int4 (NF4) export of the merged model
+safetensors==0.7.0
+qwen-vl-utils==0.0.14     # Qwen2.5-VL image/video message path
+
+nibabel==5.4.2            # CBCT volume IO (Task 1)
+SimpleITK==2.5.6          # .mha IO (containers, model verification)
+numpy==2.1.0
+scipy==1.17.1
+pandas==3.0.2
+Pillow==12.2.0
+pillow-heif               # intraoral photos (Task 2)
+matplotlib==3.10.8        # diagnostic figures only
+tqdm==4.67.3
+
+wandb==0.26.0             # optional (--wandb)
+# flash-attn               # optional: attn_implementation="flash_attention_2"

@@ -1,0 +1,21 @@
+{
+  "version": "sagittal-v3-hierarchical-final",
+  "training_target": "cleaned_orthodontic_data_v3.json / photo_report_v3 / photo_en only",
+  "level_1": [
+    "Class I",
+    "Class II",
+    "Class III",
+    "Not_Assessable"
+  ],
+  "level_2_trainable": [
+    "Class II head-to-head",
+    "Class II full"
+  ],
+  "Class II unspecified": "not actively predicted by visual model; schema/report fallback only",
+  "Not_Mentioned": "not predicted by visual model; handled by downstream LLM/report policy",
+  "molar_view": "pure side",
+  "canine_view": "pure side + oblique 45 degrees",
+  "right_normalization": "deterministic horizontal flip inside transform",
+  "ensemble": "5 patient-level folds; temperature-scale fold probabilities then mean",
+  "calibration": "OOF-selected coarse/subtype temperatures, NA policy, and Class II full threshold"
+}

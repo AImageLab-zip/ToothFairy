@@ -1,0 +1,22 @@
+# Linux x86_64, Python 3.11, NVIDIA GPU.
+--extra-index-url https://download.pytorch.org/whl/cu126
+torch==2.9.1+cu126
+torchvision==0.24.1+cu126
+numpy==2.2.6
+scipy==1.15.3
+trimesh==4.12.2
+open3d-cpu==0.18.0
+Pillow==12.2.0
+joblib==1.5.3
+scikit-learn==1.7.2
+pyvista==0.48.4
+vtk==9.6.2
+tqdm==4.67.3
+pandas==2.3.3
+catboost==1.2.10
+transformers==5.9.0
+huggingface-hub==1.27.0
+accelerate==1.13.0
+safetensors==0.7.0
+tokenizers==0.22.2
+opencv-python-headless==4.12.0.88

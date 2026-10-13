@@ -1,0 +1,474 @@
+diff --git a/orient_scan.py b/orient_scan.py
+index 3b1dcb0..4b900f1 100644
+--- a/orient_scan.py
++++ b/orient_scan.py
+@@ -18,6 +18,7 @@ def parse_args():
+     parser.add_argument("--checkpoint", required=True)
+     parser.add_argument("--output-dir", default="data/output")
+     parser.add_argument("--points", type=int, default=None)
++    parser.add_argument("--seed", type=int, default=0, help="Deterministic point-sampling seed.")
+     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+     parser.add_argument("--debug", action="store_true", help="Enable debug mode with debugpy.")
+     parser.add_argument(
+@@ -64,7 +65,9 @@ def main():
+     output_dir = Path(args.output_dir)
+     output_dir.mkdir(parents=True, exist_ok=True)
+ 
+-    normalizer = load_normalizer(args.checkpoint, args.device, points=args.points)
++    normalizer = load_normalizer(
++        args.checkpoint, args.device, points=args.points, seed=args.seed
++    )
+ 
+     if args.preserve_occlusion:
+         patient_dir = args.scan if args.scan.is_dir() else args.scan.parent
+diff --git a/scripts/batch_orient_scans.py b/scripts/batch_orient_scans.py
+index 909884b..9d5e60f 100644
+--- a/scripts/batch_orient_scans.py
++++ b/scripts/batch_orient_scans.py
+@@ -1,4 +1,5 @@
+ import argparse
++import json
+ import math
+ import os
+ import sys
+@@ -21,75 +22,132 @@ MAX_WORKERS = 12
+ _worker_normalizer = None
+ 
+ 
+-def _init_worker(checkpoint, device, points, sampling):
++def _init_worker(checkpoint, device, points, sampling, seed):
+     global _worker_normalizer
+     torch.set_num_threads(1)
+     _worker_normalizer = load_normalizer(
+-        checkpoint, device=device, points=points, sampling=sampling
++        checkpoint, device=device, points=points, sampling=sampling, seed=seed
+     )
+ 
+ 
++def _prediction_metrics(logits):
++    maximum = max(logits)
++    exponentials = [math.exp(value - maximum) for value in logits]
++    total = sum(exponentials)
++    probabilities = [value / total for value in exponentials]
++    ranked_logits = sorted(logits, reverse=True)
++    ranked_probabilities = sorted(probabilities, reverse=True)
++    return {
++        "probabilities": probabilities,
++        "confidence": ranked_probabilities[0],
++        "probability_margin": ranked_probabilities[0] - ranked_probabilities[1],
++        "logit_margin": ranked_logits[0] - ranked_logits[1],
++    }
++
++
+ def _process_scan_task(task, orient_only, center_and_orient, save_matrix):
+     scan_path, output_path = task
+     start = time.perf_counter()
+-    result = normalize_scan(
+-        scan_path,
+-        output_path,
+-        _worker_normalizer,
+-        orient_only=orient_only,
+-        center_and_orient=center_and_orient,
+-    )
+-    if save_matrix:
+-        save_affine(
+-            result.matrix,
+-            result.center,
+-            result.scale,
++    try:
++        result = normalize_scan(
++            scan_path,
+             output_path,
++            _worker_normalizer,
+             orient_only=orient_only,
+             center_and_orient=center_and_orient,
+         )
+-    elapsed = time.perf_counter() - start
+-    return output_path, result.rotation_index, elapsed
++        if save_matrix:
++            save_affine(
++                result.matrix,
++                result.center,
++                result.scale,
++                output_path,
++                orient_only=orient_only,
++                center_and_orient=center_and_orient,
++            )
++        metrics = _prediction_metrics(result.logits)
++        return {
++            "ok": True,
++            "input_path": str(scan_path),
++            "output_paths": [str(output_path)],
++            "rotation_index": result.rotation_index,
++            "logits": result.logits,
++            "matrix": result.matrix,
++            "center": result.center,
++            "scale": result.scale,
++            "elapsed_seconds": time.perf_counter() - start,
++            **metrics,
++        }
++    except Exception as error:
++        return {
++            "ok": False,
++            "input_path": str(scan_path),
++            "output_paths": [str(output_path)],
++            "error": repr(error),
++            "elapsed_seconds": time.perf_counter() - start,
++        }
+ 
+ 
+ def _process_pair_task(task, orient_only, center_and_orient, save_matrix):
+     patient_dir, lower_path, upper_path, lower_output_path, upper_output_path = task
+     start = time.perf_counter()
+-    result = normalize_scan(
+-        lower_path,
+-        lower_output_path,
+-        _worker_normalizer,
+-        orient_only=orient_only,
+-        center_and_orient=center_and_orient,
+-    )
+-    transform_scan(
+-        upper_path,
+-        upper_output_path,
+-        result.matrix,
+-        center=result.center,
+-        scale=result.scale,
+-        orient_only=orient_only,
+-        center_and_orient=center_and_orient,
+-    )
+-    if save_matrix:
+-        save_affine(
+-            result.matrix,
+-            result.center,
+-            result.scale,
++    try:
++        result = normalize_scan(
++            lower_path,
+             lower_output_path,
++            _worker_normalizer,
+             orient_only=orient_only,
+             center_and_orient=center_and_orient,
+         )
+-        save_affine(
+-            result.matrix,
+-            result.center,
+-            result.scale,
++        transform_scan(
++            upper_path,
+             upper_output_path,
++            result.matrix,
++            center=result.center,
++            scale=result.scale,
+             orient_only=orient_only,
+             center_and_orient=center_and_orient,
+         )
+-    elapsed = time.perf_counter() - start
+-    return patient_dir, lower_output_path, upper_output_path, result.rotation_index, elapsed
++        if save_matrix:
++            save_affine(
++                result.matrix,
++                result.center,
++                result.scale,
++                lower_output_path,
++                orient_only=orient_only,
++                center_and_orient=center_and_orient,
++            )
++            save_affine(
++                result.matrix,
++                result.center,
++                result.scale,
++                upper_output_path,
++                orient_only=orient_only,
++                center_and_orient=center_and_orient,
++            )
++        metrics = _prediction_metrics(result.logits)
++        return {
++            "ok": True,
++            "patient_dir": str(patient_dir),
++            "input_paths": [str(lower_path), str(upper_path)],
++            "output_paths": [str(lower_output_path), str(upper_output_path)],
++            "rotation_index": result.rotation_index,
++            "logits": result.logits,
++            "matrix": result.matrix,
++            "center": result.center,
++            "scale": result.scale,
++            "elapsed_seconds": time.perf_counter() - start,
++            **metrics,
++        }
++    except Exception as error:
++        return {
++            "ok": False,
++            "patient_dir": str(patient_dir),
++            "input_paths": [str(lower_path), str(upper_path)],
++            "output_paths": [str(lower_output_path), str(upper_output_path)],
++            "error": repr(error),
++            "elapsed_seconds": time.perf_counter() - start,
++        }
+ 
+ 
+ def parse_args():
+@@ -100,6 +158,7 @@ def parse_args():
+     parser.add_argument("--output-dir", type=Path, default=Path("data/output"))
+     parser.add_argument("--checkpoint")
+     parser.add_argument("--points", type=int, default=None)
++    parser.add_argument("--seed", type=int, default=0, help="Deterministic point-sampling seed.")
+     parser.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
+     parser.add_argument("--sampling", choices=("fps", "random"), default="fps")
+     parser.add_argument(
+@@ -180,7 +239,8 @@ def main():
+     workers = max(1, min(requested_workers, available_cores, MAX_WORKERS))
+ 
+     output_paths = []
+-    init_args = (args.checkpoint, args.device, args.points, args.sampling)
++    records = []
++    init_args = (args.checkpoint, args.device, args.points, args.sampling, args.seed)
+     context = get_context("spawn")
+     processing_start = time.perf_counter()
+ 
+@@ -199,15 +259,24 @@ def main():
+             save_matrix=args.save_matrix,
+         )
+         with context.Pool(processes=workers, initializer=_init_worker, initargs=init_args) as pool:
+-            for index, (patient_dir, lower_output_path, upper_output_path, rotation_index, elapsed) in enumerate(
+-                pool.imap(worker_fn, tasks), start=1
+-            ):
+-                output_paths.extend([lower_output_path, upper_output_path])
+-                print(
+-                    f"[{index}/{len(pairs)}] {patient_dir.relative_to(input_dir)} lower+upper "
+-                    f"| rotation_class {rotation_index} | {elapsed:.2f}s",
+-                    flush=True,
+-                )
++            for index, record in enumerate(pool.imap(worker_fn, tasks), start=1):
++                records.append(record)
++                patient_dir = Path(record["patient_dir"])
++                if record["ok"]:
++                    output_paths.extend(Path(path) for path in record["output_paths"])
++                    print(
++                        f"[{index}/{len(pairs)}] {patient_dir.relative_to(input_dir)} lower+upper "
++                        f"| rotation_class {record['rotation_index']} "
++                        f"| confidence {record['confidence']:.4f} "
++                        f"| {record['elapsed_seconds']:.2f}s",
++                        flush=True,
++                    )
++                else:
++                    print(
++                        f"[{index}/{len(pairs)}] FAILED {patient_dir.relative_to(input_dir)} "
++                        f"| {record['error']}",
++                        flush=True,
++                    )
+     else:
+         tasks = [(scan_path, output_dir / scan_path.relative_to(input_dir)) for scan_path in scans]
+ 
+@@ -218,16 +287,48 @@ def main():
+             save_matrix=args.save_matrix,
+         )
+         with context.Pool(processes=workers, initializer=_init_worker, initargs=init_args) as pool:
+-            for index, (output_path, rotation_index, elapsed) in enumerate(pool.imap(worker_fn, tasks), start=1):
+-                output_paths.append(output_path)
+-                print(
+-                    f"[{index}/{len(scans)}] {output_path.relative_to(output_dir)} "
+-                    f"| rotation_class {rotation_index} | {elapsed:.2f}s",
+-                    flush=True,
+-                )
++            for index, record in enumerate(pool.imap(worker_fn, tasks), start=1):
++                records.append(record)
++                output_path = Path(record["output_paths"][0])
++                if record["ok"]:
++                    output_paths.append(output_path)
++                    print(
++                        f"[{index}/{len(scans)}] {output_path.relative_to(output_dir)} "
++                        f"| rotation_class {record['rotation_index']} "
++                        f"| confidence {record['confidence']:.4f} "
++                        f"| {record['elapsed_seconds']:.2f}s",
++                        flush=True,
++                    )
++                else:
++                    print(
++                        f"[{index}/{len(scans)}] FAILED {output_path.relative_to(output_dir)} "
++                        f"| {record['error']}",
++                        flush=True,
++                    )
+ 
+     processing_elapsed = time.perf_counter() - processing_start
+ 
++    manifest = {
++        "input_dir": str(input_dir),
++        "output_dir": str(output_dir),
++        "checkpoint": str(Path(args.checkpoint).expanduser().resolve()),
++        "device": args.device,
++        "points": args.points,
++        "sampling": args.sampling,
++        "seed": args.seed,
++        "preserve_occlusion": args.preserve_occlusion,
++        "orient_only": args.orient_only,
++        "center_and_orient": args.center_and_orient,
++        "workers": workers,
++        "succeeded": sum(record["ok"] for record in records),
++        "failed": sum(not record["ok"] for record in records),
++        "records": records,
++    }
++    output_dir.mkdir(parents=True, exist_ok=True)
++    (output_dir / "normalization_manifest.json").write_text(
++        json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
++    )
++
+     qa_elapsed = 0.0
+     if args.render:
+         qa_start = time.perf_counter()
+@@ -243,7 +344,11 @@ def main():
+         )
+         qa_elapsed = time.perf_counter() - qa_start
+ 
+-    print(f"oriented {len(output_paths)} scans into {output_dir}", flush=True)
++    print(
++        f"oriented {len(output_paths)} scans into {output_dir}; "
++        f"failures {manifest['failed']}; manifest {output_dir / 'normalization_manifest.json'}",
++        flush=True,
++    )
+     print(
+         f"processing took {processing_elapsed:.1f}s with {workers} worker(s), "
+         f"QA rendering took {qa_elapsed:.1f}s, total {processing_elapsed + qa_elapsed:.1f}s",
+@@ -251,6 +356,8 @@ def main():
+     )
+     if args.render:
+         print(f"QA images saved under {output_dir / 'qa'}", flush=True)
++    if manifest["failed"]:
++        raise SystemExit(2)
+ 
+ 
+ def find_stl_files(root, exclude_dir=None):
+diff --git a/src/scannormalizer/dataset.py b/src/scannormalizer/dataset.py
+index fadd73d..1d67243 100644
+--- a/src/scannormalizer/dataset.py
++++ b/src/scannormalizer/dataset.py
+@@ -133,27 +133,51 @@ def best_rotation_class(points, target):
+     return torch.argmin(errors).item()
+ 
+ 
+-def random_point_sample(points, count):
++def _make_generator(points, seed):
++    if seed is None:
++        return None
++    generator = torch.Generator(device=points.device)
++    generator.manual_seed(int(seed))
++    return generator
++
++
++def random_point_sample(points, count, seed=None):
++    generator = _make_generator(points, seed)
+     if points.shape[0] >= count:
+-        choice = torch.randperm(points.shape[0])[:count]
++        choice = torch.randperm(
++            points.shape[0], device=points.device, generator=generator
++        )[:count]
+     else:
+-        choice = torch.randint(points.shape[0], (count,))
++        choice = torch.randint(
++            points.shape[0], (count,), device=points.device, generator=generator
++        )
+     return points[choice]
+ 
+ 
+-def farthest_point_sample(points, count, max_candidates=64000):
++def farthest_point_sample(points, count, max_candidates=64000, seed=None):
++    generator = _make_generator(points, seed)
+     if points.shape[0] > max_candidates:
+-        choice = torch.randperm(points.shape[0])[:max_candidates]
++        choice = torch.randperm(
++            points.shape[0], device=points.device, generator=generator
++        )[:max_candidates]
+         points = points[choice]
+ 
+     sample_count = min(count, points.shape[0])
+     points_np = np.ascontiguousarray(points.detach().cpu().numpy(), dtype=np.float32)
+-    selected = fpsample.bucket_fps_kdline_sampling(points_np, sample_count, h=3)
++    start_idx = None if seed is None else int(seed) % sample_count
++    selected = fpsample.bucket_fps_kdline_sampling(
++        points_np, sample_count, h=3, start_idx=start_idx
++    )
+     selected = torch.as_tensor(selected, dtype=torch.long, device=points.device)
+     sampled = points[selected]
+ 
+     if sampled.shape[0] < count:
+-        extra = torch.randint(sampled.shape[0], (count - sampled.shape[0],), device=points.device)
++        extra = torch.randint(
++            sampled.shape[0],
++            (count - sampled.shape[0],),
++            device=points.device,
++            generator=generator,
++        )
+         sampled = torch.cat([sampled, sampled[extra]], dim=0)
+ 
+     return sampled
+diff --git a/src/scannormalizer/evaluate.py b/src/scannormalizer/evaluate.py
+index 8342aa4..94fe635 100644
+--- a/src/scannormalizer/evaluate.py
++++ b/src/scannormalizer/evaluate.py
+@@ -33,7 +33,9 @@ def run_evaluation(
+ 
+     was_training = model.training
+     model.eval()
+-    normalizer = Normalizer(model=model, device=device, points=points, sampling=sampling)
++    normalizer = Normalizer(
++        model=model, device=device, points=points, sampling=sampling, seed=0
++    )
+     gt_by_scan = load_gt_matrices(gt_json)
+ 
+     predictions = []
+diff --git a/src/scannormalizer/scan_inference.py b/src/scannormalizer/scan_inference.py
+index 0250b26..6ce86da 100644
+--- a/src/scannormalizer/scan_inference.py
++++ b/src/scannormalizer/scan_inference.py
+@@ -15,6 +15,7 @@ class Normalizer:
+     device: str
+     points: int
+     sampling: str
++    seed: int | None
+ 
+ 
+ @dataclass
+@@ -35,9 +36,9 @@ class MatrixPrediction:
+     logits: list[float]
+ 
+ 
+-def load_normalizer(checkpoint_path, device=None, points=None, sampling="fps"):
++def load_normalizer(checkpoint_path, device=None, points=None, sampling="fps", seed=0):
+     device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+-    checkpoint = torch.load(checkpoint_path, map_location=device)
++    checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=True)
+     sample_count = points or checkpoint.get("points")
+ 
+     model = RotationNormalizer().to(device)
+@@ -49,6 +50,7 @@ def load_normalizer(checkpoint_path, device=None, points=None, sampling="fps"):
+         device=device,
+         points=sample_count,
+         sampling=sampling,
++        seed=seed,
+     )
+ 
+ 
+@@ -114,7 +116,7 @@ def transform_scan(
+ ):
+     scan_path = Path(scan_path)
+     output_path = Path(output_path)
+-    mesh = trimesh.load_mesh(scan_path, force="mesh")
++    mesh = trimesh.load_mesh(scan_path, force="mesh", process=False)
+     vertices = np.asarray(mesh.vertices, dtype=np.float32)
+     if vertices.ndim != 2 or vertices.shape[1] != 3 or len(vertices) == 0:
+         raise RuntimeError(f"Could not load vertices from {scan_path}")
+@@ -160,9 +162,13 @@ def _run_inference(scan_path, normalizer, input_rotation=None):
+ 
+     normalized, center, scale = normalize_points(points)
+     if normalizer.sampling == "fps":
+-        sampled = farthest_point_sample(normalized, normalizer.points)
++        sampled = farthest_point_sample(
++            normalized, normalizer.points, seed=normalizer.seed
++        )
+     else:
+-        sampled = random_point_sample(normalized, normalizer.points)
++        sampled = random_point_sample(
++            normalized, normalizer.points, seed=normalizer.seed
++        )
+ 
+     pca_sampled, basis = pca_orient_points(sampled)
+     pca_sampled = pca_sampled.unsqueeze(0).to(normalizer.device)

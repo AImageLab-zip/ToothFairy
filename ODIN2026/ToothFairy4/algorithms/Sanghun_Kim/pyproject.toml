@@ -1,0 +1,77 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sinus"
+version = "1.0.0"
+description = "SINUS — structure-wise radiology report generation from dental CBCT"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Sanghun Kim" }]
+
+# Pinned to the validated environment. These versions were checked on an RTX 5090 (sm_120)
+# and an H100 (sm_90) with bitsandbytes 4bit; on other hardware the 4bit path is worth
+# re-checking.
+#
+# Install torch FIRST, from the index that matches your CUDA build:
+#
+#     pip install torch==2.11.0 torchvision==0.26.0 --index-url https://download.pytorch.org/whl/cu128
+#     pip install -e .
+#
+# The pin below then reads as already satisfied (`==2.11.0` matches `2.11.0+cu128`), so pip
+# will not pull a different build over it. Installing without that first step gets whatever
+# torch PyPI serves for the platform, which may not match the GPU.
+dependencies = [
+  # --- core DL stack ---
+  "torch==2.11.0",
+  "torchvision==0.26.0",
+  "transformers==5.12.1",
+  "tokenizers==0.22.2",
+  "peft==0.19.1",
+  "accelerate==1.14.0",
+  "bitsandbytes==0.49.2",
+  "safetensors==0.8.0",
+  "einops==0.8.2",
+
+  # --- dental segmentation backbone (nnU-Net) ---
+  "nnunetv2==2.8.0",
+  "batchgenerators==0.25.3",
+
+  # --- imaging I/O ---
+  "SimpleITK==2.5.5",
+  "nibabel==5.4.2",
+  "numpy==2.2.6",
+  "PyYAML==6.0.2",
+
+  # --- evaluation (captioning metrics) ---
+  "sacrebleu==2.4.3",
+  "nltk==3.9.1",
+]
+
+# Deliberately NOT installed: the Qwen3.5 gated-delta-net fast paths.
+#   fla / liger / causal-conv1d are Triton JIT kernels and need a C compiler at run time. On a
+#   machine without one, generate() fails with "Failed to find C compiler". Leaving all three
+#   uninstalled makes transformers take the pure torch path (GDN=torch_chunk_gated_delta_rule,
+#   RMSNormGated=Qwen3_5RMSNormGated, standard CE); generation speed and output are unchanged
+#   (verified: 71s, identical report).
+#   liger is used during training only, to avoid the large-vocabulary cross-entropy OOM —
+#   install liger_kernel if you train and hit that. Where the fast kernels do work, set
+#   TF4_TORCH_GDN_FALLBACK=conv to keep only the causal-conv1d kernel on the reference path
+#   (it segfaults on some stacks; the loss differs by less than 1e-3 relative).
+
+[project.optional-dependencies]
+# Only for the rejection-sampling steps that talk to an OpenAI-compatible endpoint, and for
+# logging training curves.
+rft = ["openai>=1.60"]
+wandb = ["wandb"]
+
+[project.urls]
+Homepage = "https://odin2026.grand-challenge.org/"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+toothfairy = ["configs/*.yaml"]

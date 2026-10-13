@@ -1,0 +1,69 @@
+{
+  "schema_version": "r225_impacted_runtime_contract_v1",
+  "model": "R198 impacted high-risk-12 five-fold DualScaleROIMIL",
+  "candidate_fdis": [
+    "13",
+    "17",
+    "18",
+    "23",
+    "27",
+    "28",
+    "33",
+    "37",
+    "38",
+    "43",
+    "47",
+    "48"
+  ],
+  "folds": [
+    {
+      "fold": 0,
+      "path": "weak_heads/r198_impacted/fold_0/best.pt",
+      "sha256": "5cbb92fc5a876566336e56ccc8603fd25f5e96edf96565379a764e1fae267e11",
+      "inner_threshold": 0.5,
+      "score_normalizer_center": 1.2035447220409514,
+      "score_normalizer_scale": 0.9588218283594518
+    },
+    {
+      "fold": 1,
+      "path": "weak_heads/r198_impacted/fold_1/best.pt",
+      "sha256": "4643dd7b8afcc37f9f450694dab934f8cf4e5ea278a7992075cc07a37b190c9b",
+      "inner_threshold": 0.5,
+      "score_normalizer_center": 0.21883500929761057,
+      "score_normalizer_scale": 0.6523235551103691
+    },
+    {
+      "fold": 2,
+      "path": "weak_heads/r198_impacted/fold_2/best.pt",
+      "sha256": "cd5443e7c79289d896ee2a8b4a865057e826a3f16c5645b65061f256bd54513a",
+      "inner_threshold": 0.5,
+      "score_normalizer_center": 1.066445318990494,
+      "score_normalizer_scale": 0.7840899237476386
+    },
+    {
+      "fold": 3,
+      "path": "weak_heads/r198_impacted/fold_3/best.pt",
+      "sha256": "b47c11f20d7bccfc01ad5e035d6bd86032c4e13b1fc7925be0f3da709fbabdee",
+      "inner_threshold": 0.5,
+      "score_normalizer_center": 0.6205593033658734,
+      "score_normalizer_scale": 1.0944330232200143
+    },
+    {
+      "fold": 4,
+      "path": "weak_heads/r198_impacted/fold_4/best.pt",
+      "sha256": "f1932651af30a4e2af1b91c9cc2a45210332c93fb89ce42f815402feeeb6c525",
+      "inner_threshold": 0.5,
+      "score_normalizer_center": 0.160177169096001,
+      "score_normalizer_scale": 1.0439380080037077
+    }
+  ],
+  "policy": {
+    "minimum_positive_votes": 4,
+    "minimum_fdi_votes": 4,
+    "minimum_attention_margin": 0.02,
+    "legacy_online_score_threshold": 0.75,
+    "independent_guard": "R134D2 exact position-8 component guard",
+    "location_agreement": "same FDI or left-right mirrored position-8 FDI",
+    "fallback": "fail closed"
+  }
+}

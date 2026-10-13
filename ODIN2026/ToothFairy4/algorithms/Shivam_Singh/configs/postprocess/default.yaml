@@ -1,0 +1,119 @@
+# =============================================================================
+# configs/postprocess/default.yaml -- THE MAIN ARM.
+#
+# The settings that produced outputs/aksssr_v7_trained_arm6_validate: Final
+# Score 0.4658, RadFact Logical F1 0.5139 (P 0.5306 / R 0.4982) on validate-40
+# under the local qwen3-14b judge. Everything here is the measured setting, and
+# every one of them is argued in docs/postprocess.md -- the section named in
+# each comment is where the table that chose it lives.
+#
+# This file restates the defaults in code/pipeline/postprocess/rules_config.py,
+# on purpose: an arm should be readable as a file, not as the absence of one.
+# `--print-config --config <this file>` fails loudly if the two ever drift.
+#
+#   python3 code/pipeline/postprocess/postprocess_pred.py \
+#       --config configs/postprocess/default.yaml \
+#       --pred-dir <run>/predictions --out-dir <run>/summaries \
+#       --facts-dir dataset/validate/facts
+#
+# TO MAKE A NEW ARM, copy this file, change what the experiment changes, and
+# name it for the question it asks. Do not edit this one -- it is the baseline
+# every other arm is a diff against.
+# =============================================================================
+
+arm: aksssr_v7_trained_arm6
+notes: >-
+  Schema v7.1, LoRA-SFT arm 6 (models/Qwen3.5-9B-AWQ-dental-cbct-sft), all
+  eleven source rules on. Final 0.4658 / RadFact F1 0.5139 on validate-40.
+  The +0.0101 over the same predictions without the last three commits is
+  postprocess alone, bought with recall (+0.031) at -0.010 precision.
+
+
+# ── THE ELEVEN SOURCE RULES ──────────────────────────────────────────────────
+# Each says one finding should come from a SPECIFIC source rather than from a
+# vote between every read that can assert it. Worth +0.06 official together.
+#
+# ALL OF THEM ARE NO-OPS WITHOUT --facts-dir. Turning a rule off here is not
+# the same ablation as dropping --facts-dir (NO_FACTS=1), which also takes
+# away the maxilla-FOV override -- see no_source_rules.yaml.
+source_rules:
+  absent_teeth:   true    # facts.teeth_absent, gated on fov.maxilla == excluded
+  impaction:      true    # re-derived from eruption_state + orientation; 0.52 -> 0.75 F1
+  endodontic:     true    # the composite's with_endo alone; the arch read adds 2 TP for 20 FP
+  fillings:       true    # composite with_fillings alone; the arch read's alias scores 0.17
+  crown:          true    # the mask's crown list (the summary JSON only -- the renderer is silent)
+  implants:       true    # mask positions; the VLM's own score 0.00/0.00
+  canal_adjacent: true    # facts.ian_close_teeth; 0.69/0.69 against 0.21/0.54
+  canal_location: true    # composite when unanimous, else the prior below
+  atrophy:        true    # pred `present` OR mask edentulism; recall 0.18 -> 0.55
+  bridges:        true    # mask bridge label, as a SOURCE not a gate; no span claimed
+  condyle_fov:    true    # the mask's FOV, but only where it speaks
+
+# Priors -- what is stated when no read settled the question.
+priors:
+  # 61 of 70 validate sides are lingual, 640/154 in training, and neither read
+  # has ever identified a buccal canal. docs/postprocess.md THE RULE -- canal
+  # location. Bound to BOTH source_rules.py and synthesize_report.py.
+  canal_location: lingual
+
+
+# ── CROSS-SOURCE VOTE GATES ──────────────────────────────────────────────────
+# `require_agreement` is the master switch and it is OFF since 2026-08-07: a
+# finding asked of both the panoramic arch read and the tooth's own composite
+# crop is reported as the UNION, and disagreements are only annotated under
+# arch_findings.cross_source_dropped. Everything under it is subordinate and
+# only consulted while it is on -- the values are kept at their measured
+# settings so cross_validate.yaml is a one-line diff from here.
+cross_source:
+  require_agreement: false
+  impaction:         false
+  endodontic:        false
+  restorations:
+    fillings:      false
+    post_and_core: true
+    crown:         true
+  canal_adjacency:               true
+  prefer_composite_canal_location: true
+  caries_arch_agreement:         true
+  bone_quality_tooth_confirmation: true
+
+
+# ── STANDALONE GATES ─────────────────────────────────────────────────────────
+gates:
+  # Force every tooth in uncertain_teeth back to 'normal' before anything reads
+  # the map. Off since 2026-08-07; the affected teeth are recorded either way.
+  demote_uncertain_to_normal:     false
+  drop_impaction_on_absent_teeth: false
+  # An implant at a position the reads show a tooth at is dropped. Measured on.
+  drop_implants_on_present_teeth: true
+
+
+# ── THE MAXILLA FOV POLICY ───────────────────────────────────────────────────
+# docs/postprocess.md, THE RULE -- maxilla FOV scope (2026-08-17).
+maxilla_fov:
+  # An arch not in the volume has no teeth in the volume either.
+  drop_excluded: true
+  # ...but its ARCH-LEVEL tooth facts survive: they are read off the panoramic,
+  # which still shows the upper crowns, and 11.7% of the reference reports for
+  # these cases describe one. UNRESOLVED -- validate has n=2 for this path.
+  drop_excluded_teeth: false
+  # Case-ID prefixes whose maxilla is treated as excluded WHATEVER the model
+  # answered. Empty: forcing S costs the 27% of its references that do describe
+  # upper teeth. ['P', 'S'] reproduces the blunt FOV-based arm.
+  force_excluded_prefixes: []
+
+
+# ── EXTRACTION-SIDE FALLBACKS ────────────────────────────────────────────────
+extraction:
+  # Take a missing 3D wisdom eruption_state from that tooth's own composite
+  # read. REQUIRED by schema_dedup.json, which omits the four 3D wisdom facts.
+  # Not a no-op here: 11 of 40 validate cases would gain new sentences.
+  wisdom_eruption_fallback: false
+
+
+# ── WHAT REACHES THE REPORT TEXT ─────────────────────────────────────────────
+# crown (0.18 precision) and post_and_core (0 right in 40 cases) are silenced
+# in synthesize_report.py itself -- they are not arm knobs. Fillings is, because
+# the sentence is only safe once THE RULE -- fillings has re-sourced the group.
+report:
+  render_fillings: true

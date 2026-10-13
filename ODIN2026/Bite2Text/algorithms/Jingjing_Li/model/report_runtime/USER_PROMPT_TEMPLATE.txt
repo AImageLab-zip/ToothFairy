@@ -1,0 +1,6 @@
+Edit only grammar, flow, and redundancy. The clinical wording below is authoritative; do not reinterpret or replace any clinical term.
+
+CANONICAL FACT-PRESERVING REPORT:
+{canonical_report}
+
+OUTPUT: one English paragraph only.

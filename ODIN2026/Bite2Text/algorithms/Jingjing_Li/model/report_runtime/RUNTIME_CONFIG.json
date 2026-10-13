@@ -1,0 +1,36 @@
+{
+  "runtime_version": "bite2text-final-report-runtime-v1",
+  "decision": "qwen3.5-2b-bfloat16-transformers-with-one-verified-attempt-and-template-fallback",
+  "model": {
+    "model_id": "Qwen/Qwen3.5-2B",
+    "revision": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+    "local_path": "model",
+    "precision": "bfloat16",
+    "quantized": false,
+    "manifest": "MODEL_MANIFEST.json"
+  },
+  "generation": {
+    "device_default": "cuda:0",
+    "enable_thinking": false,
+    "do_sample": false,
+    "temperature": 0,
+    "max_new_tokens": 256,
+    "use_cache": true,
+    "candidate_attempts": 1,
+    "correction_retry_attempts": 0
+  },
+  "safety_contract": {
+    "structured_is_only_fact_source": true,
+    "raw_modalities_exposed_to_llm": false,
+    "case_id_exposed_to_llm": false,
+    "llm_may_add_clinical_facts": false,
+    "llm_may_change_fdi_teeth": false,
+    "closed_world_verifier_required": true,
+    "fallback": "deterministic canonical template on model load failure, generation failure, or verifier rejection"
+  },
+  "versions": {
+    "canonical_builder": "schema-report-generator-v1",
+    "polisher": "qwen3.5-2b-closed-world-polisher-v1",
+    "verifier": "closed-world-fact-verifier-v1"
+  }
+}

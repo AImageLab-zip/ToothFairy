@@ -1,0 +1,13 @@
+# Python 3.13. Versions are the ones the reported results were produced with.
+# Install PyTorch for your CUDA version first (https://pytorch.org), e.g.
+#   pip install torch==2.11.0 --index-url https://download.pytorch.org/whl/cu128
+torch==2.11.0
+numpy==2.5.2
+scipy==1.18.0
+nibabel==5.4.2
+SimpleITK==2.5.6
+
+# Local RadFact evaluation only. 0.1.0 is the version used for every RadFact
+# number in the technical report.
+radfact-lite==0.1.0
+openai==3.0.0

@@ -1,0 +1,64 @@
+# LLM LoRA stage: perception and prefix frozen, **only the LLM LoRA** is trained on L_report.
+# The visual representation obtained in the earlier stages is held fixed while the language model
+# adapts to the wording and the terminology of the reports.
+#
+# Trade-off worth noting: this curriculum has no phase in which perception and LoRA adapt
+# **together** (LLaVA-style recipes end by training projector + LLM jointly). That may cost some
+# performance; a joint fine-tuning stage can be added as an ablation if needed.
+
+perception:
+  backbone: hybrid
+  cache_dir: experiments/feature_cache/region_features_sc
+  tf2_teeth_cache_dir: experiments/feature_cache/tf2_tooth_density_sc
+
+encoder:
+  pe_k: 6
+  d_model: 128
+  n_heads: 4
+  gate_hidden: 128
+  dropout: 0.2
+  cl_layers: 2
+  cl_heads: 4
+  cl_dropout: 0.2
+  use_presence_emb: false
+  use_in_proj: false
+
+realizer:
+  llm_name: Qwen/Qwen3.5-9B
+  quant: 4bit
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  n_prefix_per_token: 1
+  proj_hidden: 512
+  dropout: 0.2
+  max_text_len: 512
+  grad_checkpointing: true
+  use_liger: true
+
+train:
+  run_name: sinus_llm_lora
+  seed: 42
+  lr: 2.0e-4
+  weight_decay: 1.0e-2
+  batch_size: 1
+  grad_accum: 4
+  epochs: 40                     # in practice early stopping (patience 5) ends the run
+  early_stopping_patience: 5
+
+  stage: qlora
+  init_from: models/sinus_prefix/best.pt      # weights from the prefix stage
+  region_chunk_size: 8           # per-region decode chunk (bounds memory; loss/gradient equal)
+  best_metric: finding           # best/early-stop on finding-region CE (no normal-EOS dilution)
+
+  # --- ground truth ---
+  anat_dir: experiments/extraction/per_structure_per_report_split
+  dense_dir: experiments/GT/categorical_GT/per_report
+
+  # --- findings (claim) supervision ---
+  # --- no findings head = no gate loss and no soft injection (pure L_report) ---
+  findings_head: false
+  false_eos_weight_beta: 0.99
+  false_eos_lambda: 1.6
+  eos_include_not_available: true
+  use_siglip: false

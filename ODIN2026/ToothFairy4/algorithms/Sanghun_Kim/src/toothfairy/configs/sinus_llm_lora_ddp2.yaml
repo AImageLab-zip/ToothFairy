@@ -1,0 +1,73 @@
+# LLM LoRA stage (stage 3), two-rank DDP variant. It differs from the single-GPU config in
+# **grad_accum only** (4 -> 2). The effective batch is world_size x batch_size x grad_accum, so
+# 2 x 1 x 2 = 4, the same as the single-GPU run. Without lowering that one line the effective
+# batch becomes 8, and the comparison then mixes a change of batch size into the change of
+# parallelism.
+# The output directory and run_name are kept the same as in the single-GPU config: DDP is a way of
+# computing, not a separate experiment, and the actual number of ranks is recorded as `ranks` in
+# the reproducibility snapshot written into the output directory.
+#
+# Perception and prefix are frozen and **only the LLM QLoRA adapter** is trained on L_report: the
+# visual representation learned in the earlier stages stays fixed while the language model adapts
+# to the style and vocabulary of the reports.
+#
+# Known trade-off: this curriculum has no stage in which perception and the LoRA adapter adapt
+# **together** (LLaVA-style recipes finetune the projector and the LLM jointly at the end). That
+# may cost some performance; a joint finetuning stage can be added as an ablation if needed.
+
+perception:
+  backbone: hybrid
+  cache_dir: experiments/feature_cache/region_features_sc
+  tf2_teeth_cache_dir: experiments/feature_cache/tf2_tooth_density_sc
+
+encoder:
+  pe_k: 6
+  d_model: 128
+  n_heads: 4
+  gate_hidden: 128
+  dropout: 0.2
+  cl_layers: 2
+  cl_heads: 4
+  cl_dropout: 0.2
+  use_presence_emb: false
+  use_in_proj: false
+
+realizer:
+  llm_name: Qwen/Qwen3.5-9B
+  quant: 4bit
+  lora_r: 16
+  lora_alpha: 32
+  lora_dropout: 0.1
+  n_prefix_per_token: 1
+  proj_hidden: 512
+  dropout: 0.2
+  max_text_len: 512
+  grad_checkpointing: true
+  use_liger: true
+
+train:
+  run_name: sinus_llm_lora
+  seed: 42
+  lr: 2.0e-4
+  weight_decay: 1.0e-2
+  batch_size: 1
+  grad_accum: 2                  # 2-rank DDP: world_size(2) x 2 = effective 4 (as on one GPU)
+  epochs: 40                     # in practice training ends on early stopping (patience 5)
+  early_stopping_patience: 5
+
+  stage: qlora
+  init_from: models/sinus_prefix/best.pt      # starting weights: best prefix-stage checkpoint
+  region_chunk_size: 8           # per-structure decode chunk (bounds memory; loss/gradient equal)
+  best_metric: finding           # best/early-stop on the CE of finding regions, so that the many
+                                 # normal slots emitting EOS do not dilute the signal
+
+  # --- ground truth ---
+  anat_dir: experiments/extraction/per_structure_per_report_split
+  dense_dir: experiments/GT/categorical_GT/per_report
+
+  # --- no findings head: no gate loss and no soft injection, i.e. pure L_report ---
+  findings_head: false
+  false_eos_weight_beta: 0.99
+  false_eos_lambda: 1.6
+  eos_include_not_available: true
+  use_siglip: false

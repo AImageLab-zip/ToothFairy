@@ -1,0 +1,44 @@
+{
+  "folds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "cases": 867,
+  "unique_patients": 867,
+  "fold_summaries": [
+    {
+      "fold": 1,
+      "cases": 172,
+      "checkpoint": "task2_bite2text/Bits2Bites/exp/dental/bite2text_ptv3_v3_official_12head_fold1_stage2_joint_seed20260810/model/model_best.pth",
+      "checkpoint_epoch": 17
+    },
+    {
+      "fold": 2,
+      "cases": 173,
+      "checkpoint": "task2_bite2text/Bits2Bites/exp/dental/bite2text_ptv3_v3_official_12head_fold2_stage2_joint_seed20260811/model/model_best.pth",
+      "checkpoint_epoch": 59
+    },
+    {
+      "fold": 3,
+      "cases": 173,
+      "checkpoint": "task2_bite2text/Bits2Bites/exp/dental/bite2text_ptv3_v3_official_12head_fold3_stage2_joint_seed20260812/model/model_best.pth",
+      "checkpoint_epoch": 47
+    },
+    {
+      "fold": 4,
+      "cases": 174,
+      "checkpoint": "task2_bite2text/Bits2Bites/exp/dental/bite2text_ptv3_v3_official_12head_fold4_stage2_joint_seed20260813/model/model_best.pth",
+      "checkpoint_epoch": 38
+    },
+    {
+      "fold": 5,
+      "cases": 175,
+      "checkpoint": "task2_bite2text/Bits2Bites/exp/dental/bite2text_ptv3_v3_official_12head_fold5_stage2_joint_seed20260814/model/model_best.pth",
+      "checkpoint_epoch": 48
+    }
+  ],
+  "output": "task2_bite2text/bite2text_ptv3_v3_oof.jsonl"
+}

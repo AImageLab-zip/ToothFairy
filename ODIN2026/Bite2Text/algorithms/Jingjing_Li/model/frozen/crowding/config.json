@@ -1,0 +1,67 @@
+{
+  "version": "crowding-final-freeze-v1",
+  "decision_source": {
+    "routing_summary": "DADSN/work/crowding_router/routing_summary.json",
+    "routing_table": "DADSN/work/crowding_router/routing_table.csv",
+    "geometry_profile": "DADSN/work/crowding_router/geometry_profile.json",
+    "visual_blend": "DADSN/work/crowding_oof_blend/blend_config.json"
+  },
+  "labels": ["Spacing", "None", "Mild", "Moderate", "Severe"],
+  "primary_route": {
+    "name": "full_catboost",
+    "models": {
+      "upper": "models/primary/upper_model.cbm",
+      "lower": "models/primary/lower_model.cbm"
+    },
+    "feature_schema": "models/primary/feature_schema.json",
+    "eligibility": {
+      "qc_retry_recommended_v2": 0,
+      "qc_geometry_available_v2": 1,
+      "geometry_json_valid": true,
+      "required_geometry_features_finite": true,
+      "max_abs_primary_crowding_mm": 30.0,
+      "max_ood_features": 3,
+      "robust_z_limit": 8.0
+    }
+  },
+  "segmentation_fallback": {
+    "name": "segmentation_fallback",
+    "models": {
+      "upper": "models/segmentation_fallback/upper_model.cbm",
+      "lower": "models/segmentation_fallback/lower_model.cbm"
+    },
+    "feature_schema": "models/segmentation_fallback/feature_schema.json",
+    "trigger": "primary route is ineligible and segmentation is not severe"
+  },
+  "visual_fallback": {
+    "name": "visual_fallback_blend",
+    "models": {
+      "folds": "models/visual_fallback/fold_{0..4}/{upper,lower}_visual_fallback.pt"
+    },
+    "trigger": "severe segmentation: unexpected FDI labels, severe label expansion, multiple severe fragmentation, at least two hard failures, at least three critical flags, or selection score below 45",
+    "probability_blend": "(1-alpha_visual) * segmentation + alpha_visual * visual",
+    "alpha_visual_by_arch": {
+      "upper": 0.7000000000000001,
+      "lower": 1.0
+    }
+  },
+  "route_order": ["full_catboost", "segmentation_fallback", "visual_fallback_blend"],
+  "segmentation_retry": {
+    "policy": "original -> QC v2 -> conditional retry1 -> retry QC v2 -> select_best_segmentation rank",
+    "runner": "code/run_predict1_retry.py",
+    "selector": "code/select_best_segmentation.py",
+    "retry_args": {
+      "align_seed": 200003,
+      "pass1_seed": 200011,
+      "pass2_seed": 200029,
+      "retry_pass1_seed": 200047,
+      "align_trials": 4
+    },
+    "selection_rank": ["geometry_available_v2", "not retry_recommended_v2", "fewer hard_failure_count", "fewer critical_reason_count", "higher selection_score_v2", "higher mean_core_confidence"]
+  },
+  "prohibited": [
+    "reselecting model families",
+    "retuning thresholds or blend alphas",
+    "reading training geometry JSON, masks, renders, CSVs, OOF predictions, or ground truth at inference"
+  ]
+}

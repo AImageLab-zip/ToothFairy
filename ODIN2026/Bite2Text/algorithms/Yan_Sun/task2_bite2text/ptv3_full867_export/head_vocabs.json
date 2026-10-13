@@ -1,0 +1,83 @@
+{
+  "right_molar_relation": [
+    "class_i",
+    "class_ii_edge_to_edge",
+    "class_ii_full",
+    "class_ii_unspecified",
+    "class_iii",
+    "not_assessable"
+  ],
+  "right_canine_relation": [
+    "class_i",
+    "class_ii_edge_to_edge",
+    "class_ii_full",
+    "class_ii_unspecified",
+    "class_iii",
+    "not_assessable"
+  ],
+  "left_molar_relation": [
+    "class_i",
+    "class_ii_edge_to_edge",
+    "class_ii_full",
+    "class_ii_unspecified",
+    "class_iii",
+    "not_assessable"
+  ],
+  "left_canine_relation": [
+    "class_i",
+    "class_ii_edge_to_edge",
+    "class_ii_full",
+    "class_ii_unspecified",
+    "class_iii",
+    "not_assessable"
+  ],
+  "overjet": [
+    "normal",
+    "increased",
+    "reduced",
+    "negative",
+    "edge_to_edge"
+  ],
+  "vertical_relation": [
+    "normal",
+    "increased",
+    "reduced",
+    "deep_bite",
+    "open_bite"
+  ],
+  "midline_relation": [
+    "coincident",
+    "slightly_deviated",
+    "deviated"
+  ],
+  "crossbite": [
+    "none",
+    "anterior",
+    "posterior",
+    "present_unspecified"
+  ],
+  "upper_crowding": [
+    "none",
+    "mild",
+    "mild-to-moderate",
+    "moderate",
+    "moderate-to-severe",
+    "severe"
+  ],
+  "lower_crowding": [
+    "none",
+    "mild",
+    "mild-to-moderate",
+    "moderate",
+    "moderate-to-severe",
+    "severe"
+  ],
+  "curve_spee": [
+    "normal",
+    "increased"
+  ],
+  "curve_wilson": [
+    "normal",
+    "increased"
+  ]
+}

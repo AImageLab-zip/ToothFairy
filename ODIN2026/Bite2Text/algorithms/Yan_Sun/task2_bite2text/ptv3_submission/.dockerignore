@@ -1,0 +1,7 @@
+model
+test
+*.tar
+*.tar.gz
+__pycache__
+*.pyc
+.git

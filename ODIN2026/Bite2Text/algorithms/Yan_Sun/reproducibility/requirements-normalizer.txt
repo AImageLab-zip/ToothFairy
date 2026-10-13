@@ -1,0 +1,9 @@
+# Development-server snapshot checked 2026-09-26; separate from the Docker runtime.
+--extra-index-url https://download.pytorch.org/whl/cu121
+torch==2.5.1+cu121
+fpsample==1.0.2
+numpy==2.2.6
+trimesh==5.0.0
+matplotlib==3.10.9
+wandb==0.28.1
+debugpy==1.8.21

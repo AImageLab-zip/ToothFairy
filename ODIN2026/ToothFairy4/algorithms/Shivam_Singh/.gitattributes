@@ -1,0 +1,18 @@
+# Line endings are decided by the repo, not by each machine's core.autocrlf.
+# The laptop is Windows (CRLF), the cluster is Linux (LF), and the same files are
+# executed on both -- a .sh that reaches the cluster with CRLF fails on the shebang.
+* text=auto
+
+# Anything the cluster executes or sources must be LF in the working tree too,
+# not just in the index.
+*.sh   text eol=lf
+*.py   text eol=lf
+*.json text eol=lf
+*.yml  text eol=lf
+*.yaml text eol=lf
+
+# Binary: never touch, never diff.
+*.png  binary
+*.nii  binary
+*.gz   binary
+*.sqsh binary

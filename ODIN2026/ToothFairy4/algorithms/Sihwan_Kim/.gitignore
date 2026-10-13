@@ -1,0 +1,17 @@
+/weights/
+/input/
+/output/
+/models/
+__pycache__/
+*.pyc
+*.pt
+*.pth
+*.tar
+*.tar.gz
+*.mha
+*.nii
+*.nii.gz
+*.npz
+.env
+.DS_Store
+._*

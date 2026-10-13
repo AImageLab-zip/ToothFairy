@@ -1,0 +1,43 @@
+{
+  "name": "challenge_tooth_mask_v1",
+  "tooth_region_scheme": "ten_region",
+  "action": "force_negative",
+  "rules": [
+    {
+      "label": "impacted_or_disodontiasis",
+      "regions": [
+        "lower_left_premolars",
+        "lower_right_premolars",
+        "upper_left_premolars",
+        "upper_right_premolars"
+      ]
+    },
+    {
+      "label": "root_fracture",
+      "regions": [
+        "lower_anterior",
+        "upper_anterior",
+        "upper_left_molars",
+        "upper_left_premolars",
+        "upper_right_molars",
+        "upper_right_premolars"
+      ]
+    },
+    {
+      "label": "root_remnant",
+      "regions": [
+        "upper_left_molars",
+        "upper_left_premolars",
+        "upper_right_molars",
+        "upper_right_premolars"
+      ]
+    },
+    {
+      "label": "implant",
+      "regions": [
+        "upper_left_molars",
+        "upper_right_molars"
+      ]
+    }
+  ]
+}

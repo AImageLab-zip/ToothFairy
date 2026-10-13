@@ -1,0 +1,69 @@
+{
+  "schema_version": 2,
+  "submitted_source_commit": "0d0d83e1a962f361bc3b70e4d36ae129d338708b",
+  "image_tag": "odin2026-bite2text-hybrid-photo-test-v9:latest",
+  "image_id": "sha256:1422835134dd43439969a40c3f88dc05bce3963fcb9b58a2d77d4ecc80e8a920",
+  "archives": {
+    "submission": {
+      "filename": "ODIN2026_Bite2Text_v9_Final_Submission.zip",
+      "url": "https://drive.google.com/file/d/1K4eBy1yikNn5vnwmpTz215F-FK8_KDiU/view",
+      "bytes": 4479620106,
+      "sha256": "89e7cc673b4eb618bb9f0c4deabcf0b7e73611830423f86abcc32f2fcc439315",
+      "metadata_files": ["README_Q51.txt", "SHA256SUMS_Q51.txt"]
+    },
+    "weights": {
+      "filename": "Bite2Text_v9_public_weights.zip",
+      "url": "https://drive.google.com/file/d/1gjF4qhSN8jg0XQ_ysvf9toVUjn4hxH4a/view",
+      "bytes": 125784118,
+      "sha256": "92f704a706604613e08cd560bd0594a52bd40d6e65487aa7c7660f511739e3a8"
+    }
+  },
+  "image_archive": {
+    "filename": "odin2026-bite2text-hybrid-photo-test-v9_2026-08-18T11-22-00.039286625+08-00.tar.gz",
+    "bytes": 4295468660,
+    "sha256": "44e7af19d41c5bb898ef57111a880027c744aed3bcb2773599dd5b770b33f2ca"
+  },
+  "model_archive": {
+    "filename": "model-hybrid-photo-test-v9.tar.gz",
+    "bytes": 184145882,
+    "sha256": "a0973c9dd59be57d190cba25e9478d1d38e1811fb6355aff1b489a751844f8fe"
+  },
+  "model_files": {
+    "ios_normalizer_best.pt": {
+      "bytes": 55850956,
+      "sha256": "4f742f3a3dd411e5dedcdc59c6f6682021986dee69f5429b82e95135a335a486"
+    },
+    "retrieval_reports.json": {
+      "bytes": 744163,
+      "sha256": "860701e6e14c0b5c916e1d4520ff4b2df3bd5f60ff40052584f87a08d673a95b"
+    },
+    "model_final.pth": {
+      "bytes": 41772576,
+      "sha256": "d7f3be80fadc361248b970a85861660ad527d7cf5e82232e563fb1fe363c6811"
+    },
+    "photo_model_final.pt": {
+      "bytes": 50185336,
+      "sha256": "86829bf980fb96df5ae4bb0ef673c6cd10350b3fc6163883b18a3a0a4621ef0b"
+    },
+    "head_vocabs.json": {
+      "bytes": 1417,
+      "sha256": "3511edb5079db674be62202a51d341ac1cc277b117e67daa5c431d8d487ef3da"
+    },
+    "retrieval_index.npz": {
+      "bytes": 6809738,
+      "sha256": "10626d3d22ec2f221ac24779033687a4170ca835bd965ee859f5875a63a5e4b5"
+    },
+    "photo_view_classifier.pt": {
+      "bytes": 44792932,
+      "sha256": "aa47c53aaca03709767f5176971bccc2d240fd853f584cfada8284d926b0bcc9"
+    },
+    "retrieval_labels.json": {
+      "bytes": 405847,
+      "sha256": "bb40fa9402b7dfd1a0ce2b77ff30a18b98c29458451851aa6a83ba385b034ade"
+    },
+    "config.py": {
+      "bytes": 7695,
+      "sha256": "596e70c607ef4bdde60ba2b34be94254803ea07d5d231a76d1773ed029765616"
+    }
+  }
+}

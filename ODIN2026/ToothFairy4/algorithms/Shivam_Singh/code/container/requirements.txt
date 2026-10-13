@@ -1,0 +1,19 @@
+# torch / torchvision come from the base image — do NOT reinstall them.
+SimpleITK
+nibabel
+numpy
+scipy
+connected-components-3d
+acvl_utils
+# nnU-Netv2 comes from your U-Mamba2 fork (installed in the Dockerfile).
+# If your fork does NOT vendor nnunetv2, uncomment a pinned version:
+# nnunetv2==2.5.1
+
+# ── Her VLM stack (fill to match her model) ───────────────────────────────
+# transformers
+# accelerate
+# sentencepiece
+# (+ any adapter/quantization libs her weights need, all offline-capable)
+
+# (VLM report-arm deps live in requirements-vlm.txt / /opt/vlmenv)
+transformers==4.43.4

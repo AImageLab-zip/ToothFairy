@@ -1,0 +1,6 @@
+﻿fold,gate_model,visual_model,gate_threshold,visual_threshold,gate_feature_family,visual_feature_family,outer_train_n,reference_outer_val_n
+0,gate_geom_quality_extra,visual_all_logit,0.58,0.4,geom_quality_pair,all_modalities,691,173
+1,gate_geom_quality_extra,visual_all_extra,0.56,0.58,geom_quality_pair,all_modalities,691,173
+2,gate_geom_quality_extra,visual_all_logit,0.58,0.32,geom_quality_pair,all_modalities,691,173
+3,gate_photo_stats_geom_logit,visual_all_logit,0.62,0.32,photo_stats_geom,all_modalities,691,173
+4,gate_quality_pair_logit,visual_geom_pair_extra,0.58,0.56,quality_pair,geom_pair,692,172

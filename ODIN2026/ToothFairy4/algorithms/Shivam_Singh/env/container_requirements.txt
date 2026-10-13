@@ -1,0 +1,87 @@
+# env/container_requirements.txt
+#
+# The ONE container: it serves the model AND trains the adapter.
+#
+# ⚠ SPEC, NOT A BUILT IMAGE. The versions below are taken from the two working
+# environments this merges -- the serving stack of the image that produced
+# every number in this repo, and the training env that produced the adapter --
+# and the merge is justified by the dependency table further down. But the
+# combined image has NOT been built and smoke-tested. Treat a first build as
+# something to verify, not something to trust.
+#
+# HOW TO BUILD IT
+# ───────────────
+# Layer onto an image that already has the serving half, rather than resolving
+# a stack from scratch: a fresh resolve picks its own torch, and torch is
+# exactly what must not move.
+#
+#     pip install --no-cache-dir -r env/container_requirements.txt
+#
+# Then check that it did not move, because `transformers` and
+# `flash-linear-attention` both have opinions about it:
+#
+#     python3 -c "import torch, vllm, transformers, peft; \
+#         print(torch.__version__, vllm.__version__, \
+#               transformers.__version__, peft.__version__)"
+#     # expect: 2.11.0+cu130  0.22.0  5.9.0  0.20.0
+#
+# On a cluster where users cannot run docker, pyxis `--container-save` is the
+# build path. This repo's development checkout carries a script for that; it is
+# specific to one site's Slurm setup and is not shipped here.
+#
+# WHY ONE CONTAINER IS POSSIBLE AT ALL
+# ────────────────────────────────────
+# Nothing in the pipeline imports vLLM. `run_vqa_inference.py` is an HTTP
+# client that speaks OpenAI-standard `response_format` (not vLLM's
+# `guided_json`), so the client half never cared which vLLM is behind the
+# socket. What forced three containers was the SERVING/TRAINING dependency
+# conflict, and it is a real one:
+#
+#     vllm 0.19.0   torch ==2.10.0   transformers <5,>=4.56.0
+#     vllm 0.22.0   torch ==2.11.0   transformers >=4.56.0, not 5.0-5.5.0
+#     training      torch ==2.11.0   transformers ==5.9.0
+#
+# vLLM 0.19.0 cannot host training: wrong torch, and `transformers<5` against a
+# required 5.9.0. vLLM **0.22.0 can** -- same torch, and 5.9.0 clears its
+# exclusion list. That single row is why this file exists.
+#
+# WHY 0.22.0 AND NOT SOMETHING NEWER
+# ──────────────────────────────────
+# It is what produced every number in this repo, including the 0.4658 headline.
+# Consolidating onto it keeps the serving half byte-for-byte what was measured;
+# consolidating onto 0.25+ would change torch to 2.13 and re-open a question
+# nothing needs re-opened.
+#
+# NOT HERE, DELIBERATELY
+# ──────────────────────
+#   gptqmodel  -- it monkey-patches Triton's autotuner GLOBALLY at import, and
+#                 Qwen3.5's GatedDeltaNet layers run on fla's Triton kernels,
+#                 which then die on a `_cache_lock` only gptqmodel's patched
+#                 __init__ sets. Every forward pass hits it. Merely having it
+#                 INSTALLED is enough: peft imports it during get_peft_model.
+#   nltk, radfact-lite  -- scoring only. That runs on the host, and keeping it
+#                 out of here is what keeps `eval_now.sh` usable without a GPU.
+#   vtk        -- nothing imports it. The 3D renders use skimage.marching_cubes.
+#
+# ── already in the base image; pinned here so the build can ASSERT them ─────
+# vllm==0.22.0
+# torch==2.11.0+cu130
+# torchvision==0.26.0+cu130
+# triton==3.6.0
+
+# ── the training half, layered on ───────────────────────────────────────────
+transformers==5.9.0
+peft==0.20.0
+accelerate==1.13.0
+datasets==5.0.1
+flash-linear-attention==0.5.2
+
+# ── the client half. openai is what run_vqa_inference actually talks through;
+#    requests and pillow are used by the evidence and few-shot passes that also
+#    run inside the container.
+openai==2.44.0
+requests
+pillow==12.2.0
+
+# ── read by the arm scripts that run inference in-container
+nibabel==5.4.2

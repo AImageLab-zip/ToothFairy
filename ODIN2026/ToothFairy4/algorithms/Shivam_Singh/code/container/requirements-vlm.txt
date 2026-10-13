@@ -1,0 +1,39 @@
+# env/competition_requirements.txt
+#
+# The VQA half of the competition container: everything from mask + facts to
+# report.txt, including the vLLM server. Install into its OWN venv so it cannot
+# collide with the segmentation half, which brings its own torch:
+#
+#     python3 -m venv /opt/vqa
+#     /opt/vqa/bin/pip install --no-cache-dir -r env/competition_requirements.txt
+#
+# The base image must be CUDA 12.8. Grand Challenge runs driver 570; any CUDA
+# 12.x build works there by minor-version compatibility, CUDA 13.x does not
+# (it needs driver 580+). vllm 0.19.0 is the newest release still on 12.8 that
+# also knows Qwen3_5ForConditionalGeneration.
+#
+# Versions below are the ones verified working together on the cluster
+# (2026-08-13, container vllm019_cu128.sqsh / competition.sqsh).
+
+# ── server + client ───────────────────────────────────────────────────────
+# Pulls torch 2.10.0+cu128 and the nvidia-*-cu12 runtime wheels, so no system
+# CUDA toolkit is needed to RUN. nvcc is only needed if flashinfer JIT-compiles
+# an attention kernel at run time; the FLASH_ATTN backend this pipeline selects
+# does not, but a -devel base removes the risk entirely.
+vllm==0.19.0
+openai==3.0.0                # OpenAI-compatible client for the local server
+
+# ── image generation (volume + mask -> PNGs) ──────────────────────────────
+nibabel==5.4.2               # read .nii.gz
+numpy==2.2.6                 # (already a vllm dependency; pinned for clarity)
+scipy==1.15.3                # resampling, morphology
+scikit-image==0.25.2         # marching cubes for the 3D renders
+pillow==12.3.0               # PNG writing, captions
+matplotlib==3.10.9           # figure composition for the tooth crops
+
+# ── NOT needed ────────────────────────────────────────────────────────────
+# nltk / radfact_lite : scoring only, never runs inside the container
+# vtk                 : the 3D renders use scikit-image, not VTK
+# transformers        : comes in with vllm; do NOT pin it above 5, vllm 0.19
+#                       requires transformers<5 and a v5 tokenizer config will
+#                       fail to load

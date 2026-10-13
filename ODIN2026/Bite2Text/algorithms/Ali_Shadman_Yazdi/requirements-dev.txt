@@ -1,0 +1,3 @@
+-r requirements.txt
+nltk>=3.9      # scripts/score.py
+pytest>=8.0

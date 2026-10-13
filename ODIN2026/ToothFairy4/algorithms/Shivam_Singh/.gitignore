@@ -1,0 +1,66 @@
+# Data. The ToothFairy4 / ODIN2026 volumes, masks and reports are distributed
+# by the challenge under its own terms and are not redistributed here.
+dataset/
+*.nii
+*.nii.gz
+
+# Everything a run produces. A validate-40 run writes several GB of PNGs.
+outputs/
+logs/
+.judge/
+
+# Model weights.
+models/
+*.pt
+*.pth
+*.bin
+*.ckpt
+*.onnx
+*.safetensors
+
+# Rendered images, at any depth.
+*.png
+# ...except the README's pipeline banner, which is a document, not a render.
+!docs/pipeline.png
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editors
+.idea/
+.vscode/
+.DS_Store
+
+# ── segmentation half / container artefacts ───────────────────────────────
+# U-Mamba2 is CC BY-NC 4.0 and cloned at build time, not vendored (THIRD_PARTY.md).
+umamba2/
+# Prebuilt mamba CUDA kernels, fetched from the upstream releases.
+wheels/
+*.whl
+# Compiled vLLM/Inductor/Triton caches: 227 MB, and keyed to GPU architecture,
+# model path and Python version, so they are not portable enough to commit.
+vllm_cache/
+inductor_cache/
+triton_cache/
+# Container images and model bundles.
+*.tar
+*.tar.gz
+*.sqsh
+# Weight sets under their working names (the models/ rule above misses these).
+model/
+model_awq/
+model_sft/
+model_arm6/
+# Volumes in the challenge's submission format.
+*.mha
+# Working copies kept while iterating.
+backup_*/
+*.bak
+*.bak_*
+test/output/
+
+# Local Claude Code permissions.
+.claude/settings.json

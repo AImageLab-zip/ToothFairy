@@ -1,0 +1,12 @@
+.git
+weights
+input
+output
+models
+*.pt
+*.pth
+*.tar.gz
+__pycache__
+.env
+.DS_Store
+._*

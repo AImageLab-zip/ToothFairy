@@ -1,0 +1,6 @@
+*
+!bite2text
+!inference.py
+!requirements.txt
+**/__pycache__
+**/*.pyc

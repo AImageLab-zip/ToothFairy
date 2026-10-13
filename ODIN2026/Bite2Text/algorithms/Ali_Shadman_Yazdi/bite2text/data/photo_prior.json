@@ -1,0 +1,28 @@
+{
+  "gingivitis": "uncertain",
+  "caries": {
+    "status": "suspected"
+  },
+  "recession": {
+    "severity": "mild"
+  },
+  "plaque": true,
+  "restorations": {
+    "type": [
+      "restoration"
+    ]
+  },
+  "discoloration": {
+    "type": [
+      "stain"
+    ]
+  },
+  "sealants": true,
+  "calculus": true,
+  "hygiene": "poor",
+  "enamel_defect": {
+    "type": [
+      "hypoplasia"
+    ]
+  }
+}

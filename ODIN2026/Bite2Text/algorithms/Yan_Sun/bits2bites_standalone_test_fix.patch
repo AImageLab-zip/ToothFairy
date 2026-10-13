@@ -1,0 +1,12 @@
+diff --git a/configs/dental/_base_dental.py b/configs/dental/_base_dental.py
+--- a/configs/dental/_base_dental.py
++++ b/configs/dental/_base_dental.py
+@@ -119,7 +119,7 @@ data = dict(
+                 type="GridSample",
+                 grid_size=0.01,
+                 hash_type="fnv",
+-                mode="test",
++                mode="train",
+                 return_grid_coord=True,
+             ),
+             dict(type="ToTensor"),

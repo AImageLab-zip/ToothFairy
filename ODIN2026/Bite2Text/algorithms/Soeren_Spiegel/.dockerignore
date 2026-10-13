@@ -1,0 +1,32 @@
+# Build context = repo root (submission/Dockerfile). Keep only what the container COPYs:
+#   toothfairy/, eval/explore/tf_zip.py, experiments/finetune_qwen_v1/{dataset_fiveviews,_env}.py,
+#   submission/{requirements.txt,entrypoint.py}
+# Everything below is excluded so the context stays small (weights are mounted, not shipped).
+**/__pycache__/
+**/*.pyc
+**/*.pyo
+.git/
+.devcontainer/
+wandb/
+plots/
+splits/
+eval/explore/out/
+eval/fdi.py
+eval/*.py
+
+# Heavy experiment artifacts + the other experiments (not imported by the container).
+experiments/*/runs/
+experiments/*/outputs/
+experiments/*/wandb/
+experiments/*/smoke/
+experiments/*/images/
+experiments/baseline_hu_v1/
+experiments/medgemma4b_v0/
+experiments/finetune_v0/
+experiments/finetune_qwen_v0/
+experiments/probe_v0/
+
+# Tarballs, logs, scratch.
+*.tar.gz
+*.log
+tea_debug.log

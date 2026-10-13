@@ -1,0 +1,34 @@
+SINUS — structure-wise report generation from dental CBCT
+Submission to Task 1 of the ODIN 2026 ToothFairy4 challenge.
+
+Copyright 2026 Sanghun Kim.
+Released under the Apache License, Version 2.0 (see LICENSE).
+
+--------------------------------------------------------------------------------
+Third-party components
+--------------------------------------------------------------------------------
+This repository contains no third-party source code, no model weights and no data.
+The pipeline calls the components below at run time; each is obtained from its own
+distributor and is governed by its own licence, which is not granted by this
+repository's licence:
+
+  * nnU-Net (Isensee et al.) — segmentation framework used to run both frozen
+    segmentation networks.
+  * DentalSegmentator (Dot et al.) — frozen 6-class CBCT segmentation network.
+  * ToothFairy2 tooth segmentation network — frozen 33-class network used for the
+    per-tooth anchors.
+  * Qwen3.5-9B — the frozen language model that the LoRA adapters are trained on.
+  * Qwen3-32B-AWQ — the local model used as the entailment judge during
+    rejection-sampling fine-tuning and as the development scorer.
+  * PubMedBERT sentence embeddings (neuml/pubmedbert-base-embeddings) — the frozen
+    text encoder used as the anchor of the region-text alignment loss.
+  * RadFact (Microsoft) and radfact_lite (AImageLab) — report-level scoring code.
+  * PyTorch, Hugging Face transformers / PEFT / bitsandbytes, SimpleITK, and the other
+    packages pinned in pyproject.toml.
+
+--------------------------------------------------------------------------------
+Data
+--------------------------------------------------------------------------------
+The ToothFairy4 CBCT volumes and radiology reports are distributed by the challenge
+organisers under their own licence. Neither the data nor the per-structure training
+targets used with it is included in this repository or covered by its licence.

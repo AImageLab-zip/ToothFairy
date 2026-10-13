@@ -1,0 +1,120 @@
+{
+  "version": "sagittal-v3-calibration-v2",
+  "task": "molar",
+  "coarse_temperature": 1.2,
+  "coarse_oof_nll": 0.6488429420373414,
+  "subtype_temperature": 1.65,
+  "subtype_oof_nll": 0.3870501950780672,
+  "na_threshold": null,
+  "subtype_full_threshold": 0.43,
+  "subtype_policy": "if coarse == Class II: predict Class II full when calibrated P(full) >= subtype_full_threshold; otherwise Class II head-to-head",
+  "class_ii_unspecified_policy": "disabled for visual inference in v2 because the photo_en training set contains too few unspecified examples; keep it only as a schema/report-generation fallback",
+  "not_mentioned_policy": "excluded from visual classifier; handled later by report-generation mention/omission policy",
+  "selection_basis": "5-fold OOF predictions only",
+  "raw_argmax_oof_metrics": {
+    "coarse_macro_f1": 0.6851850720829679,
+    "coarse_accuracy": 0.7749567224466244,
+    "subtype_macro_f1": 0.8310319122501864,
+    "subtype_accuracy": 0.8352941176470589,
+    "expanded_macro_f1": 0.650711305412809,
+    "expanded_accuracy": 0.7184073860357761,
+    "expanded_n": 1733,
+    "expanded_per_class": {
+      "Class I": {
+        "precision": 0.8075601374570447,
+        "recall": 0.8255269320843092,
+        "f1": 0.8164447017950203,
+        "support": 854
+      },
+      "Class II head-to-head": {
+        "precision": 0.5413533834586466,
+        "recall": 0.5699208443271768,
+        "f1": 0.5552699228791774,
+        "support": 379
+      },
+      "Class II full": {
+        "precision": 0.7561837455830389,
+        "recall": 0.7109634551495017,
+        "f1": 0.7328767123287672,
+        "support": 301
+      },
+      "Class III": {
+        "precision": 0.6698113207547169,
+        "recall": 0.568,
+        "f1": 0.6147186147186147,
+        "support": 125
+      },
+      "Not_Assessable": {
+        "precision": 0.5416666666666666,
+        "recall": 0.527027027027027,
+        "f1": 0.5342465753424658,
+        "support": 74
+      }
+    },
+    "by_side": {
+      "left": {
+        "macro_f1": 0.6440343733338276,
+        "accuracy": 0.7136258660508084,
+        "n": 866
+      },
+      "right": {
+        "macro_f1": 0.6586551283136457,
+        "accuracy": 0.7231833910034602,
+        "n": 867
+      }
+    }
+  },
+  "selected_oof_metrics": {
+    "coarse_macro_f1": 0.6851850720829679,
+    "coarse_accuracy": 0.7749567224466244,
+    "subtype_macro_f1": 0.8352190617179515,
+    "subtype_accuracy": 0.8382352941176471,
+    "expanded_macro_f1": 0.651318198843661,
+    "expanded_accuracy": 0.7195614541257934,
+    "expanded_n": 1733,
+    "expanded_per_class": {
+      "Class I": {
+        "precision": 0.8075601374570447,
+        "recall": 0.8255269320843092,
+        "f1": 0.8164447017950203,
+        "support": 854
+      },
+      "Class II head-to-head": {
+        "precision": 0.5483028720626631,
+        "recall": 0.554089709762533,
+        "f1": 0.5511811023622047,
+        "support": 379
+      },
+      "Class II full": {
+        "precision": 0.7424749163879598,
+        "recall": 0.7375415282392026,
+        "f1": 0.74,
+        "support": 301
+      },
+      "Class III": {
+        "precision": 0.6698113207547169,
+        "recall": 0.568,
+        "f1": 0.6147186147186147,
+        "support": 125
+      },
+      "Not_Assessable": {
+        "precision": 0.5416666666666666,
+        "recall": 0.527027027027027,
+        "f1": 0.5342465753424658,
+        "support": 74
+      }
+    },
+    "by_side": {
+      "left": {
+        "macro_f1": 0.6494643735997321,
+        "accuracy": 0.7193995381062356,
+        "n": 866
+      },
+      "right": {
+        "macro_f1": 0.6544660772203771,
+        "accuracy": 0.7197231833910035,
+        "n": 867
+      }
+    }
+  }
+}

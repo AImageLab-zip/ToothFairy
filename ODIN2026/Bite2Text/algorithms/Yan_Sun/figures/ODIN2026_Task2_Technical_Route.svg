@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="960" viewBox="0 0 1800 960">
+  <defs>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#4A76A8"/></marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#D79B00"/></marker>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#7653A6"/></marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#B85450"/></marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#2E6B3E"/></marker>
+    <marker id="arrow-gray" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L0,6 L9,3 z" fill="#666666"/></marker>
+    <style>
+      .font { font-family: Arial, Helvetica, sans-serif; fill: #222; }
+      .stage { font-family: Arial, Helvetica, sans-serif; fill: white; font-size: 14px; font-weight: 700; text-anchor: middle; }
+      .box-title { font-family: Arial, Helvetica, sans-serif; fill: #1F1F1F; font-size: 15px; font-weight: 700; text-anchor: middle; }
+      .box-text { font-family: Arial, Helvetica, sans-serif; fill: #333; font-size: 13px; text-anchor: middle; }
+      .edge { fill: none; stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+    </style>
+  </defs>
+  <rect width="1800" height="960" fill="#FFFFFF"/>
+  <text x="900" y="52" class="font" font-size="25" font-weight="700" text-anchor="middle" fill="#17365D">Fact-Constrained Multimodal Retrieval for ODIN 2026 Bite2Text</text>
+
+  <g>
+    <rect x="40" y="85" width="220" height="38" rx="10" fill="#17365D"/><text x="150" y="109" class="stage">MULTIMODAL INPUTS</text>
+    <rect x="300" y="85" width="500" height="38" rx="10" fill="#17365D"/><text x="550" y="109" class="stage">PRE-PROCESSING &amp; EVIDENCE ENCODERS</text>
+    <rect x="840" y="85" width="270" height="38" rx="10" fill="#5B3F8C"/><text x="975" y="109" class="stage">REPORT RETRIEVAL</text>
+    <rect x="1150" y="85" width="300" height="38" rx="10" fill="#A23B3B"/><text x="1300" y="109" class="stage">FACT CONSTRAINTS</text>
+    <rect x="1490" y="85" width="250" height="38" rx="10" fill="#2E6B3E"/><text x="1615" y="109" class="stage">OUTPUT</text>
+  </g>
+
+  <g id="edges-under">
+    <path d="M245 205 H300" class="edge" stroke="#4A76A8" marker-end="url(#arrow-blue)"/>
+    <path d="M520 205 H570" class="edge" stroke="#4A76A8" marker-end="url(#arrow-blue)"/>
+    <path d="M520 230 H545 V338 H570" class="edge" stroke="#4A76A8" marker-end="url(#arrow-blue)"/>
+    <path d="M245 445 H300" class="edge" stroke="#D79B00" marker-end="url(#arrow-orange)"/>
+    <path d="M520 445 H570" class="edge" stroke="#D79B00" marker-end="url(#arrow-orange)"/>
+    <path d="M245 735 H300" class="edge" stroke="#666666" marker-end="url(#arrow-gray)"/>
+    <path d="M790 338 H815 V215 H865" class="edge" stroke="#4A76A8" marker-end="url(#arrow-blue)"/>
+    <path d="M790 728 H815 V240 H865" class="edge" stroke="#666666" marker-end="url(#arrow-gray)"/>
+    <path d="M975 260 V315" class="edge" stroke="#7653A6" marker-end="url(#arrow-purple)"/>
+    <path d="M790 205 H825 V365 H850" class="edge" stroke="#4A76A8" marker-end="url(#arrow-blue)"/>
+    <path d="M790 445 H850" class="edge" stroke="#D79B00" marker-end="url(#arrow-orange)"/>
+    <path d="M1100 365 H1135 V220 H1175" class="edge" stroke="#B85450" marker-end="url(#arrow-red)"/>
+    <path d="M1300 265 V340" class="edge" stroke="#B85450" marker-end="url(#arrow-red)"/>
+    <path d="M1300 440 V515" class="edge" stroke="#B85450" marker-end="url(#arrow-red)"/>
+    <path d="M1425 572 H1470 V398 H1510" class="edge" stroke="#2E6B3E" stroke-width="3" marker-end="url(#arrow-green)"/>
+    <path d="M1615 460 V525" class="edge" stroke="#2E6B3E" marker-end="url(#arrow-green)"/>
+    <path d="M520 480 H540 V550 H825 V475 H850" class="edge" stroke="#A67C00" stroke-dasharray="8 7" marker-end="url(#arrow-orange)"/>
+    <rect x="620" y="530" width="195" height="28" rx="5" fill="#FFFDF2"/>
+    <text x="717" y="548" class="font" font-size="12" text-anchor="middle" fill="#7F6000">photos unavailable → λphoto = 0</text>
+  </g>
+
+  <g id="inputs">
+    <rect x="55" y="160" width="190" height="90" rx="13" fill="#DAE8FC" stroke="#4A76A8" stroke-width="2"/>
+    <text x="150" y="191" class="box-title">Paired 3D IOS</text><text x="150" y="217" class="box-text">Upper + lower STL meshes</text>
+    <rect x="55" y="400" width="190" height="90" rx="13" fill="#FFE6CC" stroke="#D79B00" stroke-width="2"/>
+    <text x="150" y="430" class="box-title">Intraoral photographs</text><text x="150" y="454" class="box-text">Frontal, bilateral &amp;</text><text x="150" y="474" class="box-text">occlusal views</text>
+    <rect x="55" y="685" width="190" height="100" rx="13" fill="#F5F5F5" stroke="#666666" stroke-width="2"/>
+    <text x="150" y="708" class="box-title">867-case training</text><text x="150" y="728" class="box-title">collection</text><text x="150" y="754" class="box-text">Structured labels + English</text><text x="150" y="774" class="box-text">clinical reports</text>
+  </g>
+
+  <g id="encoders">
+    <rect x="300" y="150" width="220" height="110" rx="13" fill="#EAF2F8" stroke="#4A76A8" stroke-width="2"/>
+    <text x="410" y="181" class="box-title">Paired IOS normalization</text><text x="410" y="207" class="box-text">IOS-Normalizer + deterministic QC</text><text x="410" y="229" class="box-text">Shared rigid transform</text>
+    <rect x="570" y="145" width="220" height="120" rx="13" fill="#DAE8FC" stroke="#4A76A8" stroke-width="2"/>
+    <text x="680" y="177" class="box-title">PTv3 geometry encoder</text><text x="680" y="204" class="box-text">2 × 32,768 surface points</text><text x="680" y="226" class="box-text">12 attributes + confidence</text>
+    <rect x="570" y="295" width="220" height="85" rx="13" fill="#DAE8FC" stroke="#4A76A8" stroke-width="2"/>
+    <text x="680" y="327" class="box-title">Geometric descriptor</text><text x="680" y="353" class="box-text">3,720-D paired-arch representation</text>
+    <rect x="300" y="390" width="220" height="110" rx="13" fill="#FFF2CC" stroke="#D79B00" stroke-width="2"/>
+    <text x="410" y="421" class="box-title">Deterministic view selection</text><text x="410" y="447" class="box-text">Five slots + missing-view mask</text><text x="410" y="469" class="box-text">No left/right flip</text>
+    <rect x="570" y="390" width="220" height="110" rx="13" fill="#FFE6CC" stroke="#D79B00" stroke-width="2"/>
+    <text x="680" y="421" class="box-title">Shared ResNet18</text><text x="680" y="447" class="box-text">Multiview feature fusion</text><text x="680" y="469" class="box-text">8 supported attributes (soft)</text>
+    <rect x="300" y="670" width="490" height="115" rx="13" fill="#F5F5F5" stroke="#666666" stroke-width="2"/>
+    <text x="545" y="704" class="box-title">Offline report bank</text><text x="545" y="732" class="box-text">Descriptors · labels · original reports</text><text x="545" y="755" class="box-text">Built once from the training collection</text>
+  </g>
+
+  <g id="retrieval">
+    <rect x="865" y="170" width="220" height="90" rx="13" fill="#E1D5E7" stroke="#7653A6" stroke-width="2"/>
+    <text x="975" y="202" class="box-title">Cosine retrieval</text><text x="975" y="230" class="box-text">Top-50 candidate reports</text>
+    <rect x="850" y="315" width="250" height="190" rx="13" fill="#E1D5E7" stroke="#7653A6" stroke-width="2"/>
+    <text x="975" y="345" class="box-title">Hybrid evidence ranking</text><text x="975" y="378" class="box-text">sᵢ = cosine(q,i)</text><text x="975" y="402" class="box-text">+ 0.5 APTv3(q,i)</text><text x="975" y="426" class="box-text">+ 0.2 Aphoto(q,i)</text><text x="975" y="468" class="box-text" font-weight="700">Select baseline clinical report</text>
+  </g>
+
+  <g id="constraints">
+    <rect x="1175" y="175" width="250" height="90" rx="13" fill="#FCE8E6" stroke="#B85450" stroke-width="2"/>
+    <text x="1300" y="207" class="box-title">1 · Midline correction</text><text x="1300" y="235" class="box-text">PTv3 confidence ≥ 0.45</text>
+    <rect x="1175" y="340" width="250" height="100" rx="13" fill="#FCE8E6" stroke="#B85450" stroke-width="2"/>
+    <text x="1300" y="372" class="box-title">2 · Precision sanitizer</text><text x="1300" y="399" class="box-text">Remove unsupported high-risk</text><text x="1300" y="421" class="box-text">tooth-specific statements</text>
+    <rect x="1175" y="515" width="250" height="115" rx="13" fill="#F8CECC" stroke="#B85450" stroke-width="2"/>
+    <text x="1300" y="546" class="box-title">3 · v9 risk reranking</text><text x="1300" y="574" class="box-text">Margin ≤ 0.02 · confidence ≥ 0.65</text><text x="1300" y="597" class="box-text">Contradiction reduction ≥ 0.015</text>
+  </g>
+
+  <g id="output">
+    <rect x="1510" y="335" width="210" height="125" rx="13" fill="#D5E8D4" stroke="#2E6B3E" stroke-width="3"/>
+    <text x="1615" y="369" class="box-title" font-size="16">Final orthodontic report</text><text x="1615" y="399" class="box-text">Fluent retrieved report with</text><text x="1615" y="421" class="box-text">conservative fact controls</text>
+    <rect x="1510" y="525" width="210" height="105" rx="13" fill="#E2F0D9" stroke="#2E6B3E" stroke-width="2"/>
+    <text x="1615" y="555" class="box-title">Offline Docker</text><text x="1615" y="581" class="box-text">Deterministic fallback · no network</text><text x="1615" y="604" class="box-text">27–40 s per case</text>
+  </g>
+
+  <rect x="300" y="840" width="1125" height="60" rx="12" fill="#FFFDF2" stroke="#C8B458" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="862" y="876" class="font" font-size="14" text-anchor="middle" fill="#444"><tspan font-weight="700">Design principle: </tspan><tspan>retrieve fluent clinical text, but modify it only through cross-validated, high-confidence evidence gates.</tspan></text>
+</svg>

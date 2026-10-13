@@ -1,0 +1,21 @@
+{
+  "seed": 2026,
+  "strategy": "stratified by (has_photo_report, multi_ios_report), 80/10/10 by case",
+  "counts": {
+    "train": {
+      "cases": 798,
+      "with_photo_report": 698,
+      "multi_ios": 400
+    },
+    "val": {
+      "cases": 99,
+      "with_photo_report": 87,
+      "multi_ios": 49
+    },
+    "test": {
+      "cases": 99,
+      "with_photo_report": 87,
+      "multi_ios": 49
+    }
+  }
+}
