@@ -1,0 +1,49 @@
+{
+  "weights": [
+    {
+      "p": "w/view.pt",
+      "b": 43344567,
+      "h": "b341a006df8212c5dae2d38c436a8a7f1e75641174b4b3864dd714e0b529f5e9"
+    },
+    {
+      "p": "w/crowding-upper.pt",
+      "b": 81581159,
+      "h": "60679d90ab64043e7d0e0c0ae70523c2f7e7baa84fa7cc3feace76cb0be725e2"
+    },
+    {
+      "p": "w/crowding-lower.pt",
+      "b": 81581159,
+      "h": "cf162fc16b41cd8f94dbb19bfc47b57f9f331c6427c78e373ad2b0152946f950"
+    },
+    {
+      "p": "w/instseg.ckpt",
+      "b": 111127353,
+      "h": "100c68a9b120402cc75539eff6347bd998bce8b1d4f01550638f471797d70803"
+    },
+    {
+      "p": "w/landmarks.ckpt",
+      "b": 115592777,
+      "h": "9d4489439a7e9cab4d368b51de5f6debc41540abd8936a8605afebf1bd2daeff"
+    },
+    {
+      "p": "w/spee.pt",
+      "b": 155711197,
+      "h": "93424f52684ba19d59a6f6dc39b450ca6c46d317443378486e59a6980e61bf87"
+    },
+    {
+      "p": "w/wilson.pt",
+      "b": 155711197,
+      "h": "fa8784ebdca7a74edf0b2b456b905d909f02ba0548cfcc2b9cd918e6b2a2e7fb"
+    },
+    {
+      "p": "w/overjet.pt",
+      "b": 155520669,
+      "h": "17a7fd61778ff7a6b5a657f952393dc5f958d008057c737cade9d6a8d49ee2a9"
+    },
+    {
+      "p": "w/yolo11m.pt",
+      "b": 45233334,
+      "h": "8c50dd3e4b6fc1626247b8ad3d9cf4def91715d67a014181178d46b58438bb41"
+    }
+  ]
+}

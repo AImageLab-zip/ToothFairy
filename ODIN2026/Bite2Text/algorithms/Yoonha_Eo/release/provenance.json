@@ -1,0 +1,15 @@
+{
+  "source": "final2 submission, 2026-08-18",
+  "original_model_archive_sha256": "995d045041455b4c04bb420e8032b76133338fa9397ad4160faa763e155a93c8",
+  "original_container_archive_sha256": "6af221b68b0f21ecf52127891b26de5cc4bca034b4f1ef4ce609893e8f9c907f",
+  "original_pipeline_code_sha256": "e11c95b95d03c9ed40e09adb9cd7afb3249b1810d6e9fcfdf84762206c916541",
+  "public_pipeline_code_sha256": "2ec0c903c7cf454d1e5a201b7bb93db97abb9371d50bdba218464b8e1a0505bf",
+  "changes": [
+    "Extracted largest executable notebook cell, removed other cells and all outputs.",
+    "Replaced example CASE_NUMBER with F0000 and removed example case-ID comments. Submission adapter already overrides this value.",
+    "Retained only inference-consumed canine calibration and gate fields.",
+    "Removed Python bytecode/build caches. All nine checkpoint bytes are unchanged."
+  ],
+  "adapter_sha256": "5fb38f6205afb4dcf0da77cbf1221ac4bb31b54162d9cea0b6384205b061f898",
+  "fresh_gpu_execution_verified": false
+}

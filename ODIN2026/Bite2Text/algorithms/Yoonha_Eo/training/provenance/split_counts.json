@@ -1,0 +1,17 @@
+{
+  "view": {
+    "train": 11611,
+    "val": 1451,
+    "test": 1452
+  },
+  "crowding_upper": {
+    "train": 24682,
+    "val": 3085,
+    "test": 3086
+  },
+  "crowding_lower": {
+    "train": 33464,
+    "val": 4183,
+    "test": 4183
+  }
+}

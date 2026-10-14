@@ -1,0 +1,30 @@
+release:
+  needs_to_be_finetuned: true
+  clinically_validated: false
+  contains_real_calibration: false
+  placeholder_seed: 20260831
+  notice: "RANDOM PUBLIC PLACEHOLDERS ONLY - NEEDS TO BE FINETUNED"
+
+iop:
+  minimum_view_probability: 0.173
+  segmentation_score_threshold: 0.119
+  midline_centered_tooth_width: 0.071
+  midline_deviated_tooth_width: 0.238
+  crowding_class_names: ["none-to-mild", "mild-to-moderate", "moderate-to-severe"]
+
+ios:
+  expected_fdi_without_third_molars:
+    [11, 12, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27,
+     31, 32, 33, 34, 35, 36, 37, 41, 42, 43, 44, 45, 46, 47]
+  molar_cuts: [0.143, 0.587, 1.291]
+  anterior_bite_cuts: [-0.231, 0.366, 0.917]
+  transverse_bite_cuts: [-0.418, 0.274]
+  canine_cuts: [-0.193, 0.462]
+  canine_assessability_score: 0.537
+  canine_occlusal_cap: 0.083
+
+labels:
+  molar: ["Class II full", "Class II edge-to-edge", "Class I", "Class III"]
+  canine: ["Class II", "Class I", "Class III"]
+  anterior_bite: ["Open bite", "Decreased", "Normal", "Increased"]
+  transverse_bite: ["Cross bite", "Normal", "Scissor bite"]

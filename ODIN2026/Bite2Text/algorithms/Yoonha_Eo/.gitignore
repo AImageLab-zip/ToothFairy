@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+*.egg-info/
+
+# Weights are distributed as release assets; never put data or weights in Git.
+models/**/*
+!models/README.md
+weights/
+checkpoints/
+data/
+dataset/
+private/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+*.engine
+*.safetensors
+*.npz
+*.npy
+*.stl
+
+# Generated outputs
+output/
+outputs/
+diagnostic-imaging-report.json
+
+# Notebooks may contain private paths, parameters, or outputs
+*.ipynb
+*.ipynb_checkpoints/
+experiments/private/
+
+# Secrets
+.env
+*.pem
+*.key
+credentials*
+secrets*
+
+input/
+*.tar.gz
+*.zip
+*.log
+
+# Third-party Python source package, not patient data.
+!final2/model/s/b/b/data/
+!final2/model/s/b/b/data/**
+# Fixed upstream ScanNet class-mean metadata (not a dental scan/patient file).
+!final2/model/s/a/pointcept/datasets/preprocessing/scannet/meta_data/scannet_means.npz

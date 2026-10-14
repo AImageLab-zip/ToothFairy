@@ -1,0 +1,84 @@
+work_dir: '/output'
+version: synapse
+seed: 0
+
+model:
+  instseg:
+    channels_list: [48, 96, 192, 256]
+    depths: [3, 9, 3]
+    heads_list: [6, 12, 24]
+    window_sizes: [0.4, 0.8, 1.6]
+    point_embedding:
+      use: True
+      kpconv_point_influence: 0.04
+      kpconv_ball_radius: 0.1
+    stratified_union: False
+    downsample_ratio: 0.26
+    max_drop_path_prob: 0.3
+    stratified_downsample_ratio: 0.26
+    crpe_bins: 80
+    transformer_lr_ratio: 0.1
+    checkpoint_path: 'checkpoints/instseg_full.ckpt'
+    lr: 0.0006
+    weight_decay: 0.0001
+    epochs: 500
+    warmup_epochs: 5
+
+  landmarks:
+    channels_list: [48, 96, 192, 256]
+    depths: [3, 9, 3]
+    heads_list: [6, 12, 24]
+    window_sizes: [0.2, 0.4, 0.8]
+    point_embedding:
+      use: True
+      kpconv_point_influence: 0.02
+      kpconv_ball_radius: 0.05
+    stratified_union: False
+    downsample_ratio: 0.26
+    max_drop_path_prob: 0.3
+    stratified_downsample_ratio: 0.26
+    crpe_bins: 80
+    transformer_lr_ratio: 0.1
+    checkpoint_path: 'checkpoints/landmarks_full.ckpt'
+    lr: 0.0006
+    weight_decay: 0.0001
+    epochs: 500
+    warmup_epochs: 5
+
+  proposal_points: 10000
+  dbscan_cfg:
+    max_neighbor_dist: 0.03
+    min_points: 40  # [30, 50]
+    weighted: True
+
+accumulate_grad_batches: 1  # 1 better segmentation, worse classification
+gradient_clip_norm: 35  # 10 is worse
+
+out_dir: '/output'
+datamodule:
+  # root: '/home/mkaailab/Documents/IOS/3dteethland/data/lower_upper'
+  root: '/input'
+  landmarks_root: '/home/mkaailab/Documents/IOS/3dteethland/data/3DTeethLand_landmarks_train'
+  regex_filter: ''
+  extensions: ['ply', 'stl', 'obj']
+  clean: True  # TODO: Set to true for Grand Challenge inference
+  val_size: 0.1
+  include_val_as_train: true
+  batch: null  # [0, 100]
+  batch_size: 1
+  num_workers: 0
+  pin_memory: True
+  persistent_workers: False
+  # uniform_density_voxel_size: 0.025  # instseg
+  uniform_density_voxel_size: [0.025, 0.01]  # landmarks
+  boundary_aware:
+    use: False
+    voxel_size: 0.01
+    sample_ratio: 0.25
+  proposal_points: 10000
+  # proposal_points: 10000
+  max_proposals: 8
+  include_cusps: false
+  to_left_right: false
+  separate_front_posterior: false
+  distinguish_upper_lower: False  # True worse

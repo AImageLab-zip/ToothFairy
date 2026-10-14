@@ -1,0 +1,53 @@
+{
+  "retrieved": "2026-10-13",
+  "sources": [
+    {
+      "public_source": "training/iop/train_view.py",
+      "server_source_relative_to_Bite2Text": "complexity_aihub_dental/view_classifier_run_20260715/train_advanced_3model_view_classifier.py",
+      "retrieved_source_sha256": "40f0d0129275f14c1a8acbe3b7a33947e1c4bf7019e400ae0e9fa718dad4e97d",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/iop/train_crowding.py",
+      "server_source_relative_to_Bite2Text": "complexity_aihub_dental/train_combined_upper_lower_complexity_multimodel.py",
+      "retrieved_source_sha256": "6c287c990fec50b228abf8a0fd3e5b1379d8efc090da529f26a8d64fe8078fa5",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/iop/prepare_yolo_fdi24.py",
+      "server_source_relative_to_Bite2Text": "complexity_aihub_dental/yolo11m_seg_fdi24_20260816/scripts/prepare_yolo_fdi24.py",
+      "retrieved_source_sha256": "c879ffff22e4cf780e0f2c1513836b08518c76de8314fa76b24b20fc1ee61ba0",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/iop/train_yolo_fdi24.py",
+      "server_source_relative_to_Bite2Text": "complexity_aihub_dental/yolo11m_seg_fdi24_20260816/scripts/train_yolo11m_seg_fdi24.py",
+      "retrieved_source_sha256": "3165a2c50000f77bb2d247614236f54c10aa9ba9cb08dcaac37a8b5e880da7ec",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/ios/train_curves.py",
+      "server_source_relative_to_Bite2Text": "Final/toothmask_curve_ptv3/scripts/train_toothmask_curve_ptv3.py",
+      "retrieved_source_sha256": "e6f5db0fa6e1c48a74843602f9c1c9dc6b28a66918b1c14917162394c0187050",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/ios/prepare_overjet.py",
+      "server_source_relative_to_Bite2Text": "orthodontic_stl_ptv3/tools/prepare_raw_stl_dataset.py",
+      "retrieved_source_sha256": "7f9d4d4a0a6ef6889927b82f0da3948637b1ebd0ca1670c487d5312b29938ba5",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/ios/train_overjet.py",
+      "server_source_relative_to_Bite2Text": "orthodontic_stl_ptv3/tools/train_reduced_official_base.py",
+      "retrieved_source_sha256": "8c653f7e313245cd9b4594885f55df757f28d7604e9154b36c445a464df3d44e",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    },
+    {
+      "public_source": "training/labels/build_curve_review.py",
+      "server_source_relative_to_Bite2Text": "tools/build_curve_midline_review.py",
+      "retrieved_source_sha256": "e13c99741210e450d683ddae8e6aab9bc6254ae5b490008925a7f4b4fd0c5df0",
+      "export_modifications": "Portable input defaults. Additional reviewed CLI/profile changes are documented in training/README.md."
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "case_id": "SYNTHETIC-DEMO",
+  "views": {
+    "left": "synthetic-left.jpg",
+    "right": "synthetic-right.jpg",
+    "upper": "synthetic-upper.jpg",
+    "front": "synthetic-front.jpg",
+    "lower": "synthetic-lower.jpg"
+  },
+  "iop": {
+    "upper_crowding": "mild-to-moderate",
+    "lower_crowding": "none-to-mild",
+    "midline_displacement_tooth_width": 0.124
+  },
+  "ios": {
+    "present_fdis": [11, 12, 13, 14, 15, 16, 17, 21, 22, 23, 24, 25, 26, 27, 31, 32, 33, 34, 35, 36, 37, 41, 42, 43, 44, 45, 46, 47],
+    "right_molar_score": 0.721,
+    "left_molar_score": 0.344,
+    "right_canine_score": 0.211,
+    "left_canine_score": 0.639,
+    "right_canine_assessability": 0.812,
+    "left_canine_assessability": 0.794,
+    "anterior_bite_score": 0.529,
+    "transverse_bite_score": 0.091,
+    "overjet_label": "Normal",
+    "spee_label": "Normal",
+    "wilson_label": "Increased"
+  }
+}

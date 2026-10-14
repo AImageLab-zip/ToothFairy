@@ -1,0 +1,5 @@
+#!/bin/sh
+# Same Python environment as the main process, with 3DTeethLand's colliding
+# pointops extension placed first only inside this subprocess.
+export PYTHONPATH="/opt/teethland-pointops:/opt/ml/model/z${PYTHONPATH:+:$PYTHONPATH}"
+exec /opt/conda/bin/python "$@"

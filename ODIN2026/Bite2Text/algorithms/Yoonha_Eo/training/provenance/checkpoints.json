@@ -1,0 +1,16 @@
+{
+  "audited": "2026-10-13",
+  "weight_hash_manifest": "release/weights.json",
+  "notes": "Facts from checkpoint metadata and archived results. CLI defaults are documented separately in training/README.md. No patient-level records included.",
+  "checkpoints": [
+    {"path": "w/view.pt", "training_source": "training/iop/train_view.py", "status": "recovered_source", "data": "AI HUB oral images", "initialization": "torchvision ImageNet", "seed": 20260812, "selected_epoch": 2, "selection": "validation macro-F1 then accuracy"},
+    {"path": "w/crowding-upper.pt", "training_source": "training/iop/train_crowding.py", "status": "recovered_source", "data": "AI HUB upper occlusal images", "initialization": "torchvision ImageNet", "selected_epoch": 13, "selection": "validation macro-F1"},
+    {"path": "w/crowding-lower.pt", "training_source": "training/iop/train_crowding.py", "status": "recovered_source", "data": "AI HUB lower occlusal images", "initialization": "torchvision ImageNet", "selected_epoch": 33, "selection": "validation macro-F1"},
+    {"path": "w/yolo11m.pt", "training_source": "training/iop/train_yolo_fdi24.py", "status": "recovered_source", "data": "AI HUB FDI polygons", "initialization": "yolo11m-seg.pt", "classes": 24, "seed": 42, "selection": "Ultralytics validation fitness"},
+    {"path": "w/instseg.ckpt", "status": "upstream_reused_no_bitemark_finetuning", "upstream": "https://github.com/nnistelrooij/3dteethland", "epoch_zero_based": 499, "global_step": 112000, "exact_upstream_training_split": "not established by available checkpoint metadata"},
+    {"path": "w/landmarks.ckpt", "status": "upstream_reused_no_bitemark_finetuning", "upstream": "https://github.com/nnistelrooij/3dteethland", "epoch_zero_based": 499, "global_step": 59000, "exact_upstream_training_split": "not established by available checkpoint metadata"},
+    {"path": "w/spee.pt", "training_source": "training/ios/train_curves.py", "status": "recovered_source", "profile": "spee-final2", "data": "Bite2Text scans with reviewed report-derived labels", "initialization": "scratch", "feature_dim": 20, "sample_points": 12288, "seed": 42, "split": {"train": 764, "val": 96, "test": 96}, "run": "369367253595", "selected_epoch": 52, "selection": "best_macro_f1"},
+    {"path": "w/wilson.pt", "training_source": "training/ios/train_curves.py", "status": "reconstructed_earlier_cohort_profile", "profile": "wilson-final2", "data": "Bite2Text scans with reviewed report-derived labels", "initialization": "scratch", "feature_dim": 20, "sample_points": 12288, "seed": 42, "split": {"train": 780, "val": 98, "test": 98}, "run": "369367253578", "selected_epoch": 74, "selection": "best_accuracy"},
+    {"path": "w/overjet.pt", "training_source": "training/ios/train_overjet.py", "status": "recovered_source", "data": "Wang et al. 2024 pre/post-orthodontic dental model dataset; pre-treatment pairs", "initialization": "scratch", "feature_dim": 8, "points_per_arch": 4096, "seed": 42, "run": "369367248013", "selected_epoch": 122, "selection": "best_accuracy", "split_policy": "Official test unchanged; 80/20 within official train; reduced-label filtering afterwards"}
+  ]
+}

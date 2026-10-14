@@ -7,7 +7,7 @@ own licence. Trained weights are not copied: follow the links in each `SOURCE.md
 | Rank | Team | Folder | Original repository | Licence |
 |---|---|---|---|---|
 | 1st | 429 | [Jingjing_Li](Jingjing_Li) | [yuyuanm/bite2text](https://github.com/yuyuanm/bite2text) | MIT (project-owned code) |
-| 2nd | yoonhaeo | not mirrored yet | [yoonhaeo/bitemark](https://github.com/yoonhaeo/bitemark) | Apache-2.0 |
+| 2nd | yoonhaeo | [Yoonha_Eo](Yoonha_Eo) | [yoonhaeo/bitemark](https://github.com/yoonhaeo/bitemark) | AGPL-3.0 |
 | 3rd | aliishadman | [Ali_Shadman_Yazdi](Ali_Shadman_Yazdi) | [Ali5hadman/Bite2Text-odin2026](https://github.com/Ali5hadman/Bite2Text-odin2026) | AGPL-3.0 |
 | - | shayne | [Yan_Sun](Yan_Sun) | [Shayne-Pro/ODIN2026-Bite2Text](https://github.com/Shayne-Pro/ODIN2026-Bite2Text) | MIT |
 | - | IAMTryhard | [Soeren_Spiegel](Soeren_Spiegel) (both tracks) | [IAMspiegel/rgbite](https://github.com/IAMspiegel/rgbite) | Apache-2.0 |

@@ -1,0 +1,7 @@
+# Preserve submission snapshot bytes and hashes across platforms.
+* text=auto eol=lf
+final2/** -text
+submission/** -text
+LICENSE -text
+LICENSES/** -text
+release/** -text
